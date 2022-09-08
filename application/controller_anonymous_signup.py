@@ -3,13 +3,14 @@ import sys
 import uuid
 import traceback
 import boto3
-from repository.dynamodb_repository import DynamoDBRepository
+from model.anonymous_signup_model import AnonymousSignupModel
 
 
 def main(user_id: str, user_token: str):
     print('hello')
-    xxx = DynamoDBRepository()
-    xxx.insert_user()
+    xxx = AnonymousSignupModel()
+    xxx.set(1, 2)
+    print(xxx.sum())
 
 
 
