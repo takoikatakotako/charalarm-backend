@@ -10,5 +10,8 @@ aws dynamodb create-table \
 
 aws dynamodb describe-table --table-name user-table --endpoint-url=http://localhost:4566
 
+aws dynamodb scan --table-name user-table --endpoint-url=http://localhost:4566 | jq
+
 aws dynamodb delete-table --table-name user-table --endpoint-url=http://localhost:4566
+
 
