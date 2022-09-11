@@ -31,3 +31,6 @@ lambdaのハンドラをsignup_anonymous_userに設定する。
 
 curl -X POST -H "Content-Type: application/json" -d '{"userId": "12345", "userToken":"テストユーザー"}' https://uj37p62g2liwpa334yjfh4e53i0jepqe.lambda-url.ap-northeast-1.on.aws/
 
+
+go fmt ./...
+

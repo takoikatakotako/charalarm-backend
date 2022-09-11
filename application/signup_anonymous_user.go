@@ -2,16 +2,16 @@ package main
 
 import (
 	"charalarm/model"
-	"fmt"
-	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/aws/aws-lambda-go/events"
 	"context"
 	"encoding/json"
+	"fmt"
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
 type Request struct {
-	UserId   string `json: "userId"`
-	UserToken string  `json: "userToken"`
+	UserId    string `json: "userId"`
+	UserToken string `json: "userToken"`
 }
 
 type Response struct {
@@ -52,4 +52,3 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (Response,
 func main() {
 	lambda.Start(Handler)
 }
-

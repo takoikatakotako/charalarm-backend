@@ -1,12 +1,12 @@
 package model
 
 import (
-	"charalarm/repository"
 	"charalarm/entity"
+	"charalarm/repository"
 )
 
-type SignupAnonymousUser struct{
-  Repository repository.DynamoDBRepository
+type SignupAnonymousUser struct {
+	Repository repository.DynamoDBRepository
 }
 
 func (self *SignupAnonymousUser) Setup() {

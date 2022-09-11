@@ -6,8 +6,8 @@ import (
 	"fmt"
 )
 
-type GetAnonymousUser struct{
-  Repository repository.DynamoDBRepository
+type GetAnonymousUser struct {
+	Repository repository.DynamoDBRepository
 }
 
 func (self *GetAnonymousUser) Setup() {
@@ -16,10 +16,10 @@ func (self *GetAnonymousUser) Setup() {
 
 func (self *GetAnonymousUser) GetAnonymousUser(userId string) {
 	anonymousUser, err := self.Repository.GetAnonymousUser(userId)
-    if err != nil {
-        fmt.Printf("put item: %s\n", err.Error())
-        return
-    }
+	if err != nil {
+		fmt.Printf("put item: %s\n", err.Error())
+		return
+	}
 	fmt.Printf(anonymousUser.UserId, anonymousUser.UserToken)
 	fmt.Printf("取得完了")
 }
