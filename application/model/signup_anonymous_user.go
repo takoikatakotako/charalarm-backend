@@ -5,15 +5,15 @@ import (
 	"charalarm/entity"
 )
 
-type AnonymousUserSignup struct{
+type SignupAnonymousUser struct{
   Repository repository.DynamoDBRepository
 }
 
-func (self *AnonymousUserSignup) Setup() {
+func (self *SignupAnonymousUser) Setup() {
 	self.Repository = repository.DynamoDBRepository{}
 }
 
-func (self *AnonymousUserSignup) Signup(userId string, userToken string) {
+func (self *SignupAnonymousUser) Signup(userId string, userToken string) {
 	anonymousUser := entity.AnonymousUser{UserId: userId, UserToken: userToken}
 	self.Repository.InsertAnonymousUser(anonymousUser)
 }

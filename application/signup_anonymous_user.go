@@ -39,7 +39,7 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (Response,
 	userId := request.UserId
 	userToken := request.UserToken
 
-	model := model.AnonymousUserSignup{}
+	model := model.SignupAnonymousUser{}
 	model.Setup()
 	model.Signup(userId, userToken)
 
