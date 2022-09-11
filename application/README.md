@@ -23,3 +23,14 @@ https://developer.so-tech.co.jp/entry/2022/03/08/120000
 
 https://haithai91.medium.com/how-to-setup-aws-config-connect-to-localstack-with-golang-bd71ac2dd9d2
 
+
+
+
+
+GOOS=linux GOARCH=amd64 go build -o signup_anonymous_user signup_anonymous_user.go
+zip signup_anonymous_user.zip ./signup_anonymous_user
+
+lambdaのハンドラをsignup_anonymous_userに設定する。
+
+curl -X POST -H "Content-Type: application/json" -d '{"userId": "12345", "userToken":"テストユーザー"}' https://uj37p62g2liwpa334yjfh4e53i0jepqe.lambda-url.ap-northeast-1.on.aws/
+

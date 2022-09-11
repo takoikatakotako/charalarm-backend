@@ -4,9 +4,9 @@ provider "aws" {
   shared_credentials_files = ["~/.aws/credentials"]
 }
 
-# module "dynamodb" {
-#   source = "./dynamodb"
-# }
+module "dynamodb" {
+  source = "./dynamodb"
+}
 
 # module "notification_batch" {
 #   source = "./notification_batch"

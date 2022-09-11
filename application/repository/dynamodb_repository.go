@@ -31,18 +31,18 @@ func (self DynamoDBRepository) createDynamoDBClient() (*dynamodb.Client, error) 
         return nil, err
     }
 
-	awsEndpoint := "http://localhost:4566"
+	// awsEndpoint := "http://localhost:4566"
 
-	c.EndpointResolverWithOptions = aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...interface{}) (aws.Endpoint, error) {
-		return aws.Endpoint{
-		   URL:           awsEndpoint,
-		   SigningRegion: awsRegion,
-		}, nil
-	 })
-	 if err != nil {
-		fmt.Printf("unable to load SDK config, %v", err)
-		return nil, err
-	 }
+	// c.EndpointResolverWithOptions = aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...interface{}) (aws.Endpoint, error) {
+	// 	return aws.Endpoint{
+	// 	   URL:           awsEndpoint,
+	// 	   SigningRegion: awsRegion,
+	// 	}, nil
+	//  })
+	//  if err != nil {
+	// 	fmt.Printf("unable to load SDK config, %v", err)
+	// 	return nil, err
+	//  }
 
 	 return dynamodb.NewFromConfig(c), nil
 }
