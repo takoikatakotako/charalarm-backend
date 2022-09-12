@@ -19,9 +19,9 @@ module "dynamodb" {
 #   acm_certificate_arn = local.front_acm_certificate_arn
 # }
 
-# module "web_api" {
-#   source              = "./web_api"
-#   domain              = local.api_domain
-#   route53_zone_id     = local.route53_zone_id
-#   acm_certificate_arn = local.api_acm_certificate_arn
-# }
+module "web_api" {
+  source              = "./web_api"
+  domain              = local.api_domain
+  route53_zone_id     = local.route53_zone_id
+  acm_certificate_arn = local.api_acm_certificate_arn
+}
