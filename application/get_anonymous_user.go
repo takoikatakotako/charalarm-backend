@@ -40,11 +40,11 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (Response,
 	userToken := request.UserToken
 
 	model := model.GetAnonymousUser{}
-	model.GetAnonymousUser("UUUUserDDDD")
+	anonymousUser, _ := model.GetAnonymousUser(userId, userToken)
 
 	return Response{
-		YouName: fmt.Sprintf("UserID %s です。", request.UserId),
-		YouLike: fmt.Sprintf("UserToken %s です", request.UserToken),
+		YouName: anonymousUser.UserId,
+		YouLike: anonymousUser.UserToken,
 	}, nil
 }
 

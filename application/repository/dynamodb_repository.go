@@ -36,6 +36,7 @@ func (self DynamoDBRepository) createDynamoDBClient() (*dynamodb.Client, error) 
 		return nil, err
 	}
 
+	// LocalStackを使う場合
 	if self.IsLocal {
 		c.EndpointResolverWithOptions = aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...interface{}) (aws.Endpoint, error) {
 			return aws.Endpoint{

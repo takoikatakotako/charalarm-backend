@@ -32,5 +32,18 @@ lambdaのハンドラをsignup_anonymous_userに設定する。
 curl -X POST -H "Content-Type: application/json" -d '{"userId": "12345", "userToken":"テストユーザー"}' https://uj37p62g2liwpa334yjfh4e53i0jepqe.lambda-url.ap-northeast-1.on.aws/
 
 
+curl -X POST -H "Content-Type: application/json" -d '{"userId": "12345", "userToken":"テストユーザー"}' https://o666obnfeuamd4mh5bza4vyuba0wwljs.lambda-url.ap-northeast-1.on.aws/
+
+
+
 go fmt ./...
 
+
+# 新規登録
+curl -X POST -H "Content-Type: application/json" -d '{"userId": "okki-", "userToken":"password"}' https://uj37p62g2liwpa334yjfh4e53i0jepqe.lambda-url.ap-northeast-1.on.aws/
+
+# 登録確認
+curl -X POST -H "Content-Type: application/json" -d '{"userId": "okki-", "userToken":"password"}' https://o666obnfeuamd4mh5bza4vyuba0wwljs.lambda-url.ap-northeast-1.on.aws/
+
+# 登録されてない場合
+curl -X POST -H "Content-Type: application/json" -d '{"userId": "okki-55", "userToken":"password"}' https://o666obnfeuamd4mh5bza4vyuba0wwljs.lambda-url.ap-northeast-1.on.aws/
