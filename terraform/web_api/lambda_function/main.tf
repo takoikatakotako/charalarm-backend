@@ -4,11 +4,15 @@
 resource "aws_lambda_function" "lambda_function" {
   function_name    = var.function_name
   role             = var.role
-  runtime          = "python3.9"
-  handler          = "lambda_function.lambda_handler"
-  timeout          = 3
+  runtime          = "go1.x"
+  handler          = var.handler
+  timeout          = 15
   filename         = data.archive_file.python_script_archive_file.output_path
   source_code_hash = data.archive_file.python_script_archive_file.output_base64sha256
+
+  architectures = [
+    "x86_64"
+  ]
 
   environment {
     variables = {
@@ -19,17 +23,18 @@ resource "aws_lambda_function" "lambda_function" {
 
 data "archive_file" "python_script_archive_file" {
   type        = "zip"
-  output_path = "${path.root}/output/${var.archive_filename}"
+  source_file = "${path.root}/../application/build/${var.filename}"
+  output_path = "${path.root}/../application/build/${var.archive_filename}"
 
-  source {
-    content  = data.template_file.python_script_file.rendered
-    filename = "lambda_function.py"
-  }
+  # source {
+  #   content  = file("${path.root}/../application/build/${var.filename}")
+  #   filename = "lambda_function.py"
+  # }
 }
 
-data "template_file" "python_script_file" {
-  template = file("${path.module}/script/${var.filename}")
-}
+# data "template_file" "python_script_file" {
+#   template = file("${path.root}/../application/build/${var.filename}")
+# }
 
 
 resource "aws_lambda_permission" "lambda_permission" {

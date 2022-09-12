@@ -6,6 +6,10 @@ variable "role" {
   type = string
 }
 
+variable "handler" {
+  type = string
+}
+
 variable "filename" {
   type = string
 }
