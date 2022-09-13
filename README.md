@@ -1,6 +1,8 @@
 # CharalarmBackend
 
 
+## GET:  /healthcheck
+
 
 ## POST: /user/signup/anonymous
 
