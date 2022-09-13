@@ -28,3 +28,22 @@
 
 
 ## GET: /news/list
+
+
+
+
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"userId": "okki-", "userToken":"password"}' \
+  https://api.sandbox.swiswiswift.com/user/signup/anonymous
+
+
+
+
+
+
+
+https://99byleidca.execute-api.ap-northeast-1.amazonaws.com/production
+
+
+https://api.sandbox.swiswiswift.com/user/signup/anonymous

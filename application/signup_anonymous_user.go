@@ -14,12 +14,8 @@ type Request struct {
 	UserToken string `json: "userToken"`
 }
 
-type Response struct {
-	YouName string `json: "name"`
-	YouLike string `json: "like"`
-}
 
-func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (Response, error) {
+func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	body := name.Body
 	request := Request{}
 
@@ -30,9 +26,9 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (Response,
 	fmt.Println("-------")
 
 	if err := json.Unmarshal([]byte(body), &request); err != nil {
-		return Response{
-			YouName: "デコードにしっぱいしやした",
-			YouLike: "デコードにしっぱいしやした",
+		return events.APIGatewayProxyResponse{
+			Body:       string("デコードに失敗しました"),
+			StatusCode: 500,
 		}, nil
 	}
 
@@ -43,10 +39,12 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (Response,
 	model.Setup()
 	model.Signup(userId, userToken)
 
-	return Response{
-		YouName: fmt.Sprintf("UserID %s です。", request.UserId),
-		YouLike: fmt.Sprintf("UserToken %s です", request.UserToken),
-	}, nil
+
+    // jsonBytes, _ := json.Marshal(res)
+    return events.APIGatewayProxyResponse{
+        Body:       string("登録完了しました"),
+        StatusCode: 200,
+    }, nil
 }
 
 func main() {

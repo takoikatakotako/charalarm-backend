@@ -80,5 +80,5 @@ module "user_signup_anonymous_post_lambda_function" {
   archive_filename = "signup_anonymous_user_archive_file.zip"
   execution_arn    = aws_api_gateway_rest_api.charalarm_rest_api.execution_arn
   method           = "POST"
-  path             = "/user/signup/registration"
+  path             = "/user/signup/anonymous"
 }
