@@ -2,6 +2,7 @@ package main
 
 import (
 	"charalarm/model"
+	"charalarm/repository"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -34,13 +35,12 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 	userId := request.UserId
 	userToken := request.UserToken
 
-	model := model.SignupAnonymousUser{}
-	model.Setup()
+	model := model.WithdrawAnonymousUser{Repository: repository.DynamoDBRepository{}}
 	model.Signup(userId, userToken)
 
 	// jsonBytes, _ := json.Marshal(res)
 	return events.APIGatewayProxyResponse{
-		Body:       string("登録完了しました"),
+		Body:       string("退会完了しました"),
 		StatusCode: 200,
 	}, nil
 }
