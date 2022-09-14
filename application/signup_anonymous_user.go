@@ -1,6 +1,7 @@
 package main
 
 import (
+	"charalarm/error"
 	"charalarm/model"
 	"charalarm/repository"
 	"context"
@@ -25,16 +26,19 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 	fmt.Println(body)
 	fmt.Println("-------")
 
+	// Decode Body
 	if err := json.Unmarshal([]byte(body), &request); err != nil {
 		return events.APIGatewayProxyResponse{
-			Body:       string("デコードに失敗しました"),
+			Body:       string(charalarm_error.FAILED_TO_DECODE_REQUEST_BODY),
 			StatusCode: 500,
 		}, nil
 	}
 
+	// Get Parameters
 	userId := request.UserId
 	userToken := request.UserToken
 
+	// Signup
 	model := model.SignupAnonymousUser{Repository: repository.DynamoDBRepository{}}
 	model.Signup(userId, userToken)
 

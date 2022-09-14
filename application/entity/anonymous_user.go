@@ -1,6 +1,6 @@
 package entity
 
 type AnonymousUser struct {
-	UserId    string `dynamodbav:"userId"`
+	UserID    string `dynamodbav:"userId"`
 	UserToken string `dynamodbav:"userToken"`
 }

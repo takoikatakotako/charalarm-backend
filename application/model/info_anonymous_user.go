@@ -16,7 +16,7 @@ func (self *InfoAnonymousUser) GetAnonymousUser(userId string, userToken string)
 		fmt.Printf("put item: %s\n", err.Error())
 		return entity.AnonymousUser{}, err
 	}
-	fmt.Printf(anonymousUser.UserId, anonymousUser.UserToken)
+	fmt.Printf(anonymousUser.UserID, anonymousUser.UserToken)
 	fmt.Printf("取得完了")
 	return anonymousUser, nil
 }
