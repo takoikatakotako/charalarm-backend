@@ -106,24 +106,17 @@ func (self DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error)
 			},
 		},
 	}
-	output, err := client.GetItem(ctx, getInput)
+	response, err := client.GetItem(ctx, getInput)
 	if err != nil {
 		fmt.Printf("get item: %s\n", err.Error())
 		return false, err
 	}
 
-	// TODO: ここで取得できたかチェック
-	fmt.Println(output.Item)
-	return true, nil
-
-	// gotUser := entity.AnonymousUser{}
-	// err = attributevalue.UnmarshalMap(output.Item, &gotUser)
-	// if err != nil {
-	// 	fmt.Printf("dynamodb unmarshal: %s\n", err.Error())
-	// 	return entity.AnonymousUser{}, err
-	// }
-	// fmt.Println(gotUser)
-	// return gotUser, nil
+	if len(response.Item) == 0 {
+		return false, nil
+	} else {
+		return true, nil
+	}
 }
 
 func (self DynamoDBRepository) InsertAnonymousUser(anonymousUser entity.AnonymousUser) (error) {
