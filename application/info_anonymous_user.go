@@ -35,8 +35,8 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 	userId := request.UserId
 	userToken := request.UserToken
 
-	model := model.WithdrawAnonymousUser{Repository: repository.DynamoDBRepository{}}
-	model.Signup(userId, userToken)
+	model := model.InfoAnonymousUser{Repository: repository.DynamoDBRepository{}}
+	model.GetAnonymousUser(userId, userToken)
 
 	// jsonBytes, _ := json.Marshal(res)
 	return events.APIGatewayProxyResponse{

@@ -2,6 +2,7 @@ package main
 
 import (
 	"charalarm/model"
+	"charalarm/repository"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -34,8 +35,7 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 	userId := request.UserId
 	userToken := request.UserToken
 
-	model := model.SignupAnonymousUser{}
-	model.Setup()
+	model := model.SignupAnonymousUser{Repository: repository.DynamoDBRepository{}}
 	model.Signup(userId, userToken)
 
 	// jsonBytes, _ := json.Marshal(res)

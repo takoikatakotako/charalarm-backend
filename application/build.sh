@@ -1,3 +1,6 @@
+# healthcheck
+GOOS=linux GOARCH=amd64 go build -o ./build/healthcheck healthcheck.go
+
 # signup_anonymous_user
 GOOS=linux GOARCH=amd64 go build -o ./build/signup_anonymous_user signup_anonymous_user.go
 

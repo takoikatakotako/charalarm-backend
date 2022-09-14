@@ -6,15 +6,11 @@ import (
 	"fmt"
 )
 
-type GetAnonymousUser struct {
+type InfoAnonymousUser struct {
 	Repository repository.DynamoDBRepository
 }
 
-func (self *GetAnonymousUser) Setup() {
-	self.Repository = repository.DynamoDBRepository{}
-}
-
-func (self *GetAnonymousUser) GetAnonymousUser(userId string, userToken string) (entity.AnonymousUser, error) {
+func (self *InfoAnonymousUser) GetAnonymousUser(userId string, userToken string) (entity.AnonymousUser, error) {
 	anonymousUser, err := self.Repository.GetAnonymousUser(userId)
 	if err != nil {
 		fmt.Printf("put item: %s\n", err.Error())
