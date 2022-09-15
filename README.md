@@ -3,6 +3,10 @@
 
 ## GET:  /healthcheck
 
+ヘルスチェックに使用するエンドポイントです。
+
+
+
 
 ## POST: /user/signup/anonymous
 
@@ -33,6 +37,8 @@
 
 
 ## エラーメッセージ
+
+
 
 
 

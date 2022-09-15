@@ -29,6 +29,7 @@ func (self *SignupAnonymousUser) Signup(userID string, userToken string) (error)
 		return nil
 	}
 
+	// ユーザー作成
 	anonymousUser := entity.AnonymousUser{UserID: userID, UserToken: userToken}
 	return self.Repository.InsertAnonymousUser(anonymousUser)
 }
