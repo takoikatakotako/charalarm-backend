@@ -58,7 +58,7 @@ func (self DynamoDBRepository) GetAnonymousUser(userId string) (entity.Anonymous
 
 	client, err := self.createDynamoDBClient()
 	if err != nil {
-		fmt.Printf("err, %v", err)
+		return entity.AnonymousUser{}, err
 	}
 
 	// 既存レコードの取得
@@ -74,13 +74,11 @@ func (self DynamoDBRepository) GetAnonymousUser(userId string) (entity.Anonymous
 	// 取得
 	output, err := client.GetItem(ctx, getInput)
 	if err != nil {
-		fmt.Printf("get item: %s\n", err.Error())
 		return entity.AnonymousUser{}, err
 	}
 	gotUser := entity.AnonymousUser{}
 	err = attributevalue.UnmarshalMap(output.Item, &gotUser)
 	if err != nil {
-		fmt.Printf("dynamodb unmarshal: %s\n", err.Error())
 		return entity.AnonymousUser{}, err
 	}
 	fmt.Println(gotUser)
@@ -108,7 +106,6 @@ func (self DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error)
 	}
 	response, err := client.GetItem(ctx, getInput)
 	if err != nil {
-		fmt.Printf("get item: %s\n", err.Error())
 		return false, err
 	}
 
@@ -147,6 +144,28 @@ func (self DynamoDBRepository) InsertAnonymousUser(anonymousUser entity.Anonymou
 	return nil
 }
 
-func (self DynamoDBRepository) DeleteAnonymousUser(anonymousUserId string) (error) {
+func (self DynamoDBRepository) DeleteAnonymousUser(userID string) (error) {
+	var err error
+	var ctx = context.Background()
+
+	client, err := self.createDynamoDBClient()
+	if err != nil {
+		return err
+	}
+
+	deleteInput := &dynamodb.DeleteItemInput{
+		TableName: aws.String("user-table"),
+		Key: map[string]types.AttributeValue{
+			"userId": &types.AttributeValueMemberS{
+				Value: userID,
+			},
+		},
+	}
+	
+	_, err = client.DeleteItem(ctx, deleteInput)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
