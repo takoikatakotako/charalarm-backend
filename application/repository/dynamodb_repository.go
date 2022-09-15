@@ -55,7 +55,7 @@ func (self DynamoDBRepository) createDynamoDBClient() (*dynamodb.Client, error) 
 ////////////////////////////////////
 // AnonymousUser
 ////////////////////////////////////
-func (self DynamoDBRepository) GetAnonymousUser(userId string) (entity.AnonymousUser, error) {
+func (self DynamoDBRepository) GetAnonymousUser(userID string) (entity.AnonymousUser, error) {
 	var err error
 	var ctx = context.Background()
 
@@ -68,8 +68,8 @@ func (self DynamoDBRepository) GetAnonymousUser(userId string) (entity.Anonymous
 	getInput := &dynamodb.GetItemInput{
 		TableName: aws.String(table.USER_TABLE),
 		Key: map[string]types.AttributeValue{
-			"userId": &types.AttributeValueMemberS{
-				Value: userId,
+			"userID": &types.AttributeValueMemberS{
+				Value: userID,
 			},
 		},
 	}
@@ -93,7 +93,7 @@ func (self DynamoDBRepository) GetAnonymousUser(userId string) (entity.Anonymous
 	return gotUser, nil
 }
 
-func (self DynamoDBRepository) IsExistAnonymousUser(userId string) (bool, error) {
+func (self DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error) {
 	var err error
 	var ctx = context.Background()
 
@@ -107,8 +107,8 @@ func (self DynamoDBRepository) IsExistAnonymousUser(userId string) (bool, error)
 	getInput := &dynamodb.GetItemInput{
 		TableName: aws.String(table.USER_TABLE),
 		Key: map[string]types.AttributeValue{
-			"userId": &types.AttributeValueMemberS{
-				Value: userId,
+			"userID": &types.AttributeValueMemberS{
+				Value: userID,
 			},
 		},
 	}
@@ -152,7 +152,7 @@ func (self DynamoDBRepository) InsertAnonymousUser(anonymousUser entity.Anonymou
 	return nil
 }
 
-func (self DynamoDBRepository) DeleteAnonymousUser(userId string) error {
+func (self DynamoDBRepository) DeleteAnonymousUser(userID string) error {
 	var err error
 	var ctx = context.Background()
 
@@ -164,8 +164,8 @@ func (self DynamoDBRepository) DeleteAnonymousUser(userId string) error {
 	deleteInput := &dynamodb.DeleteItemInput{
 		TableName: aws.String(table.USER_TABLE),
 		Key: map[string]types.AttributeValue{
-			"userId": &types.AttributeValueMemberS{
-				Value: userId,
+			"userID": &types.AttributeValueMemberS{
+				Value: userID,
 			},
 		},
 	}
