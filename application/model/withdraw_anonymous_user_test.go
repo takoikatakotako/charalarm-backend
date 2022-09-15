@@ -1,9 +1,8 @@
 package model
 
-
 import (
-	"charalarm/repository"
 	"charalarm/entity"
+	"charalarm/repository"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -37,7 +36,7 @@ func TestWithdraw(t *testing.T) {
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
-	
+
 	// IsExist
 	secondIsExist, err := repository.IsExistAnonymousUser(userID)
 	if err != nil {

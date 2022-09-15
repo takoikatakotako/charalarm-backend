@@ -2,6 +2,8 @@ package repository
 
 import (
 	"charalarm/entity"
+	"charalarm/error"
+	"charalarm/table"
 	"context"
 	"errors"
 	"fmt"
@@ -62,19 +64,15 @@ func (self DynamoDBRepository) GetAnonymousUser(userId string) (entity.Anonymous
 		return entity.AnonymousUser{}, err
 	}
 
-	fmt.Println("11111")
-
 	// 既存レコードの取得
 	getInput := &dynamodb.GetItemInput{
-		TableName: aws.String("user-table"),
+		TableName: aws.String(table.USER_TABLE),
 		Key: map[string]types.AttributeValue{
 			"userId": &types.AttributeValueMemberS{
 				Value: userId,
 			},
 		},
 	}
-
-	fmt.Println("2222")
 
 	// 取得
 	output, err := client.GetItem(ctx, getInput)
@@ -83,13 +81,8 @@ func (self DynamoDBRepository) GetAnonymousUser(userId string) (entity.Anonymous
 	}
 	gotUser := entity.AnonymousUser{}
 
-	fmt.Println("----")
-	fmt.Println(output.Item)
-	fmt.Println(userId)
-	fmt.Println("----")
-
 	if len(output.Item) == 0 {
-		return entity.AnonymousUser{}, errors.New("charalarm_error.INVAlID_VALUE")
+		return entity.AnonymousUser{}, errors.New(charalarm_error.INVAlID_VALUE)
 	}
 
 	err = attributevalue.UnmarshalMap(output.Item, &gotUser)
@@ -97,14 +90,10 @@ func (self DynamoDBRepository) GetAnonymousUser(userId string) (entity.Anonymous
 		return entity.AnonymousUser{}, err
 	}
 
-	fmt.Println("3333")
-
-	fmt.Println(gotUser)
-
 	return gotUser, nil
 }
 
-func (self DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error) {
+func (self DynamoDBRepository) IsExistAnonymousUser(userId string) (bool, error) {
 	var err error
 	var ctx = context.Background()
 
@@ -116,10 +105,10 @@ func (self DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error)
 
 	// 既存レコードの取得
 	getInput := &dynamodb.GetItemInput{
-		TableName: aws.String("user-table"),
+		TableName: aws.String(table.USER_TABLE),
 		Key: map[string]types.AttributeValue{
 			"userId": &types.AttributeValueMemberS{
-				Value: userID,
+				Value: userId,
 			},
 		},
 	}
@@ -152,7 +141,7 @@ func (self DynamoDBRepository) InsertAnonymousUser(anonymousUser entity.Anonymou
 		return err
 	}
 	_, err = client.PutItem(ctx, &dynamodb.PutItemInput{
-		TableName: aws.String("user-table"),
+		TableName: aws.String(table.USER_TABLE),
 		Item:      av,
 	})
 	if err != nil {
@@ -163,7 +152,7 @@ func (self DynamoDBRepository) InsertAnonymousUser(anonymousUser entity.Anonymou
 	return nil
 }
 
-func (self DynamoDBRepository) DeleteAnonymousUser(userID string) error {
+func (self DynamoDBRepository) DeleteAnonymousUser(userId string) error {
 	var err error
 	var ctx = context.Background()
 
@@ -173,10 +162,10 @@ func (self DynamoDBRepository) DeleteAnonymousUser(userID string) error {
 	}
 
 	deleteInput := &dynamodb.DeleteItemInput{
-		TableName: aws.String("user-table"),
+		TableName: aws.String(table.USER_TABLE),
 		Key: map[string]types.AttributeValue{
 			"userId": &types.AttributeValueMemberS{
-				Value: userID,
+				Value: userId,
 			},
 		},
 	}
