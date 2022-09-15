@@ -1,7 +1,7 @@
 package model
 
 import (
-    "testing"
+	"testing"
 )
 
 func TestSample1(t *testing.T) {}

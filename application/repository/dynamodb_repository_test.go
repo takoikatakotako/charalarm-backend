@@ -1,10 +1,10 @@
 package repository
 
 import (
-    "testing"
 	"charalarm/entity"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestInsertAndGet(t *testing.T) {
@@ -64,7 +64,6 @@ func TestInsertAndExist(t *testing.T) {
 	// Assert
 	assert.Equal(t, secondIsExist, true)
 }
-
 
 func TestInsertAndDelete(t *testing.T) {
 	var err error

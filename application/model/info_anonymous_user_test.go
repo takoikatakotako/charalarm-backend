@@ -1,11 +1,11 @@
 package model
 
 import (
-    "testing"
-	"charalarm/repository"
 	"charalarm/entity"
+	"charalarm/repository"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestInfoUser(t *testing.T) {
@@ -15,7 +15,7 @@ func TestInfoUser(t *testing.T) {
 	userID := uuid.New().String()
 	userToken := uuid.New().String()
 
-	// Insert
+	// ユーザー作成
 	insertUser := entity.AnonymousUser{UserID: userID, UserToken: userToken}
 	err := repository.InsertAnonymousUser(insertUser)
 	if err != nil {

@@ -12,9 +12,11 @@ type SignupAnonymousUser struct {
 	Repository repository.DynamoDBRepository
 }
 
-func (self *SignupAnonymousUser) Signup(userID string, userToken string) (error) {
+func (self *SignupAnonymousUser) Signup(userID string, userToken string) error {
 	// バリデーション
 	if validator.IsValidUUID(userID) && validator.IsValidUUID(userToken) {
+		// Nothing
+	} else {
 		return errors.New(charalarm_error.INVAlID_VALUE)
 	}
 
