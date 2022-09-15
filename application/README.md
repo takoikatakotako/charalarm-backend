@@ -18,6 +18,8 @@ go get: added github.com/go-sql-driver/mysql v1.5.0
 go get: added golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
 
 
+go get -u github.com/google/uuid
+
 
 https://developer.so-tech.co.jp/entry/2022/03/08/120000
 

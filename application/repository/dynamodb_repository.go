@@ -3,6 +3,7 @@ package repository
 import (
 	"charalarm/entity"
 	"context"
+	"errors"
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -84,7 +85,12 @@ func (self DynamoDBRepository) GetAnonymousUser(userId string) (entity.Anonymous
 
 	fmt.Println("----")
 	fmt.Println(output.Item)
+	fmt.Println(userId)
 	fmt.Println("----")
+
+	if len(output.Item) == 0 {
+		return entity.AnonymousUser{}, errors.New("charalarm_error.INVAlID_VALUE")
+	}
 
 	err = attributevalue.UnmarshalMap(output.Item, &gotUser)
 	if err != nil {
@@ -94,6 +100,7 @@ func (self DynamoDBRepository) GetAnonymousUser(userId string) (entity.Anonymous
 	fmt.Println("3333")
 
 	fmt.Println(gotUser)
+
 	return gotUser, nil
 }
 

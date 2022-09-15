@@ -27,7 +27,7 @@ func (self *SignupAnonymousUser) Signup(userID string, userToken string) error {
 	}
 
 	// ユーザーが既に作成されていた場合
-	if isExist == false {
+	if isExist {
 		return nil
 	}
 

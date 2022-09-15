@@ -14,6 +14,8 @@ type WithdrawAnonymousUser struct {
 func (self *WithdrawAnonymousUser) Withdraw(userID string, userToken string) error {
 	// バリデーション
 	if validator.IsValidUUID(userID) && validator.IsValidUUID(userToken) {
+		// Nothing
+	} else {
 		return errors.New(charalarm_error.INVAlID_VALUE)
 	}
 

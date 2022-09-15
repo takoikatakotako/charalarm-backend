@@ -2,10 +2,9 @@ package model
 
 import (
 	"charalarm/repository"
-	"testing"
-	// "charalarm/entity"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestSignup(t *testing.T) {
@@ -29,5 +28,5 @@ func TestSignup(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, userID, getUser.UserID)
-	// assert.Equal(t, userToken, getUser.UserToken)
+	assert.Equal(t, userToken, getUser.UserToken)
 }
