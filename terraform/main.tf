@@ -8,9 +8,10 @@ module "dynamodb" {
   source = "./dynamodb"
 }
 
-# module "notification_batch" {
-#   source = "./notification_batch"
-# }
+module "application" {
+  source = "./application"
+  bucket_name = local.application_bucket_name
+}
 
 # module "web_front" {
 #   source              = "./web_front"
