@@ -19,6 +19,10 @@ jobs:
         with:
           go-version: 1.16.2
 
+      - name: Set up Docker
+        run: |
+          cd application && docker-compose up -d
+
       - name: Test
         run: |
           cd application && sh test.sh
