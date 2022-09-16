@@ -5,6 +5,11 @@ on:
   push:
     branches: [ develop ]
 
+env:
+  AWS_ACCESS_KEY_ID: dummy
+  AWS_SECRET_ACCESS_KEY: dummy
+  # AWS_DEFAULT_REGION: ap-nor
+
 jobs:
   test:
     name: Test
@@ -22,6 +27,10 @@ jobs:
       - name: Set up Docker
         run: |
           cd application && docker-compose up -d
+
+      - name: PWD
+        run: |
+          pwd
 
       - name: Test
         run: |
