@@ -34,4 +34,4 @@ jobs:
 
       - name: Deploy to S3
         run: |
-          aws s3 sync ./build $S3_BUCKET_URL/$APPLICATION_VERSION --exact-timestamps --delete
+          aws s3 sync application/build $S3_BUCKET_URL/$APPLICATION_VERSION --exact-timestamps --delete
