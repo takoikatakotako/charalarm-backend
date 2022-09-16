@@ -5,8 +5,9 @@
 
 ヘルスチェックに使用するエンドポイントです。
 
-
-
+```
+$ curl https://api.sandbox.swiswiswift.com/healthcheck
+```
 
 ## POST: /user/signup/anonymous
 
