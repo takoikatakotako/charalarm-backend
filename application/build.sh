@@ -1,19 +1,22 @@
-# healthcheck
-GOOS=linux GOARCH=amd64 go build -o ./build/healthcheck healthcheck.go
-zip ./build/healthcheck.zip ./build/healthcheck
+################################################################
+# Build
+################################################################
+GOOS=linux GOARCH=amd64 go build -o build/healthcheck healthcheck.go
+GOOS=linux GOARCH=amd64 go build -o build/signup_anonymous_user signup_anonymous_user.go
+GOOS=linux GOARCH=amd64 go build -o build/info_anonymous_user info_anonymous_user.go
+GOOS=linux GOARCH=amd64 go build -o build/withdraw_anonymous_user withdraw_anonymous_user.go
 
-# signup_anonymous_user
-GOOS=linux GOARCH=amd64 go build -o ./build/signup_anonymous_user signup_anonymous_user.go
-zip ./build/signup_anonymous_user.zip ./build/signup_anonymous_user
+################################################################
+# Archive
+################################################################
+cd ./build
+zip healthcheck.zip healthcheck
+zip signup_anonymous_user.zip signup_anonymous_user
+zip info_anonymous_user.zip info_anonymous_user
+zip withdraw_anonymous_user.zip withdraw_anonymous_user
 
-# info_anonymous_user
-GOOS=linux GOARCH=amd64 go build -o ./build/info_anonymous_user info_anonymous_user.go
-zip ./build/info_anonymous_user.zip ./build/info_anonymous_user
-
-# withdraw_anonymous_user
-GOOS=linux GOARCH=amd64 go build -o ./build/withdraw_anonymous_user withdraw_anonymous_user.go
-zip ./build/withdraw_anonymous_user.zip ./build/withdraw_anonymous_user
-
-
-# remove not zip file
-cd build && ls | grep -v -E '.zip$' | xargs rm -r
+################################################################
+# Clear
+################################################################
+ls | grep -v -E '.zip$' | xargs rm -r
+cd ..
