@@ -11,7 +11,7 @@ import (
 )
 
 type Request struct {
-	UserId    string `json: "userId"`
+	UserId    string `json: "userID"`
 	UserToken string `json: "userToken"`
 }
 

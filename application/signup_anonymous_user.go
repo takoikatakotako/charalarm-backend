@@ -3,6 +3,7 @@ package main
 import (
 	"charalarm/error"
 	"charalarm/model"
+	"charalarm/entity"
 	"charalarm/repository"
 	"context"
 	"encoding/json"
@@ -12,7 +13,7 @@ import (
 )
 
 type Request struct {
-	UserId    string `json: "userId"`
+	UserID    string `json: "userID"`
 	UserToken string `json: "userToken"`
 }
 
@@ -35,16 +36,26 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 	}
 
 	// Get Parameters
-	userId := request.UserId
+	userID := request.UserID
 	userToken := request.UserToken
 
 	// Signup
 	model := model.SignupAnonymousUser{Repository: repository.DynamoDBRepository{}}
-	model.Signup(userId, userToken)
+	err := model.Signup(userID, userToken)
+	if err != nil {
+		fmt.Println(err)
+		response := entity.MessageResponse{Message: "登録失敗しました"}
+		jsonBytes, _ := json.Marshal(response)
+		return events.APIGatewayProxyResponse{
+			Body:       string(jsonBytes),
+			StatusCode: 500,
+		}, nil
+	}
 
-	// jsonBytes, _ := json.Marshal(res)
+	response := entity.MessageResponse{Message: "登録完了しました"}
+	jsonBytes, _ := json.Marshal(response)
 	return events.APIGatewayProxyResponse{
-		Body:       string("登録完了しました"),
+		Body:       string(jsonBytes),
 		StatusCode: 200,
 	}, nil
 }
