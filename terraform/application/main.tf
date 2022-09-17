@@ -1,6 +1,6 @@
 ##############################################################
 # S3
 ##############################################################
-resource "aws_s3_bucket" "application_bucket" {
-  bucket = var.bucket_name
-}
+# resource "aws_s3_bucket" "application_bucket" {
+#   bucket = var.bucket_name
+# }

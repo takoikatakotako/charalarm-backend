@@ -11,15 +11,15 @@ resource "aws_api_gateway_resource" "user_withdraw_anonymous_resource" {
 # Lambda
 ##################################################
 module "user_withdraw_anonymous_post_lambda_function" {
-  source           = "./lambda_function"
-  function_name    = "user-withdraw-anonymous-post-function"
-  role             = aws_iam_role.api_gateway_lambda_role.arn
-  handler          = "withdraw_anonymous_user"
-  filename         = "withdraw_anonymous_user"
-  archive_filename = "withdraw_anonymous_user_archive_file.zip"
-  execution_arn    = aws_api_gateway_rest_api.charalarm_rest_api.execution_arn
-  method           = "POST"
-  path             = "/user/withdraw/anonymous"
+  source        = "./lambda_function"
+  function_name = "user-withdraw-anonymous-post-function"
+  role          = aws_iam_role.api_gateway_lambda_role.arn
+  handler       = "withdraw_anonymous_user"
+  s3_bucket     = local.application_bucket_s3_url
+  s3_key        = "/${var.application_version}/withdraw_anonymous_user.zip"
+  execution_arn = aws_api_gateway_rest_api.charalarm_rest_api.execution_arn
+  method        = "POST"
+  path          = "/user/withdraw/anonymous"
 }
 
 ##################################################

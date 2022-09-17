@@ -8,10 +8,10 @@ module "dynamodb" {
   source = "./dynamodb"
 }
 
-module "application" {
-  source = "./application"
-  bucket_name = local.application_bucket_name
-}
+# module "application" {
+#   source = "./application"
+#   bucket_name = local.application_bucket_name
+# }
 
 # module "web_front" {
 #   source              = "./web_front"
@@ -21,8 +21,10 @@ module "application" {
 # }
 
 module "web_api" {
-  source              = "./web_api"
-  domain              = local.api_domain
-  route53_zone_id     = local.route53_zone_id
-  acm_certificate_arn = local.api_acm_certificate_arn
+  source                  = "./web_api"
+  domain                  = local.api_domain
+  route53_zone_id         = local.route53_zone_id
+  acm_certificate_arn     = local.api_acm_certificate_arn
+  application_version     = local.application_version  
+  application_bucket_name = local.application_bucket_name
 }

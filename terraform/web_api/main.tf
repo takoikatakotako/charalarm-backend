@@ -57,3 +57,11 @@ resource "aws_route53_record" "route53_record" {
     zone_id                = aws_api_gateway_domain_name.api_gateway_domain_name.regional_zone_id
   }
 }
+
+
+##############################################################
+# S3
+##############################################################
+resource "aws_s3_bucket" "application_bucket" {
+  bucket = var.application_bucket_name
+}

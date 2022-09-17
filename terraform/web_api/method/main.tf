@@ -6,11 +6,11 @@ resource "aws_api_gateway_method" "api_gateway_method" {
 }
 
 resource "aws_api_gateway_integration" "api_gateway_integration" {
-  rest_api_id             = var.rest_api_id
-  resource_id             = var.resource_id
-  http_method             = aws_api_gateway_method.api_gateway_method.http_method
-  type                    = "AWS_PROXY"
-  content_handling        = "CONVERT_TO_TEXT"
+  rest_api_id      = var.rest_api_id
+  resource_id      = var.resource_id
+  http_method      = aws_api_gateway_method.api_gateway_method.http_method
+  type             = "AWS_PROXY"
+  content_handling = "CONVERT_TO_TEXT"
   # 原因は不明だが、POSTにしないとGETにしたときにエラーになる
   integration_http_method = "POST"
   uri                     = var.lambda_uri

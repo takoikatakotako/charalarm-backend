@@ -10,11 +10,11 @@ variable "handler" {
   type = string
 }
 
-variable "filename" {
+variable "s3_bucket" {
   type = string
 }
 
-variable "archive_filename" {
+variable "s3_key" {
   type = string
 }
 

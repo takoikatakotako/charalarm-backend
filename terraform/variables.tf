@@ -27,5 +27,6 @@ locals {
   # front_acm_certificate_arn = local.config[terraform.workspace].front_acm_certificate_arn
   api_domain              = local.config[terraform.workspace].api_domain
   api_acm_certificate_arn = local.config[terraform.workspace].api_acm_certificate_arn
+  application_version     = "0.0.1"
   application_bucket_name = local.config[terraform.workspace].application_bucket_name
 }

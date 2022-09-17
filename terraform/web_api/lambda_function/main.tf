@@ -2,13 +2,13 @@
 # Lambda
 ##################################################
 resource "aws_lambda_function" "lambda_function" {
-  function_name    = var.function_name
-  role             = var.role
-  runtime          = "go1.x"
-  handler          = var.handler
-  timeout          = 15
-  filename         = data.archive_file.python_script_archive_file.output_path
-  source_code_hash = data.archive_file.python_script_archive_file.output_base64sha256
+  function_name = var.function_name
+  role          = var.role
+  runtime       = "go1.x"
+  handler       = var.handler
+  timeout       = 15
+  s3_bucket     = var.s3_bucket
+  s3_key        = var.s3_key
 
   architectures = [
     "x86_64"
@@ -19,12 +19,6 @@ resource "aws_lambda_function" "lambda_function" {
       DISCORD_WEBHOOK_URL = "xxx"
     }
   }
-}
-
-data "archive_file" "python_script_archive_file" {
-  type        = "zip"
-  source_file = "${path.root}/../application/build/${var.filename}"
-  output_path = "${path.root}/../application/build/${var.archive_filename}"
 }
 
 
