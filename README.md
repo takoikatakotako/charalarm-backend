@@ -81,3 +81,11 @@ https://99byleidca.execute-api.ap-northeast-1.amazonaws.com/production
 
 
 https://api.sandbox.swiswiswift.com/user/signup/anonymous
+
+
+
+aws lambda list-functions --profile sandbox | jq
+
+
+aws lambda update-function-code --function-name healthcheck-get-function --s3-bucket application.charalarm.sandbox.swiswiswift.com --s3-key 0.0.1/healthcheck.zip --profile sandbox
+
