@@ -6,7 +6,7 @@
 ヘルスチェックに使用するエンドポイントです。
 
 ```
-$ curl https://api.sandbox.swiswiswift.com/healthcheck
+$ curl https://api.sandbox.swiswiswift.com/healthcheck | jq
 ```
 
 ## POST: /user/signup/anonymous
@@ -16,7 +16,7 @@ $ curl https://api.sandbox.swiswiswift.com/healthcheck
 ```
 $ curl -X POST https://api.sandbox.swiswiswift.com/user/signup/anonymous \
     -H 'Content-Type: application/json' \
-    -d '{"userID":"20f0c1cd-9c2a-411a-878c-9bd0bb15dc35","userToken":"038a5e28-15ce-46b4-8f46-4934202faa85"}'
+    -d '{"userID":"20f0c1cd-9c2a-411a-878c-9bd0bb15dc35","userToken":"038a5e28-15ce-46b4-8f46-4934202faa85"}' | jq
 ```
 
 
@@ -27,7 +27,7 @@ $ curl -X POST https://api.sandbox.swiswiswift.com/user/signup/anonymous \
 ```
 $ curl -X POST https://api.sandbox.swiswiswift.com/user/withdraw/anonymous \
     -H 'Content-Type: application/json' \
-    -d '{"userID":"20f0c1cd-9c2a-411a-878c-9bd0bb15dc35","userToken":"038a5e28-15ce-46b4-8f46-4934202faa85"}'
+    -d '{"userID":"20f0c1cd-9c2a-411a-878c-9bd0bb15dc35","userToken":"038a5e28-15ce-46b4-8f46-4934202faa85"}' | jq
 ```
 
 ## POST: /user/info/anonymous

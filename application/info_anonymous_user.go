@@ -3,6 +3,7 @@ package main
 import (
 	"charalarm/model"
 	"charalarm/repository"
+	"charalarm/entity"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -10,14 +11,9 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-type Request struct {
-	UserId    string `json: "userId"`
-	UserToken string `json: "userToken"`
-}
-
 func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	body := name.Body
-	request := Request{}
+	request := entity.AnonymousUserRequest{}
 
 	fmt.Println("-------")
 	fmt.Println(ctx)
@@ -32,15 +28,24 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 		}, nil
 	}
 
-	userId := request.UserId
+	userID := request.UserID
 	userToken := request.UserToken
 
 	model := model.InfoAnonymousUser{Repository: repository.DynamoDBRepository{}}
-	model.GetAnonymousUser(userId, userToken)
+	anonymousUser, err := model.GetAnonymousUser(userID, userToken)
+	if err != nil {
+		fmt.Println(err)
+		response := entity.MessageResponse{Message: "ユーザー情報の取得に失敗しました"}
+		jsonBytes, _ := json.Marshal(response)
+		return events.APIGatewayProxyResponse{
+			Body:       string(jsonBytes),
+			StatusCode: 500,
+		}, nil
+	}
 
-	// jsonBytes, _ := json.Marshal(res)
+	jsonBytes, _ := json.Marshal(anonymousUser)
 	return events.APIGatewayProxyResponse{
-		Body:       string("退会完了しました"),
+		Body:       string(jsonBytes),
 		StatusCode: 200,
 	}, nil
 }

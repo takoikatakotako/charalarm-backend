@@ -3,6 +3,7 @@ package main
 import (
 	"charalarm/model"
 	"charalarm/repository"
+	"charalarm/entity"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -10,14 +11,9 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-type Request struct {
-	UserId    string `json: "userID"`
-	UserToken string `json: "userToken"`
-}
-
 func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	body := name.Body
-	request := Request{}
+	request := entity.AnonymousUserRequest{}
 
 	fmt.Println("-------")
 	fmt.Println(ctx)
@@ -32,11 +28,21 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 		}, nil
 	}
 
-	userId := request.UserId
+	userID := request.UserID
 	userToken := request.UserToken
 
+	// Withdraw
 	model := model.WithdrawAnonymousUser{Repository: repository.DynamoDBRepository{}}
-	model.Withdraw(userId, userToken)
+	err := model.Withdraw(userID, userToken)
+	if err != nil {
+		fmt.Println(err)
+		response := entity.MessageResponse{Message: "退会失敗しました"}
+		jsonBytes, _ := json.Marshal(response)
+		return events.APIGatewayProxyResponse{
+			Body:       string(jsonBytes),
+			StatusCode: 500,
+		}, nil
+	}
 
 	// jsonBytes, _ := json.Marshal(res)
 	return events.APIGatewayProxyResponse{

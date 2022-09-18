@@ -12,14 +12,9 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-type Request struct {
-	UserID    string `json: "userID"`
-	UserToken string `json: "userToken"`
-}
-
 func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	body := name.Body
-	request := Request{}
+	request := entity.AnonymousUserRequest{}
 
 	fmt.Println("-------")
 	fmt.Println(ctx)
