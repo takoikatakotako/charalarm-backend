@@ -7,20 +7,23 @@ resource "aws_lambda_function" "lambda_function" {
   runtime       = "go1.x"
   handler       = var.handler
   timeout       = 15
-  s3_bucket     = var.s3_bucket
-  s3_key        = var.s3_key
 
+  # Lambda生成に必要なのでダミーファイルを渡している。デプロイはCLIから行う。
+  filename         = "${path.module}/source/dummy.zip"
+  source_code_hash = sha256(filebase64("${path.module}/source/dummy.zip"))
+  publish       = false
   architectures = [
     "x86_64"
   ]
-
-  environment {
-    variables = {
-      DISCORD_WEBHOOK_URL = "xxx"
-    }
+  lifecycle {
+    ignore_changes = [
+      filename,
+      source_code_hash,
+      s3_bucket,
+      s3_key
+    ]
   }
 }
-
 
 ##################################################
 # Log Group

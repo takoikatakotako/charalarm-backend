@@ -41,3 +41,4 @@ jobs:
           aws lambda update-function-code --function-name healthcheck-get-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/healthcheck.zip
           aws lambda update-function-code --function-name user-signup-anonymous-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/signup_anonymous_user.zip
           aws lambda update-function-code --function-name user-withdraw-anonymous-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/withdraw_anonymous_user.zip
+          aws lambda update-function-code --function-name user-info-anonymous-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/info_anonymous_user.zip
