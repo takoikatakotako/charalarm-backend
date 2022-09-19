@@ -1,9 +1,9 @@
 package main
 
 import (
+	"charalarm/entity"
 	"charalarm/model"
 	"charalarm/repository"
-	"charalarm/entity"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -24,7 +24,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	userID := request.UserID
 	userToken := request.UserToken
-	alarm   := request.Alarm
+	alarm := request.Alarm
 
 	model := model.AlarmAdd{Repository: repository.DynamoDBRepository{}}
 	err := model.AddAlarm(userID, userToken, alarm)

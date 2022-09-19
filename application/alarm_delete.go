@@ -1,9 +1,9 @@
 package main
 
 import (
+	"charalarm/entity"
 	"charalarm/model"
 	"charalarm/repository"
-	"charalarm/entity"
 	"context"
 	"encoding/json"
 	"fmt"

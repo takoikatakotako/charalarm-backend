@@ -11,7 +11,7 @@ type AlarmDelete struct {
 	Repository repository.DynamoDBRepository
 }
 
-func (self *AlarmDelete) DeleteAlarm(userID string, userToken string, alarmID string) (error) {
+func (self *AlarmDelete) DeleteAlarm(userID string, userToken string, alarmID string) error {
 	// ユーザーを取得
 	anonymousUser, err := self.Repository.GetAnonymousUser(userID)
 	if err != nil {

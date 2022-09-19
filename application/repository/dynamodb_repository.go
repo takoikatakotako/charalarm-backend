@@ -177,3 +177,98 @@ func (self DynamoDBRepository) DeleteAnonymousUser(userID string) error {
 
 	return nil
 }
+
+////////////////////////////////////
+// Alarm
+////////////////////////////////////
+func (self DynamoDBRepository) GetAlarmList(userID string) ([]entity.Alarm, error) {
+	var err error
+	var ctx = context.Background()
+
+	client, err := self.createDynamoDBClient()
+	if err != nil {
+		return entity.AnonymousUser{}, err
+	}
+
+	// 既存レコードの取得
+	getInput := &dynamodb.GetItemInput{
+		TableName: aws.String(table.ALARM_TABLE),
+		Key: map[string]types.AttributeValue{
+			"alarmID": &types.AttributeValueMemberS{
+				Value: userID,
+			},
+		},
+	}
+
+	// 取得
+	output, err := client.GetItem(ctx, getInput)
+	if err != nil {
+		return entity.AnonymousUser{}, err
+	}
+	gotUser := entity.AnonymousUser{}
+
+	if len(output.Item) == 0 {
+		return entity.AnonymousUser{}, errors.New(charalarm_error.INVAlID_VALUE)
+	}
+
+	err = attributevalue.UnmarshalMap(output.Item, &gotUser)
+	if err != nil {
+		return entity.AnonymousUser{}, err
+	}
+
+	return gotUser, nil
+}
+
+func (self DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
+	var err error
+	var ctx = context.Background()
+
+	client, err := self.createDynamoDBClient()
+	if err != nil {
+		fmt.Printf("err, %v", err)
+		return err
+	}
+
+	// 新規レコードの追加
+	av, err := attributevalue.MarshalMap(anonymousUser)
+	if err != nil {
+		fmt.Printf("dynamodb marshal: %s\n", err.Error())
+		return err
+	}
+	_, err = client.PutItem(ctx, &dynamodb.PutItemInput{
+		TableName: aws.String(table.USER_TABLE),
+		Item:      av,
+	})
+	if err != nil {
+		fmt.Printf("put item: %s\n", err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func (self DynamoDBRepository) DeleteAlarm(alarmID string) error {
+	var err error
+	var ctx = context.Background()
+
+	client, err := self.createDynamoDBClient()
+	if err != nil {
+		return err
+	}
+
+	deleteInput := &dynamodb.DeleteItemInput{
+		TableName: aws.String(table.USER_TABLE),
+		Key: map[string]types.AttributeValue{
+			"userID": &types.AttributeValueMemberS{
+				Value: userID,
+			},
+		},
+	}
+
+	_, err = client.DeleteItem(ctx, deleteInput)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

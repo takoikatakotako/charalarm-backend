@@ -11,7 +11,7 @@ type AlarmAdd struct {
 	Repository repository.DynamoDBRepository
 }
 
-func (self *AlarmAdd) AddAlarm(userID string, userToken string, alarm entity.Alarm) (error) {
+func (self *AlarmAdd) AddAlarm(userID string, userToken string, alarm entity.Alarm) error {
 	// ユーザーを取得
 	anonymousUser, err := self.Repository.GetAnonymousUser(userID)
 	if err != nil {
