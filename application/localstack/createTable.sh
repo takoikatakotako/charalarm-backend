@@ -9,8 +9,8 @@ awslocal dynamodb create-table \
     --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1
 
 # alarm-table
-aws dynamodb create-table \
-    --table-name alarm-table8 \
+awslocal dynamodb create-table \
+    --table-name alarm-table \
     --attribute-definitions AttributeName=alarmID,AttributeType=S \
                             AttributeName=userID,AttributeType=S \
                             AttributeName=alarmTime,AttributeType=S  \
