@@ -25,5 +25,6 @@ func (self *AlarmDelete) DeleteAlarm(userID string, userToken string, alarmID st
 		return errors.New(charalarm_error.AUTHENTICATION_FAILURE)
 	}
 
-	return nil
+	// アラームを削除する
+	return repository.DeleteAlarm()
 }

@@ -25,7 +25,12 @@ func (self *AlarmAdd) AddAlarm(userID string, userToken string, alarm entity.Ala
 		return errors.New(charalarm_error.AUTHENTICATION_FAILURE)
 	}
 
-	// アラームを追加する
+	// アラームのバリデーションを行う
 
-	return nil
+	// 既に登録されたアラームの件数を取得
+
+	// 件数が多い場合はなんとかする
+
+	// アラームを追加する
+	return repository.InsertAlarm(alarm)
 }

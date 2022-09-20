@@ -187,7 +187,7 @@ func (self DynamoDBRepository) GetAlarmList(userID string) ([]entity.Alarm, erro
 
 	client, err := self.createDynamoDBClient()
 	if err != nil {
-		return entity.AnonymousUser{}, err
+		return []entity.Alarm{}, err
 	}
 
 	// 既存レコードの取得
@@ -203,17 +203,17 @@ func (self DynamoDBRepository) GetAlarmList(userID string) ([]entity.Alarm, erro
 	// 取得
 	output, err := client.GetItem(ctx, getInput)
 	if err != nil {
-		return entity.AnonymousUser{}, err
+		return []entity.Alarm{}, err
 	}
-	gotUser := entity.AnonymousUser{}
+	gotUser := []entity.Alarm{}
 
 	if len(output.Item) == 0 {
-		return entity.AnonymousUser{}, errors.New(charalarm_error.INVAlID_VALUE)
+		return []entity.Alarm{}, errors.New(charalarm_error.INVAlID_VALUE)
 	}
 
 	err = attributevalue.UnmarshalMap(output.Item, &gotUser)
 	if err != nil {
-		return entity.AnonymousUser{}, err
+		return []entity.Alarm{}, err
 	}
 
 	return gotUser, nil
@@ -229,14 +229,22 @@ func (self DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
 		return err
 	}
 
+	// Alarm のバリデーション
+
 	// 新規レコードの追加
-	av, err := attributevalue.MarshalMap(anonymousUser)
+	av, err := attributevalue.MarshalMap(alarm)
+
+
+	fmt.Printf("av, %v", av)
+
+
+
 	if err != nil {
 		fmt.Printf("dynamodb marshal: %s\n", err.Error())
 		return err
 	}
 	_, err = client.PutItem(ctx, &dynamodb.PutItemInput{
-		TableName: aws.String(table.USER_TABLE),
+		TableName: aws.String(table.ALARM_TABLE),
 		Item:      av,
 	})
 	if err != nil {
@@ -247,28 +255,28 @@ func (self DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
 	return nil
 }
 
-func (self DynamoDBRepository) DeleteAlarm(alarmID string) error {
-	var err error
-	var ctx = context.Background()
+// func (self DynamoDBRepository) DeleteAlarm(alarmID string) error {
+// 	var err error
+// 	var ctx = context.Background()
 
-	client, err := self.createDynamoDBClient()
-	if err != nil {
-		return err
-	}
+// 	client, err := self.createDynamoDBClient()
+// 	if err != nil {
+// 		return err
+// 	}
 
-	deleteInput := &dynamodb.DeleteItemInput{
-		TableName: aws.String(table.USER_TABLE),
-		Key: map[string]types.AttributeValue{
-			"userID": &types.AttributeValueMemberS{
-				Value: userID,
-			},
-		},
-	}
+// 	deleteInput := &dynamodb.DeleteItemInput{
+// 		TableName: aws.String(table.USER_TABLE),
+// 		Key: map[string]types.AttributeValue{
+// 			"userID": &types.AttributeValueMemberS{
+// 				Value: userID,
+// 			},
+// 		},
+// 	}
 
-	_, err = client.DeleteItem(ctx, deleteInput)
-	if err != nil {
-		return err
-	}
+// 	_, err = client.DeleteItem(ctx, deleteInput)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
