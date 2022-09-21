@@ -35,7 +35,28 @@ $ aws dynamodb describe-table \
     --endpoint-url=http://localhost:4566 | jq
 ```
 
-## テーブルのすべてを表示
+### クエリ
+
+```
+$ aws dynamodb query \
+    --table-name alarm-table \
+    --index-name user-id-index \
+    --key-condition-expression "userID = :userID" \
+    --expression-attribute-values '{ ":userID": { "S": "b87e945d-8912-4276-99f7-e636d7660093" } }' \
+    --endpoint-url=http://localhost:4566
+```
+
+```
+$ aws dynamodb query \
+    --table-name alarm-table \
+    --index-name alarm-time-index \
+    --key-condition-expression "alarmTime = :alarmTime" \
+    --expression-attribute-values '{ ":alarmTime": { "S": "XXXXX" } }' \
+    --endpoint-url=http://localhost:4566
+```
+
+
+## スキャン
 
 ```
 $ aws dynamodb scan \
@@ -49,6 +70,7 @@ $ aws dynamodb scan \
     --endpoint-url=http://localhost:4566 | jq
 ```
 
+
 ### テーブルの削除
 
 ```
@@ -58,14 +80,5 @@ $ aws dynamodb delete-table \
 ```
 
 
-### クエリ
 
-```
-$ aws dynamodb query \
-    --table-name alarm-table \
-    --index-name user-id-index \
-    --key-condition-expression "userID = :userID" \
-    --expression-attribute-values '{ ":userID": { "S": "XXXXX" } }' \
-    --endpoint-url=http://localhost:4566
-```
 

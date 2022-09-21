@@ -190,33 +190,31 @@ func (self DynamoDBRepository) GetAlarmList(userID string) ([]entity.Alarm, erro
 		return []entity.Alarm{}, err
 	}
 
-	// 既存レコードの取得
-	getInput := &dynamodb.GetItemInput{
-		TableName: aws.String(table.ALARM_TABLE),
-		Key: map[string]types.AttributeValue{
-			"alarmID": &types.AttributeValueMemberS{
-				Value: userID,
-			},
+	// クエリ実行
+	output, err := client.Query(ctx, &dynamodb.QueryInput{
+		TableName:              aws.String("alarm-table"),
+		IndexName:              aws.String("user-id-index"),
+		KeyConditionExpression: aws.String("userID = :userID"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":userID": &types.AttributeValueMemberS{Value: userID},
 		},
-	}
-
-	// 取得
-	output, err := client.GetItem(ctx, getInput)
-	if err != nil {
-		return []entity.Alarm{}, err
-	}
-	gotUser := []entity.Alarm{}
-
-	if len(output.Item) == 0 {
-		return []entity.Alarm{}, errors.New(charalarm_error.INVAlID_VALUE)
-	}
-
-	err = attributevalue.UnmarshalMap(output.Item, &gotUser)
+	})
 	if err != nil {
 		return []entity.Alarm{}, err
 	}
 
-	return gotUser, nil
+	// 取得結果を struct の配列に変換
+	alarmList := []entity.Alarm{}
+	for _, item := range output.Items {
+		alarm := entity.Alarm{}
+		err = attributevalue.UnmarshalMap(item, &alarm)
+		if err != nil {
+			return []entity.Alarm{}, err
+		}
+		alarmList = append(alarmList, alarm)
+	}
+
+	return alarmList, nil
 }
 
 func (self DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
@@ -233,12 +231,6 @@ func (self DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
 
 	// 新規レコードの追加
 	av, err := attributevalue.MarshalMap(alarm)
-
-
-	fmt.Printf("av, %v", av)
-
-
-
 	if err != nil {
 		fmt.Printf("dynamodb marshal: %s\n", err.Error())
 		return err

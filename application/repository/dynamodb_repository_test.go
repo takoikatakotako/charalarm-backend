@@ -152,13 +152,13 @@ func TestInsertAlarmAndGet(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 
-	// // Get
-	// getUser, err := repository.GetAnonymousUser(userID)
-	// if err != nil {
-	// 	t.Errorf("unexpected error: %v", err)
-	// }
+	// Get
+	alarmList, err := repository.GetAlarmList(userID)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
 
-	// // Assert
-	// assert.Equal(t, userID, getUser.UserID)
-	// assert.Equal(t, userToken, getUser.UserToken)
+	// Assert
+	assert.Equal(t, len(alarmList), 1)
+	assert.Equal(t, alarmList[0], insertAlarm)
 }
