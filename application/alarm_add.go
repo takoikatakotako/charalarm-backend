@@ -11,15 +11,9 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	body := name.Body
-	request := entity.AnonymousUserRequest{}
-
-	fmt.Println("-------")
-	fmt.Println(ctx)
-	fmt.Println(name)
-	fmt.Println(body)
-	fmt.Println("-------")
+func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	body := event.Body
+	request := entity.AnonymousAddAlarmRequest{}
 
 	if err := json.Unmarshal([]byte(body), &request); err != nil {
 		return events.APIGatewayProxyResponse{
@@ -30,13 +24,13 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 
 	userID := request.UserID
 	userToken := request.UserToken
+	alarm := request.Alarm
 
-	// Withdraw
-	model := model.WithdrawAnonymousUser{Repository: repository.DynamoDBRepository{}}
-	err := model.Withdraw(userID, userToken)
+	model := model.AlarmAdd{Repository: repository.DynamoDBRepository{}}
+	err := model.AddAlarm(userID, userToken, alarm)
 	if err != nil {
 		fmt.Println(err)
-		response := entity.MessageResponse{Message: "退会失敗しました"}
+		response := entity.MessageResponse{Message: "アラームの追加に失敗しました。"}
 		jsonBytes, _ := json.Marshal(response)
 		return events.APIGatewayProxyResponse{
 			Body:       string(jsonBytes),
@@ -44,9 +38,10 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 		}, nil
 	}
 
-	// jsonBytes, _ := json.Marshal(res)
+	response := entity.MessageResponse{Message: "アラーム追加完了!"}
+	jsonBytes, _ := json.Marshal(response)
 	return events.APIGatewayProxyResponse{
-		Body:       string("退会完了しました"),
+		Body:       string(jsonBytes),
 		StatusCode: 200,
 	}, nil
 }

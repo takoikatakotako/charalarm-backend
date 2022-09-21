@@ -7,7 +7,10 @@ import (
 	"testing"
 )
 
-func TestInsertAndGet(t *testing.T) {
+////////////////////////////////////
+// AnonymousUser
+////////////////////////////////////
+func TestInsertUserAndGet(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 
 	userID := uuid.New().String()
@@ -31,7 +34,7 @@ func TestInsertAndGet(t *testing.T) {
 	assert.Equal(t, userToken, getUser.UserToken)
 }
 
-func TestInsertAndExist(t *testing.T) {
+func TestInsertUserAndExist(t *testing.T) {
 	var err error
 
 	repository := DynamoDBRepository{IsLocal: true}
@@ -65,7 +68,7 @@ func TestInsertAndExist(t *testing.T) {
 	assert.Equal(t, secondIsExist, true)
 }
 
-func TestInsertAndDelete(t *testing.T) {
+func TestInsertUserAndDelete(t *testing.T) {
 	var err error
 
 	repository := DynamoDBRepository{IsLocal: true}
@@ -103,4 +106,59 @@ func TestInsertAndDelete(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, secondIsExist, false)
+}
+
+////////////////////////////////////
+// Alarm
+////////////////////////////////////
+func TestInsertAlarmAndGet(t *testing.T) {
+	repository := DynamoDBRepository{IsLocal: true}
+
+	alarmID := uuid.New().String()
+	userID := uuid.New().String()
+	alarmType := "VOIP_NOTIFICATION"
+	alarmEnable := true
+	alarmName := "My Alarm"
+	alarmHour := 8
+	alarmMinute := 15
+	sunday := true
+	monday := false
+	tuesday := true
+	wednesday := false
+	thursday := true
+	friday := false
+	saturday := true
+
+	insertAlarm := entity.Alarm{
+		AlarmID:     alarmID,
+		UserID:      userID,
+		AlarmType:   alarmType,
+		AlarmEnable: alarmEnable,
+		AlarmName:   alarmName,
+		AlarmHour:   alarmHour,
+		AlarmMinute: alarmMinute,
+		Sunday:      sunday,
+		Monday:      monday,
+		Tuesday:     tuesday,
+		Wednesday:   wednesday,
+		Thursday:    thursday,
+		Friday:      friday,
+		Saturday:    saturday,
+	}
+
+	// Insert
+	err := repository.InsertAlarm(insertAlarm)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Get
+	alarmList, err := repository.GetAlarmList(userID)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Assert
+	assert.Equal(t, len(alarmList), 1)
+	assert.Equal(t, alarmList[0], insertAlarm)
 }

@@ -11,7 +11,7 @@ resource "aws_lambda_function" "lambda_function" {
   # Lambda生成に必要なのでダミーファイルを渡している。デプロイはCLIから行う。
   filename         = "${path.module}/source/dummy.zip"
   source_code_hash = sha256(filebase64("${path.module}/source/dummy.zip"))
-  publish       = false
+  publish          = false
   architectures = [
     "x86_64"
   ]

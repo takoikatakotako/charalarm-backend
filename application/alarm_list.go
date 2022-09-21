@@ -15,12 +15,6 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 	body := name.Body
 	request := entity.AnonymousUserRequest{}
 
-	fmt.Println("-------")
-	fmt.Println(ctx)
-	fmt.Println(name)
-	fmt.Println(body)
-	fmt.Println("-------")
-
 	if err := json.Unmarshal([]byte(body), &request); err != nil {
 		return events.APIGatewayProxyResponse{
 			Body:       string("デコードに失敗しました"),
@@ -31,12 +25,11 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 	userID := request.UserID
 	userToken := request.UserToken
 
-	// Withdraw
-	model := model.WithdrawAnonymousUser{Repository: repository.DynamoDBRepository{}}
-	err := model.Withdraw(userID, userToken)
+	model := model.AlarmList{Repository: repository.DynamoDBRepository{}}
+	alarmList, err := model.GetAlarmList(userID, userToken)
 	if err != nil {
 		fmt.Println(err)
-		response := entity.MessageResponse{Message: "退会失敗しました"}
+		response := entity.MessageResponse{Message: "アラームの取得に失敗しました"}
 		jsonBytes, _ := json.Marshal(response)
 		return events.APIGatewayProxyResponse{
 			Body:       string(jsonBytes),
@@ -44,9 +37,9 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 		}, nil
 	}
 
-	// jsonBytes, _ := json.Marshal(res)
+	jsonBytes, _ := json.Marshal(alarmList)
 	return events.APIGatewayProxyResponse{
-		Body:       string("退会完了しました"),
+		Body:       string(jsonBytes),
 		StatusCode: 200,
 	}, nil
 }

@@ -25,6 +25,6 @@ module "web_api" {
   domain                  = local.api_domain
   route53_zone_id         = local.route53_zone_id
   acm_certificate_arn     = local.api_acm_certificate_arn
-  application_version     = local.application_version  
+  application_version     = local.application_version
   application_bucket_name = local.application_bucket_name
 }
