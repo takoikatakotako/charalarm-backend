@@ -247,28 +247,24 @@ func (self DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
 	return nil
 }
 
-// func (self DynamoDBRepository) DeleteAlarm(alarmID string) error {
-// 	var err error
-// 	var ctx = context.Background()
+func (self DynamoDBRepository) DeleteAlarm(alarmID string) error {
+	var err error
+	var ctx = context.Background()
 
-// 	client, err := self.createDynamoDBClient()
-// 	if err != nil {
-// 		return err
-// 	}
+	client, err := self.createDynamoDBClient()
+	if err != nil {
+		return err
+	}
 
-// 	deleteInput := &dynamodb.DeleteItemInput{
-// 		TableName: aws.String(table.USER_TABLE),
-// 		Key: map[string]types.AttributeValue{
-// 			"userID": &types.AttributeValueMemberS{
-// 				Value: userID,
-// 			},
-// 		},
-// 	}
+    _, err = client.DeleteItem(ctx, &dynamodb.DeleteItemInput{
+        TableName: aws.String(table.ALARM_TABLE),
+        Key: map[string]types.AttributeValue{
+            "alarmID": &types.AttributeValueMemberS{Value: alarmID},
+        },
+    })
+	if err != nil {
+		return err
+	}
 
-// 	_, err = client.DeleteItem(ctx, deleteInput)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-// }
+	return nil
+}

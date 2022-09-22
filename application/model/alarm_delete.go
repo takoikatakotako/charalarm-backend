@@ -26,5 +26,5 @@ func (self *AlarmDelete) DeleteAlarm(userID string, userToken string, alarmID st
 	}
 
 	// アラームを削除する
-	return repository.DeleteAlarm()
+	return self.Repository.DeleteAlarm(alarmID)
 }

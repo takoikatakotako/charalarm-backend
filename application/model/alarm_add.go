@@ -32,5 +32,5 @@ func (self *AlarmAdd) AddAlarm(userID string, userToken string, alarm entity.Ala
 	// 件数が多い場合はなんとかする
 
 	// アラームを追加する
-	return repository.InsertAlarm(alarm)
+	return self.Repository.InsertAlarm(alarm)
 }

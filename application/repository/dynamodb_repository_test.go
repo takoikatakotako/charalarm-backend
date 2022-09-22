@@ -114,37 +114,8 @@ func TestInsertUserAndDelete(t *testing.T) {
 func TestInsertAlarmAndGet(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 
-	alarmID := uuid.New().String()
-	userID := uuid.New().String()
-	alarmType := "VOIP_NOTIFICATION"
-	alarmEnable := true
-	alarmName := "My Alarm"
-	alarmHour := 8
-	alarmMinute := 15
-	sunday := true
-	monday := false
-	tuesday := true
-	wednesday := false
-	thursday := true
-	friday := false
-	saturday := true
-
-	insertAlarm := entity.Alarm{
-		AlarmID:     alarmID,
-		UserID:      userID,
-		AlarmType:   alarmType,
-		AlarmEnable: alarmEnable,
-		AlarmName:   alarmName,
-		AlarmHour:   alarmHour,
-		AlarmMinute: alarmMinute,
-		Sunday:      sunday,
-		Monday:      monday,
-		Tuesday:     tuesday,
-		Wednesday:   wednesday,
-		Thursday:    thursday,
-		Friday:      friday,
-		Saturday:    saturday,
-	}
+	insertAlarm := createAlarm()
+	userID := insertAlarm.UserID
 
 	// Insert
 	err := repository.InsertAlarm(insertAlarm)
@@ -161,4 +132,41 @@ func TestInsertAlarmAndGet(t *testing.T) {
 	// Assert
 	assert.Equal(t, len(alarmList), 1)
 	assert.Equal(t, alarmList[0], insertAlarm)
+}
+
+
+
+
+func createAlarm() entity.Alarm {
+	alarmID := uuid.New().String()
+	userID := uuid.New().String()
+	alarmType := "VOIP_NOTIFICATION"
+	alarmEnable := true
+	alarmName := "My Alarm"
+	alarmHour := 8
+	alarmMinute := 15
+	sunday := true
+	monday := false
+	tuesday := true
+	wednesday := false
+	thursday := true
+	friday := false
+	saturday := true
+
+	return entity.Alarm{
+		AlarmID:     alarmID,
+		UserID:      userID,
+		AlarmType:   alarmType,
+		AlarmEnable: alarmEnable,
+		AlarmName:   alarmName,
+		AlarmHour:   alarmHour,
+		AlarmMinute: alarmMinute,
+		Sunday:      sunday,
+		Monday:      monday,
+		Tuesday:     tuesday,
+		Wednesday:   wednesday,
+		Thursday:    thursday,
+		Friday:      friday,
+		Saturday:    saturday,
+	}
 }
