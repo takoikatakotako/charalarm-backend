@@ -1,11 +1,13 @@
 package main
 
 import (
-	"charalarm/entity"
 	"context"
 	"encoding/json"
+	"net/http"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/takoikatakotako/charalarm-backend/entity"
 )
 
 func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -14,7 +16,7 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
-		StatusCode: 200,
+		StatusCode: http.StatusOK,
 	}, nil
 }
 

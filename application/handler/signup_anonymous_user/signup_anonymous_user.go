@@ -1,14 +1,17 @@
 package main
 
 import (
-	"charalarm/entity"
-	"charalarm/model"
-	"charalarm/repository"
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/takoikatakotako/charalarm-backend/entity"
+	charalarm_error "github.com/takoikatakotako/charalarm-backend/error"
+	repository "github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/service"
 )
 
 func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -21,32 +24,36 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 	fmt.Println(body)
 	fmt.Println("-------")
 
+	// Decode Body
 	if err := json.Unmarshal([]byte(body), &request); err != nil {
 		return events.APIGatewayProxyResponse{
-			Body:       string("デコードに失敗しました"),
+			Body:       string(charalarm_error.FAILED_TO_DECODE_REQUEST_BODY),
 			StatusCode: 500,
 		}, nil
 	}
 
+	// Get Parameters
 	userID := request.UserID
 	userToken := request.UserToken
 
-	model := model.InfoAnonymousUser{Repository: repository.DynamoDBRepository{}}
-	anonymousUser, err := model.GetAnonymousUser(userID, userToken)
-	if err != nil {
+	// Signup
+	s := service.AnonymousUserService{Repository: repository.DynamoDBRepository{}}
+
+	if err := s.Signup(userID, userToken); err != nil {
 		fmt.Println(err)
-		response := entity.MessageResponse{Message: "ユーザー情報の取得に失敗しました"}
+		response := entity.MessageResponse{Message: "登録失敗しました"}
 		jsonBytes, _ := json.Marshal(response)
 		return events.APIGatewayProxyResponse{
 			Body:       string(jsonBytes),
-			StatusCode: 500,
+			StatusCode: http.StatusInternalServerError,
 		}, nil
 	}
 
-	jsonBytes, _ := json.Marshal(anonymousUser)
+	response := entity.MessageResponse{Message: "登録完了しました"}
+	jsonBytes, _ := json.Marshal(response)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
-		StatusCode: 200,
+		StatusCode: http.StatusOK,
 	}, nil
 }
 

@@ -1,14 +1,16 @@
 package main
 
 import (
-	"charalarm/entity"
-	"charalarm/model"
-	"charalarm/repository"
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/takoikatakotako/charalarm-backend/entity"
+	repository "github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/service"
 )
 
 func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -17,8 +19,8 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	if err := json.Unmarshal([]byte(body), &request); err != nil {
 		return events.APIGatewayProxyResponse{
-			Body:       string("デコードに失敗しました"),
-			StatusCode: 500,
+			Body:       "デコードに失敗しました",
+			StatusCode: http.StatusInternalServerError,
 		}, nil
 	}
 
@@ -26,15 +28,15 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	userToken := request.UserToken
 	alarm := request.Alarm
 
-	model := model.AlarmAdd{Repository: repository.DynamoDBRepository{}}
-	err := model.AddAlarm(userID, userToken, alarm)
-	if err != nil {
+	s := service.AlarmService{Repository: repository.DynamoDBRepository{}}
+
+	if err := s.AddAlarm(userID, userToken, alarm); err != nil {
 		fmt.Println(err)
 		response := entity.MessageResponse{Message: "アラームの追加に失敗しました。"}
 		jsonBytes, _ := json.Marshal(response)
 		return events.APIGatewayProxyResponse{
 			Body:       string(jsonBytes),
-			StatusCode: 500,
+			StatusCode: http.StatusInternalServerError,
 		}, nil
 	}
 
@@ -42,7 +44,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	jsonBytes, _ := json.Marshal(response)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
-		StatusCode: 200,
+		StatusCode: http.StatusOK,
 	}, nil
 }
 

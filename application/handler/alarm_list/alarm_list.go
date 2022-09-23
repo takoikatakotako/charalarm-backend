@@ -1,48 +1,48 @@
 package main
 
 import (
-	"charalarm/entity"
-	"charalarm/model"
-	"charalarm/repository"
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/takoikatakotako/charalarm-backend/entity"
+	repository "github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/service"
 )
 
 func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	body := name.Body
-	request := entity.AnonymousDeleteAlarmRequest{}
+	request := entity.AnonymousUserRequest{}
 
 	if err := json.Unmarshal([]byte(body), &request); err != nil {
 		return events.APIGatewayProxyResponse{
-			Body:       string("デコードに失敗しました"),
-			StatusCode: 500,
+			Body:       "デコードに失敗しました",
+			StatusCode: http.StatusInternalServerError,
 		}, nil
 	}
 
 	userID := request.UserID
 	userToken := request.UserToken
-	alarmID := request.AlarmID
 
-	model := model.AlarmDelete{Repository: repository.DynamoDBRepository{}}
-	err := model.DeleteAlarm(userID, userToken, alarmID)
+	s := service.AlarmService{Repository: repository.DynamoDBRepository{}}
+	alarmList, err := s.GetAlarmList(userID, userToken)
 	if err != nil {
 		fmt.Println(err)
-		response := entity.MessageResponse{Message: "アラームの削除に失敗しました。"}
+		response := entity.MessageResponse{Message: "アラームの取得に失敗しました"}
 		jsonBytes, _ := json.Marshal(response)
 		return events.APIGatewayProxyResponse{
 			Body:       string(jsonBytes),
-			StatusCode: 500,
+			StatusCode: http.StatusInternalServerError,
 		}, nil
 	}
 
-	response := entity.MessageResponse{Message: "アラーム削除完了!"}
-	jsonBytes, _ := json.Marshal(response)
+	jsonBytes, _ := json.Marshal(alarmList)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
-		StatusCode: 200,
+		StatusCode: http.StatusOK,
 	}, nil
 }
 
