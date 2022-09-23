@@ -2,9 +2,8 @@ name: DevelopTest
 
 on:
   workflow_dispatch:
-  push:
+  pull_request:
     branches: [ develop ]
-
 env:
   AWS_ACCESS_KEY_ID: dummy
   AWS_SECRET_ACCESS_KEY: dummy

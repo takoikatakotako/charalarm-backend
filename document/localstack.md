@@ -35,6 +35,17 @@ $ aws dynamodb describe-table \
     --endpoint-url=http://localhost:4566 | jq
 ```
 
+
+### Itemを取得
+
+```
+$ aws dynamodb get-item \
+    --table-name alarm-table \
+    --key '{"alarmID": {"S": "fd5fda81-194a-488e-80f1-52b02b0d6cc9"}}' \
+    --endpoint-url=http://localhost:4566 | jq
+```
+
+
 ### クエリ
 
 ```
