@@ -263,7 +263,7 @@ func TestInsertAndDeleteAlarmList(t *testing.T) {
 
 
 	// Get
-	alarmList, err := repository.GetAlarmList(userID)
+	alarmList, err = repository.GetAlarmList(userID)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}

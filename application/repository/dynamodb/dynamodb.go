@@ -284,7 +284,7 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 
 	// クエリ実行
 	output, err := client.Query(ctx, &dynamodb.QueryInput{
-		TableName:              aws.String("alarm-table"),
+		TableName:              aws.String(table.ALARM_TABLE),
 		IndexName:              aws.String("user-id-index"),
 		KeyConditionExpression: aws.String("userID = :userID"),
 		ExpressionAttributeValues: map[string]types.AttributeValue{
@@ -307,30 +307,17 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 		}
 		alarmID := alarm.AlarmID
 
-
-
-		fmt.Println("************")
-
-
 		fmt.Println(alarmID)
 		xxx := types.WriteRequest{
 			DeleteRequest: &types.DeleteRequest{
 				Key: map[string]types.AttributeValue{
-					"alarmID": &types.AttributeValueMemberS{Value: "123"},
+					"alarmID": &types.AttributeValueMemberS{Value: alarmID},
 				},
 			},
 		}
 
-
 		requestItems = append(requestItems, xxx)
-
-
-		fmt.Println(xxx)
-		fmt.Println("************")
-
 	}
-
-
 
     _, err = client.BatchWriteItem(ctx, &dynamodb.BatchWriteItemInput{
         RequestItems: map[string][]types.WriteRequest{
@@ -338,7 +325,7 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
         },
     })
     if err != nil {
-        panic(err)
+        return err
     }
 
 	return nil
