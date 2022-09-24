@@ -5,16 +5,17 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/takoikatakotako/charalarm-backend/entity"
-	charalarm_error "github.com/takoikatakotako/charalarm-backend/error"
-	"github.com/takoikatakotako/charalarm-backend/table"
-	"github.com/takoikatakotako/charalarm-backend/validator"
+	"encoding/json"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/takoikatakotako/charalarm-backend/entity"
+	charalarm_error "github.com/takoikatakotako/charalarm-backend/error"
+	"github.com/takoikatakotako/charalarm-backend/table"
+	"github.com/takoikatakotako/charalarm-backend/validator"
 )
 
 const (
@@ -251,7 +252,7 @@ func (d *DynamoDBRepository) DeleteAlarm(alarmID string) error {
 		return err
 	}
 
-	_, err = client.DeleteItem(ctx, &dynamodb.DeleteItemInput{
+	xx, err := client.DeleteItem(ctx, &dynamodb.DeleteItemInput{
 		TableName: aws.String(table.ALARM_TABLE),
 		Key: map[string]types.AttributeValue{
 			"alarmID": &types.AttributeValueMemberS{Value: alarmID},
@@ -260,6 +261,12 @@ func (d *DynamoDBRepository) DeleteAlarm(alarmID string) error {
 	if err != nil {
 		return err
 	}
+
+	fmt.Println("------")
+	fmt.Println(alarmID)
+	bs, _ := json.Marshal(xx)
+	fmt.Println(string(bs))
+	fmt.Println("------")
 
 	return nil
 }
