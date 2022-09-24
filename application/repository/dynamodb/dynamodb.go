@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"encoding/json"
+	// "encoding/json"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -252,7 +252,7 @@ func (d *DynamoDBRepository) DeleteAlarm(alarmID string) error {
 		return err
 	}
 
-	xx, err := client.DeleteItem(ctx, &dynamodb.DeleteItemInput{
+	_, err = client.DeleteItem(ctx, &dynamodb.DeleteItemInput{
 		TableName: aws.String(table.ALARM_TABLE),
 		Key: map[string]types.AttributeValue{
 			"alarmID": &types.AttributeValueMemberS{Value: alarmID},
@@ -262,11 +262,84 @@ func (d *DynamoDBRepository) DeleteAlarm(alarmID string) error {
 		return err
 	}
 
-	fmt.Println("------")
-	fmt.Println(alarmID)
-	bs, _ := json.Marshal(xx)
-	fmt.Println(string(bs))
-	fmt.Println("------")
+	// fmt.Println("------")
+	// fmt.Println(alarmID)
+	// bs, _ := json.Marshal(xx)
+	// fmt.Println(string(bs))
+	// fmt.Println("------")
+
+	return nil
+}
+
+func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
+	var err error
+	var ctx = context.Background()
+
+	client, err := d.createDynamoDBClient()
+	if err != nil {
+		return err
+	}
+
+
+
+	// クエリ実行
+	output, err := client.Query(ctx, &dynamodb.QueryInput{
+		TableName:              aws.String("alarm-table"),
+		IndexName:              aws.String("user-id-index"),
+		KeyConditionExpression: aws.String("userID = :userID"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":userID": &types.AttributeValueMemberS{Value: userID},
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	// 取得結果を struct の配列に変換
+
+
+	requestItems :=[]types.WriteRequest{}
+
+	for _, item := range output.Items {
+		alarm := entity.Alarm{}
+		if err := attributevalue.UnmarshalMap(item, &alarm); err != nil {
+			return err
+		}
+		alarmID := alarm.AlarmID
+
+
+
+		fmt.Println("************")
+
+
+		fmt.Println(alarmID)
+		xxx := types.WriteRequest{
+			DeleteRequest: &types.DeleteRequest{
+				Key: map[string]types.AttributeValue{
+					"alarmID": &types.AttributeValueMemberS{Value: "123"},
+				},
+			},
+		}
+
+
+		requestItems = append(requestItems, xxx)
+
+
+		fmt.Println(xxx)
+		fmt.Println("************")
+
+	}
+
+
+
+    _, err = client.BatchWriteItem(ctx, &dynamodb.BatchWriteItemInput{
+        RequestItems: map[string][]types.WriteRequest{
+            "alarm-table": requestItems,
+        },
+    })
+    if err != nil {
+        panic(err)
+    }
 
 	return nil
 }

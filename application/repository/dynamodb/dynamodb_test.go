@@ -174,6 +174,46 @@ func TestInsertAndDelete(t *testing.T) {
 	assert.Equal(t, len(alarmList), 0)
 }
 
+func TestInsertAndGetAlarmList(t *testing.T) {
+	repository := DynamoDBRepository{IsLocal: true}
+
+	userID := uuid.New().String()
+
+	alarm1 := createAlarm()
+	alarm1.UserID = userID
+
+	alarm2 := createAlarm()
+	alarm2.UserID = userID
+
+	alarm3 := createAlarm()
+	alarm3.UserID = userID
+
+	// Insert
+	err := repository.InsertAlarm(alarm1)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	err = repository.InsertAlarm(alarm2)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	err = repository.InsertAlarm(alarm3)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Get
+	alarmList, err := repository.GetAlarmList(userID)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Assert
+	assert.Equal(t, len(alarmList), 3)
+}
+
 func createAlarm() entity.Alarm {
 	alarmID := uuid.New().String()
 	userID := uuid.New().String()
