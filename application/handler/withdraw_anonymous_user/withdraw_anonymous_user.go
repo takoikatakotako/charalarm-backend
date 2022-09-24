@@ -1,15 +1,16 @@
 package main
 
 import (
-	"charalarm/entity"
-	"charalarm/error"
-	"charalarm/model"
-	"charalarm/repository"
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/takoikatakotako/charalarm-backend/entity"
+	repository "github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/service"
 )
 
 func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -22,36 +23,32 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 	fmt.Println(body)
 	fmt.Println("-------")
 
-	// Decode Body
 	if err := json.Unmarshal([]byte(body), &request); err != nil {
 		return events.APIGatewayProxyResponse{
-			Body:       string(charalarm_error.FAILED_TO_DECODE_REQUEST_BODY),
-			StatusCode: 500,
+			Body:       "デコードに失敗しました",
+			StatusCode: http.StatusInternalServerError,
 		}, nil
 	}
 
-	// Get Parameters
 	userID := request.UserID
 	userToken := request.UserToken
 
-	// Signup
-	model := model.SignupAnonymousUser{Repository: repository.DynamoDBRepository{}}
-	err := model.Signup(userID, userToken)
-	if err != nil {
+	// Withdraw
+	s := service.AnonymousUserService{Repository: repository.DynamoDBRepository{}}
+
+	if err := s.Withdraw(userID, userToken); err != nil {
 		fmt.Println(err)
-		response := entity.MessageResponse{Message: "登録失敗しました"}
+		response := entity.MessageResponse{Message: "退会失敗しました"}
 		jsonBytes, _ := json.Marshal(response)
 		return events.APIGatewayProxyResponse{
 			Body:       string(jsonBytes),
-			StatusCode: 500,
+			StatusCode: http.StatusInternalServerError,
 		}, nil
 	}
 
-	response := entity.MessageResponse{Message: "登録完了しました"}
-	jsonBytes, _ := json.Marshal(response)
 	return events.APIGatewayProxyResponse{
-		Body:       string(jsonBytes),
-		StatusCode: 200,
+		Body:       "退会完了しました",
+		StatusCode: http.StatusOK,
 	}, nil
 }
 

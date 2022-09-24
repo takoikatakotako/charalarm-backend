@@ -1,34 +1,34 @@
 package repository
 
 import (
-	"charalarm/entity"
-	"charalarm/error"
-	"charalarm/table"
 	"context"
 	"errors"
 	"fmt"
-    "encoding/json"
+
+	"encoding/json"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/takoikatakotako/charalarm-backend/entity"
+	charalarm_error "github.com/takoikatakotako/charalarm-backend/error"
+	"github.com/takoikatakotako/charalarm-backend/table"
+	"github.com/takoikatakotako/charalarm-backend/validator"
 )
 
 const (
-	awsRegion string = "ap-northeast-1"
-)
-
-const (
-	localstackEndpoint string = "http://localhost:4566"
+	awsRegion          = "ap-northeast-1"
+	localstackEndpoint = "http://localhost:4566"
 )
 
 type DynamoDBRepository struct {
 	IsLocal bool
 }
 
-func (self DynamoDBRepository) createDynamoDBClient() (*dynamodb.Client, error) {
-	var ctx = context.Background()
+func (d *DynamoDBRepository) createDynamoDBClient() (*dynamodb.Client, error) {
+	ctx := context.Background()
 
 	// DynamoDB クライアントの生成
 	c, err := config.LoadDefaultConfig(ctx, config.WithRegion(awsRegion))
@@ -38,7 +38,7 @@ func (self DynamoDBRepository) createDynamoDBClient() (*dynamodb.Client, error) 
 	}
 
 	// LocalStackを使う場合
-	if self.IsLocal {
+	if d.IsLocal {
 		c.EndpointResolverWithOptions = aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...interface{}) (aws.Endpoint, error) {
 			return aws.Endpoint{
 				URL:           localstackEndpoint,
@@ -56,11 +56,10 @@ func (self DynamoDBRepository) createDynamoDBClient() (*dynamodb.Client, error) 
 ////////////////////////////////////
 // AnonymousUser
 ////////////////////////////////////
-func (self DynamoDBRepository) GetAnonymousUser(userID string) (entity.AnonymousUser, error) {
-	var err error
-	var ctx = context.Background()
+func (d *DynamoDBRepository) GetAnonymousUser(userID string) (entity.AnonymousUser, error) {
+	ctx := context.Background()
 
-	client, err := self.createDynamoDBClient()
+	client, err := d.createDynamoDBClient()
 	if err != nil {
 		return entity.AnonymousUser{}, err
 	}
@@ -94,12 +93,11 @@ func (self DynamoDBRepository) GetAnonymousUser(userID string) (entity.Anonymous
 	return gotUser, nil
 }
 
-func (self DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error) {
-	var err error
-	var ctx = context.Background()
+func (d *DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error) {
+	ctx := context.Background()
 
 	// DBClient作成
-	client, err := self.createDynamoDBClient()
+	client, err := d.createDynamoDBClient()
 	if err != nil {
 		return false, err
 	}
@@ -125,11 +123,10 @@ func (self DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error)
 	}
 }
 
-func (self DynamoDBRepository) InsertAnonymousUser(anonymousUser entity.AnonymousUser) error {
-	var err error
-	var ctx = context.Background()
+func (d *DynamoDBRepository) InsertAnonymousUser(anonymousUser entity.AnonymousUser) error {
+	ctx := context.Background()
 
-	client, err := self.createDynamoDBClient()
+	client, err := d.createDynamoDBClient()
 	if err != nil {
 		fmt.Printf("err, %v", err)
 		return err
@@ -153,11 +150,10 @@ func (self DynamoDBRepository) InsertAnonymousUser(anonymousUser entity.Anonymou
 	return nil
 }
 
-func (self DynamoDBRepository) DeleteAnonymousUser(userID string) error {
-	var err error
-	var ctx = context.Background()
+func (d *DynamoDBRepository) DeleteAnonymousUser(userID string) error {
+	ctx := context.Background()
 
-	client, err := self.createDynamoDBClient()
+	client, err := d.createDynamoDBClient()
 	if err != nil {
 		return err
 	}
@@ -182,11 +178,10 @@ func (self DynamoDBRepository) DeleteAnonymousUser(userID string) error {
 ////////////////////////////////////
 // Alarm
 ////////////////////////////////////
-func (self DynamoDBRepository) GetAlarmList(userID string) ([]entity.Alarm, error) {
-	var err error
-	var ctx = context.Background()
+func (d *DynamoDBRepository) GetAlarmList(userID string) ([]entity.Alarm, error) {
+	ctx := context.Background()
 
-	client, err := self.createDynamoDBClient()
+	client, err := d.createDynamoDBClient()
 	if err != nil {
 		return []entity.Alarm{}, err
 	}
@@ -208,8 +203,7 @@ func (self DynamoDBRepository) GetAlarmList(userID string) ([]entity.Alarm, erro
 	alarmList := []entity.Alarm{}
 	for _, item := range output.Items {
 		alarm := entity.Alarm{}
-		err = attributevalue.UnmarshalMap(item, &alarm)
-		if err != nil {
+		if err := attributevalue.UnmarshalMap(item, &alarm); err != nil {
 			return []entity.Alarm{}, err
 		}
 		alarmList = append(alarmList, alarm)
@@ -218,17 +212,19 @@ func (self DynamoDBRepository) GetAlarmList(userID string) ([]entity.Alarm, erro
 	return alarmList, nil
 }
 
-func (self DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
-	var err error
-	var ctx = context.Background()
+func (d *DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
+	ctx := context.Background()
 
-	client, err := self.createDynamoDBClient()
+	client, err := d.createDynamoDBClient()
 	if err != nil {
 		fmt.Printf("err, %v", err)
 		return err
 	}
 
 	// Alarm のバリデーション
+	if !validator.IsValidateAlarm(alarm) {
+		return errors.New(charalarm_error.INVAlID_VALUE)
+	}
 
 	// 新規レコードの追加
 	av, err := attributevalue.MarshalMap(alarm)
@@ -248,29 +244,28 @@ func (self DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
 	return nil
 }
 
-func (self DynamoDBRepository) DeleteAlarm(alarmID string) error {
-	var err error
-	var ctx = context.Background()
+func (d *DynamoDBRepository) DeleteAlarm(alarmID string) error {
+	ctx := context.Background()
 
-	client, err := self.createDynamoDBClient()
+	client, err := d.createDynamoDBClient()
 	if err != nil {
 		return err
 	}
 
-    xx, err := client.DeleteItem(ctx, &dynamodb.DeleteItemInput{
-        TableName: aws.String(table.ALARM_TABLE),
-        Key: map[string]types.AttributeValue{
-            "alarmID": &types.AttributeValueMemberS{Value: alarmID},
-        },
-    })
+	xx, err := client.DeleteItem(ctx, &dynamodb.DeleteItemInput{
+		TableName: aws.String(table.ALARM_TABLE),
+		Key: map[string]types.AttributeValue{
+			"alarmID": &types.AttributeValueMemberS{Value: alarmID},
+		},
+	})
 	if err != nil {
 		return err
 	}
 
 	fmt.Println("------")
 	fmt.Println(alarmID)
-    bs, _ := json.Marshal(xx)
-    fmt.Println(string(bs))
+	bs, _ := json.Marshal(xx)
+	fmt.Println(string(bs))
 	fmt.Println("------")
 
 	return nil

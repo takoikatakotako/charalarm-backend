@@ -8,5 +8,5 @@ services:
       - SERVICES=s3,sqs,sns,dynamodb
       - DEFAULT_REGION=ap-northeast-1
     volumes:
-      - ./localstack/createQueue.sh:/docker-entrypoint-initaws.d/createQueue.sh
-      - ./localstack/createTable.sh:/docker-entrypoint-initaws.d/createTable.sh
+      - ./createQueue.sh:/docker-entrypoint-initaws.d/createQueue.sh
+      - ./createTable.sh:/docker-entrypoint-initaws.d/createTable.sh

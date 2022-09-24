@@ -1,10 +1,11 @@
 package repository
 
 import (
-	"charalarm/entity"
+	"testing"
+
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"testing"
+	"github.com/takoikatakotako/charalarm-backend/entity"
 )
 
 ////////////////////////////////////
@@ -172,7 +173,6 @@ func TestInsertAndDelete(t *testing.T) {
 	// // Assert
 	assert.Equal(t, len(alarmList), 0)
 }
-
 
 func createAlarm() entity.Alarm {
 	alarmID := uuid.New().String()
