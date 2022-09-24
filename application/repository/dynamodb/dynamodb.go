@@ -280,12 +280,10 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 		return err
 	}
 
-
-
-	// クエリ実行
+	// userIDからアラームを検索
 	output, err := client.Query(ctx, &dynamodb.QueryInput{
 		TableName:              aws.String(table.ALARM_TABLE),
-		IndexName:              aws.String("user-id-index"),
+		IndexName:              aws.String(table.USER_ID_INDEX),
 		KeyConditionExpression: aws.String("userID = :userID"),
 		ExpressionAttributeValues: map[string]types.AttributeValue{
 			":userID": &types.AttributeValueMemberS{Value: userID},
@@ -295,33 +293,31 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 		return err
 	}
 
-	// 取得結果を struct の配列に変換
-
-
+	// 検索結果から一括削除のためのrequestItemsを作成
 	requestItems :=[]types.WriteRequest{}
-
 	for _, item := range output.Items {
+		// alarmIDを取得
 		alarm := entity.Alarm{}
 		if err := attributevalue.UnmarshalMap(item, &alarm); err != nil {
 			return err
 		}
 		alarmID := alarm.AlarmID
 
-		fmt.Println(alarmID)
-		xxx := types.WriteRequest{
+		// requestItemsを作成
+		requestItem := types.WriteRequest{
 			DeleteRequest: &types.DeleteRequest{
 				Key: map[string]types.AttributeValue{
 					"alarmID": &types.AttributeValueMemberS{Value: alarmID},
 				},
 			},
 		}
-
-		requestItems = append(requestItems, xxx)
+		requestItems = append(requestItems, requestItem)
 	}
 
+	// アラームを削除
     _, err = client.BatchWriteItem(ctx, &dynamodb.BatchWriteItemInput{
         RequestItems: map[string][]types.WriteRequest{
-            "alarm-table": requestItems,
+            table.ALARM_TABLE: requestItems,
         },
     })
     if err != nil {
