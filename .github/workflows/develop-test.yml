@@ -24,8 +24,8 @@ jobs:
 
       - name: Set up Docker
         run: |
-          cd application && docker-compose up -d
+          cd localstack && docker-compose up -d
 
       - name: Test
         run: |
-          cd application && sh test.sh
+          cd script && sh test.sh
