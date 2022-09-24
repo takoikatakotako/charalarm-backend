@@ -23,7 +23,7 @@ jobs:
 
       - name: Build
         run: |
-          cd application && sh build.sh
+          cd script && sh build.sh
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
