@@ -6,7 +6,7 @@ import (
 
 	// "github.com/takoikatakotako/charalarm-backend/entity"
 	charalarm_error "github.com/takoikatakotako/charalarm-backend/error"
-	repository "github.com/takoikatakotako/charalarm-backend/repository/aws"
+	"github.com/takoikatakotako/charalarm-backend/repository"
 	// "github.com/takoikatakotako/charalarm-backend/validator"
 )
 
@@ -15,16 +15,16 @@ import (
 // )
 
 type PushTokenService struct {
-	DynamoDBRepository xxx.DynamoDBRepository
-	SNSRepository yyy.SNSRepository
+	DynamoDBRepository repository.DynamoDBRepository
+	SNSRepository repository.SNSRepository
 }
 
 func (a *PushTokenService) AddIOSVoipPushToken(userID string, userToken string, pushToken string) (error) {
-	// // ユーザーを取得
-	// anonymousUser, err := a.Repository.GetAnonymousUser(userID)
-	// if err != nil {
-	// 	return entity.AnonymousUser{}, err
-	// }
+	// ユーザーを取得
+	_, err := a.DynamoDBRepository.GetAnonymousUser(userID)
+	if err != nil {
+		return err
+	}
 
 	// // UserID, UserTokenが一致するか確認する
 	// if anonymousUser.UserID == userID && anonymousUser.UserToken == userToken {

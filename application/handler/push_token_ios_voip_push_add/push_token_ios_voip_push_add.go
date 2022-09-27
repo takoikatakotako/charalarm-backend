@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/takoikatakotako/charalarm-backend/entity"
-	awsRepository "github.com/takoikatakotako/charalarm-backend/repository/aws"
+	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/service"
 )
 
@@ -28,17 +28,12 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	userToken := request.UserToken
 	pushToken := request.PushToken
 
-	// s := service.PushTokenService{
-	// 	DynamoDBRepository: xxx.DynamoDBRepository{},
-	// 	SNSRepository: yyy.SNSRepository{},
-	// }
-
 	s := service.PushTokenService{
-		DynamoDBRepository: xxx.DynamoDBRepository{},
-		SNSRepository: yyy.SNSRepository{},
+		DynamoDBRepository: repository.DynamoDBRepository{},
+		SNSRepository: repository.SNSRepository{},
 	}
 
-	anonymousUser, err := s.AddIOSVoipPushToken(userID, userToken, pushToken)
+	err := s.AddIOSVoipPushToken(userID, userToken, pushToken)
 	if err != nil {
 		fmt.Println(err)
 		response := entity.MessageResponse{Message: "ユーザー情報の取得に失敗しました"}
