@@ -1,30 +1,5 @@
 ## 諸々のアップデート
 
-### Conohaサーバーの諸々をアップデート。
-
-以下のコマンドでアップデートして再起動させる。アプリケーションなどは問題なく再起動するはず。
-
-```
-apt-get -y update
-apt-get -y upgrade
-reboot
-```
-
-
-### SSL署名書の更新
-
-```
-# Nginx の停止
-systemctl stop nginx
-
-# 証明書の再取得
-certbot certonly --standalone -d api.charalarm.com --email snorlax.chemist.and.jazz@gmail.com --agree-tos
-certbot certonly --standalone -d api-stg.charalarm.com --email snorlax.chemist.and.jazz@gmail.com --agree-tos
-
-# Nginx の再起動
-systemctl restart nginx
-```
-
 ### プッシュ証明書
 
 [developer.apple.com](https://developer.apple.com/) にアクセス。
