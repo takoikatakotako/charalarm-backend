@@ -1,16 +1,16 @@
 package repository
 
 import (
-	// "context"
+	"context"
 	// "errors"
-	// "fmt"
+	"fmt"
 
 	// // "encoding/json"
 
-	// "github.com/aws/aws-sdk-go-v2/aws"
-	// "github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
 	// "github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
-	// "github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/sns"
 	// "github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	// "github.com/takoikatakotako/charalarm-backend/entity"
 	// charalarm_error "github.com/takoikatakotako/charalarm-backend/error"
@@ -18,80 +18,75 @@ import (
 	// "github.com/takoikatakotako/charalarm-backend/validator"
 )
 
-// const (
-// 	awsRegion          = "ap-northeast-1"
-// 	localstackEndpoint = "http://localhost:4566"
-// )
-
 type SNSRepository struct {
 	IsLocal bool
 }
 
-// func (d *DynamoDBRepository) createDynamoDBClient() (*dynamodb.Client, error) {
-// 	ctx := context.Background()
+func (s *SNSRepository) createSNSClient() (*sns.Client, error) {
+	ctx := context.Background()
 
-// 	// DynamoDB クライアントの生成
-// 	c, err := config.LoadDefaultConfig(ctx, config.WithRegion(awsRegion))
-// 	if err != nil {
-// 		fmt.Printf("load aws config: %s\n", err.Error())
-// 		return nil, err
-// 	}
+	// SNS クライアントの生成
+	c, err := config.LoadDefaultConfig(ctx, config.WithRegion(awsRegion))
+	if err != nil {
+		fmt.Printf("load aws config: %s\n", err.Error())
+		return nil, err
+	}
 
-// 	// LocalStackを使う場合
-// 	if d.IsLocal {
-// 		c.EndpointResolverWithOptions = aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...interface{}) (aws.Endpoint, error) {
-// 			return aws.Endpoint{
-// 				URL:           localstackEndpoint,
-// 				SigningRegion: awsRegion,
-// 			}, nil
-// 		})
-// 		if err != nil {
-// 			fmt.Printf("unable to load SDK config, %v", err)
-// 			return nil, err
-// 		}
-// 	}
-// 	return dynamodb.NewFromConfig(c), nil
-// }
+	// LocalStackを使う場合
+	if s.IsLocal {
+		c.EndpointResolverWithOptions = aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...interface{}) (aws.Endpoint, error) {
+			return aws.Endpoint{
+				URL:           localstackEndpoint,
+				SigningRegion: awsRegion,
+			}, nil
+		})
+		if err != nil {
+			fmt.Printf("unable to load SDK config, %v", err)
+			return nil, err
+		}
+	}
+	return sns.NewFromConfig(c), nil
+}
 
-// ////////////////////////////////////
-// // AnonymousUser
-// ////////////////////////////////////
-// func (d *DynamoDBRepository) GetAnonymousUser(userID string) (entity.AnonymousUser, error) {
-// 	ctx := context.Background()
+////////////////////////////////////
+// iOS
+////////////////////////////////////
+func (s *SNSRepository) CreateIOSVoipEndpoint(pushToken string) (string, error) {
+	ctx := context.Background()
 
-// 	client, err := d.createDynamoDBClient()
-// 	if err != nil {
-// 		return entity.AnonymousUser{}, err
-// 	}
+	client, err := s.createSNSClient()
+	if err != nil {
+		return "", err
+	}
 
-// 	// 既存レコードの取得
-// 	getInput := &dynamodb.GetItemInput{
-// 		TableName: aws.String(table.USER_TABLE),
-// 		Key: map[string]types.AttributeValue{
-// 			"userID": &types.AttributeValueMemberS{
-// 				Value: userID,
-// 			},
-// 		},
-// 	}
 
-// 	// 取得
-// 	output, err := client.GetItem(ctx, getInput)
-// 	if err != nil {
-// 		return entity.AnonymousUser{}, err
-// 	}
-// 	gotUser := entity.AnonymousUser{}
+	// 既存レコードの取得
+	getInput := &sns.CreatePlatformEndpointInput{
+		PlatformApplicationArn: aws.String("xxxxxxxxxx"),
+		Token: aws.String("xxxxxxxxxx"),
+	}
 
-// 	if len(output.Item) == 0 {
-// 		return entity.AnonymousUser{}, errors.New(charalarm_error.INVAlID_VALUE)
-// 	}
+	// 取得
+	output, err := client.CreatePlatformEndpoint(ctx, getInput)
+	if err != nil {
+		return "nil", err
+	}
 
-// 	err = attributevalue.UnmarshalMap(output.Item, &gotUser)
-// 	if err != nil {
-// 		return entity.AnonymousUser{}, err
-// 	}
+	fmt.Println(output)
 
-// 	return gotUser, nil
-// }
+	// gotUser := entity.AnonymousUser{}
+
+	// if len(output.Item) == 0 {
+	// 	return entity.AnonymousUser{}, errors.New(charalarm_error.INVAlID_VALUE)
+	// }
+
+	// err = attributevalue.UnmarshalMap(output.Item, &gotUser)
+	// if err != nil {
+	// 	return entity.AnonymousUser{}, err
+	// }
+
+	return "nil", nil
+}
 
 // func (d *DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error) {
 // 	ctx := context.Background()
