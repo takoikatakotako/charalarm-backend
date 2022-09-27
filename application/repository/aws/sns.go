@@ -18,10 +18,10 @@ import (
 	// "github.com/takoikatakotako/charalarm-backend/validator"
 )
 
-const (
-	awsRegion          = "ap-northeast-1"
-	localstackEndpoint = "http://localhost:4566"
-)
+// const (
+// 	awsRegion          = "ap-northeast-1"
+// 	localstackEndpoint = "http://localhost:4566"
+// )
 
 type SNSRepository struct {
 	IsLocal bool

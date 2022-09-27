@@ -6,7 +6,7 @@ import (
 
 	"github.com/takoikatakotako/charalarm-backend/entity"
 	charalarm_error "github.com/takoikatakotako/charalarm-backend/error"
-	repository "github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	repository "github.com/takoikatakotako/charalarm-backend/repository/aws"
 	"github.com/takoikatakotako/charalarm-backend/validator"
 )
 

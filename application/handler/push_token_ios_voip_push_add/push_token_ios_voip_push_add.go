@@ -9,19 +9,13 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/takoikatakotako/charalarm-backend/entity"
-	repository "github.com/takoikatakotako/charalarm-backend/repository/aws"
+	awsRepository "github.com/takoikatakotako/charalarm-backend/repository/aws"
 	"github.com/takoikatakotako/charalarm-backend/service"
 )
 
-func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	body := name.Body
-	request := entity.AnonymousUserRequest{}
-
-	fmt.Println("-------")
-	fmt.Println(ctx)
-	fmt.Println(name)
-	fmt.Println(body)
-	fmt.Println("-------")
+func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	body := event.Body
+	request := entity.AnonymousAddPushTokenRequest{}
 
 	if err := json.Unmarshal([]byte(body), &request); err != nil {
 		return events.APIGatewayProxyResponse{
@@ -32,13 +26,22 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 
 	userID := request.UserID
 	userToken := request.UserToken
+	pushToken := request.PushToken
 
-	// Withdraw
-	s := service.AnonymousUserService{Repository: repository.DynamoDBRepository{}}
+	// s := service.PushTokenService{
+	// 	DynamoDBRepository: xxx.DynamoDBRepository{},
+	// 	SNSRepository: yyy.SNSRepository{},
+	// }
 
-	if err := s.Withdraw(userID, userToken); err != nil {
+	s := service.PushTokenService{
+		DynamoDBRepository: xxx.DynamoDBRepository{},
+		SNSRepository: yyy.SNSRepository{},
+	}
+
+	anonymousUser, err := s.AddIOSVoipPushToken(userID, userToken, pushToken)
+	if err != nil {
 		fmt.Println(err)
-		response := entity.MessageResponse{Message: "退会失敗しました"}
+		response := entity.MessageResponse{Message: "ユーザー情報の取得に失敗しました"}
 		jsonBytes, _ := json.Marshal(response)
 		return events.APIGatewayProxyResponse{
 			Body:       string(jsonBytes),
@@ -46,8 +49,9 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 		}, nil
 	}
 
+	jsonBytes, _ := json.Marshal("登録完了")
 	return events.APIGatewayProxyResponse{
-		Body:       "退会完了しました",
+		Body:       string(jsonBytes),
 		StatusCode: http.StatusOK,
 	}, nil
 }
