@@ -5,3 +5,7 @@ type AnonymousAddPushTokenRequest struct {
 	UserToken string `json:"userToken"`
 	PushToken string  `json:"pushToken"`
 }
+
+type CreatePlatformEndpointResponse struct {
+	EndpointArn string
+}

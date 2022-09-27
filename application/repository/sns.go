@@ -5,14 +5,14 @@ import (
 	// "errors"
 	"fmt"
 
-	// // "encoding/json"
+	// "encoding/json"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	// "github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	// "github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	// "github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/entity"
 	// charalarm_error "github.com/takoikatakotako/charalarm-backend/error"
 	// "github.com/takoikatakotako/charalarm-backend/table"
 	// "github.com/takoikatakotako/charalarm-backend/validator"
@@ -49,43 +49,28 @@ func (s *SNSRepository) createSNSClient() (*sns.Client, error) {
 }
 
 ////////////////////////////////////
-// iOS
+// iOS Platform Endpoint
 ////////////////////////////////////
-func (s *SNSRepository) CreateIOSVoipEndpoint(pushToken string) (string, error) {
+func (s *SNSRepository) CreateIOSVoipPlatformEndpoint(pushToken string) (entity.CreatePlatformEndpointResponse, error) {
 	ctx := context.Background()
 
 	client, err := s.createSNSClient()
 	if err != nil {
-		return "", err
+		return entity.CreatePlatformEndpointResponse{}, err
 	}
 
-
-	// 既存レコードの取得
+	// エンドポイント作成
 	getInput := &sns.CreatePlatformEndpointInput{
-		PlatformApplicationArn: aws.String("xxxxxxxxxx"),
-		Token: aws.String("xxxxxxxxxx"),
+		PlatformApplicationArn: aws.String("arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-voip-push-platform-application"),
+		Token: aws.String(pushToken),
 	}
-
-	// 取得
-	output, err := client.CreatePlatformEndpoint(ctx, getInput)
+	result, err := client.CreatePlatformEndpoint(ctx, getInput)
 	if err != nil {
-		return "nil", err
+		return entity.CreatePlatformEndpointResponse{}, err
 	}
 
-	fmt.Println(output)
-
-	// gotUser := entity.AnonymousUser{}
-
-	// if len(output.Item) == 0 {
-	// 	return entity.AnonymousUser{}, errors.New(charalarm_error.INVAlID_VALUE)
-	// }
-
-	// err = attributevalue.UnmarshalMap(output.Item, &gotUser)
-	// if err != nil {
-	// 	return entity.AnonymousUser{}, err
-	// }
-
-	return "nil", nil
+	response := entity.CreatePlatformEndpointResponse{EndpointArn: *result.EndpointArn}
+	return response, nil
 }
 
 // func (d *DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error) {
