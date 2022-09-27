@@ -103,25 +103,49 @@ $ aws dynamodb delete-table \
 
 ## SNS
 
-
+### PlatformApplicationを作成
 
 ```
-aws sns create-platform-application \
-  --name ios-push-platform-application \
-  --platform APNS \
-  --attributes PlatformCredential=DAMMY \
-  --endpoint-url http://localhost:4575
+$ aws sns create-platform-application \
+    --name ios-voip-push-platform-application \
+    --platform APNS \
+    --attributes PlatformCredential=DAMMY \
+    --endpoint-url http://localhost:4566 | jq
 ```
+
+### PlatformApplicationの一覧を表示
+
+```
+$ aws sns list-platform-applications \
+    --endpoint-url http://localhost:4566 | jq
+```
+
+```
+{
+  "PlatformApplications": [
+    {
+      "PlatformApplicationArn": "arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-voip-push-platform-application",
+      "Attributes": {
+        "PlatformCredential": "DAMMY"
+      }
+    }
+  ]
+}
+```
+
+
+### PlatformEndpointを作成
 
 ```
 aws sns create-platform-endpoint \
-  --platform-application-arn arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-push-platform-application \
+  --platform-application-arn arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-voip-push-platform-application \
   --token MY_TOKEN \
-  --endpoint-url http://localhost:4575
+  --endpoint-url http://localhost:4566
 ```
 
 ```
 aws sns list-endpoints-by-platform-application \
+  --endpoint-url http://localhost:4566
 
 ```
 
@@ -131,10 +155,6 @@ aws sns   delete-platform-application \
   --endpoint-url http://localhost:4575
 ```
 
-```
-aws sns list-platform-applications \
-  --endpoint-url http://localhost:4575
-```
 
 ```
 aws sns list-topics \
