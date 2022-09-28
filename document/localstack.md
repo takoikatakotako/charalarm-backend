@@ -139,12 +139,15 @@ $ aws sns list-platform-applications \
 ```
 aws sns create-platform-endpoint \
   --platform-application-arn arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-voip-push-platform-application \
-  --token MY_TOKEN \
-  --endpoint-url http://localhost:4566
+  --token MY_TOKEN2 \
+  --endpoint-url http://localhost:4566 | jq
 ```
+
+### PlatformEndpointのEndpointsの一覧を確認
 
 ```
 aws sns list-endpoints-by-platform-application \
+  --platform-application-arn arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-voip-push-platform-application \
   --endpoint-url http://localhost:4566
 
 ```
