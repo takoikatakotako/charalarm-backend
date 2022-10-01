@@ -30,10 +30,6 @@ func TestDuplcateVoipPlatformEndpoint(t *testing.T) {
 	}
 
 	_, err = repository.CreateIOSVoipPlatformEndpoint(token)
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-
 	message := fmt.Sprint(err)
 	assert.Equal(t, strings.Contains(message, "DuplicateEndpoint"), true)
 }
