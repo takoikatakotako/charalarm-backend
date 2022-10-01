@@ -27,6 +27,15 @@ func (a *PushTokenService) AddIOSVoipPushToken(userID string, userToken string, 
 		return errors.New(charalarm_error.AUTHENTICATION_FAILURE)
 	}
 
+	// 既に作成されてるか確認する
+	for _, v := range anonymousUser.IOSVoIPPushTokens {
+		if v["token"] == userToken {
+			return nil
+		}
+	}
+
+
+
 	// PlatformApplicationを追加
 
 	// DynamoDBに追加
