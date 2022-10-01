@@ -12,10 +12,10 @@ import (
 
 type PushTokenService struct {
 	DynamoDBRepository repository.DynamoDBRepository
-	SNSRepository repository.SNSRepository
+	SNSRepository      repository.SNSRepository
 }
 
-func (a *PushTokenService) AddIOSVoipPushToken(userID string, userToken string, pushToken string) (error) {
+func (a *PushTokenService) AddIOSVoipPushToken(userID string, userToken string, pushToken string) error {
 	// ユーザーを取得
 	anonymousUser, err := a.DynamoDBRepository.GetAnonymousUser(userID)
 	if err != nil {
@@ -29,9 +29,7 @@ func (a *PushTokenService) AddIOSVoipPushToken(userID string, userToken string, 
 
 	// PlatformApplicationを追加
 
-
 	// DynamoDBに追加
-
 
 	return nil
 }

@@ -62,7 +62,7 @@ func (s *SNSRepository) CreateIOSVoipPlatformEndpoint(pushToken string) (entity.
 	// エンドポイント作成
 	getInput := &sns.CreatePlatformEndpointInput{
 		PlatformApplicationArn: aws.String("arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-voip-push-platform-application"),
-		Token: aws.String(pushToken),
+		Token:                  aws.String(pushToken),
 	}
 	result, err := client.CreatePlatformEndpoint(ctx, getInput)
 	if err != nil {

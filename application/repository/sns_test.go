@@ -1,11 +1,11 @@
 package repository
 
 import (
-	"testing"
 	"fmt"
-	"strings"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"strings"
+	"testing"
 )
 
 func TestCreateVoipPlatformEndpoint(t *testing.T) {
@@ -33,7 +33,7 @@ func TestDuplcateVoipPlatformEndpoint(t *testing.T) {
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
-	
+
 	message := fmt.Sprint(err)
 	assert.Equal(t, strings.Contains(message, "DuplicateEndpoint"), true)
 }

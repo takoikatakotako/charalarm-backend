@@ -6,6 +6,7 @@ type AnonymousUser struct {
 }
 
 type AnonymousUserRequest struct {
-	UserID    string `json:"userID"`
-	UserToken string `json:"userToken"`
+	UserID        string              `json:"userID"`
+	UserToken     string              `json:"userToken"`
+	IOSVoipTokens []map[string]string `json:"iosVoipTokens"`
 }
