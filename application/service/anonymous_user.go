@@ -25,6 +25,7 @@ func (a *AnonymousUserService) GetAnonymousUser(userID string, userToken string)
 		return anonymousUser, nil
 	}
 
+	// 一致しない場合
 	return entity.AnonymousUser{}, errors.New(charalarm_error.AUTHENTICATION_FAILURE)
 }
 

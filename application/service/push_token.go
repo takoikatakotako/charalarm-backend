@@ -3,7 +3,6 @@ package service
 import (
 	"errors"
 	// "math"
-
 	"github.com/takoikatakotako/charalarm-backend/entity"
 	charalarm_error "github.com/takoikatakotako/charalarm-backend/error"
 	"github.com/takoikatakotako/charalarm-backend/repository"
@@ -24,10 +23,12 @@ func (a *PushTokenService) AddIOSVoipPushToken(userID string, userToken string, 
 
 	// UserID, UserTokenが一致するか確認する
 	if anonymousUser.UserID == userID && anonymousUser.UserToken == userToken {
+		// Nothing
+	} else {
 		return errors.New(charalarm_error.AUTHENTICATION_FAILURE)
 	}
 
-	// 既に作成されてるか確認する
+	// 既に作成されてるか確認
 	if anonymousUser.IOSVoIPPushToken.Token == pushToken {
 		return nil
 	}
