@@ -83,7 +83,6 @@ func (s *SNSRepository) createPlatformEndpoint(platformApplicationArn string, pu
 	return response, nil
 }
 
-
 // func (d *DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error) {
 // 	ctx := context.Background()
 
