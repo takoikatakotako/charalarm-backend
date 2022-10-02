@@ -51,7 +51,17 @@ func (s *SNSRepository) createSNSClient() (*sns.Client, error) {
 ////////////////////////////////////
 // iOS Platform Endpoint
 ////////////////////////////////////
-func (s *SNSRepository) CreateIOSVoipPlatformEndpoint(pushToken string) (entity.CreatePlatformEndpointResponse, error) {
+func (s *SNSRepository) CreateIOSPushPlatformEndpoint(pushToken string) (entity.CreatePlatformEndpointResponse, error) {
+	platformApplicationArn := "arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-voip-push-platform-application"
+	return s.createPlatformEndpoint(platformApplicationArn, pushToken)
+}
+
+func (s *SNSRepository) CreateIOSVoipPushPlatformEndpoint(pushToken string) (entity.CreatePlatformEndpointResponse, error) {
+	platformApplicationArn := "arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-voip-push-platform-application"
+	return s.createPlatformEndpoint(platformApplicationArn, pushToken)
+}
+
+func (s *SNSRepository) createPlatformEndpoint(platformApplicationArn string, pushToken string) (entity.CreatePlatformEndpointResponse, error) {
 	ctx := context.Background()
 
 	client, err := s.createSNSClient()
@@ -61,7 +71,7 @@ func (s *SNSRepository) CreateIOSVoipPlatformEndpoint(pushToken string) (entity.
 
 	// エンドポイント作成
 	getInput := &sns.CreatePlatformEndpointInput{
-		PlatformApplicationArn: aws.String("arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-voip-push-platform-application"),
+		PlatformApplicationArn: aws.String(platformApplicationArn),
 		Token:                  aws.String(pushToken),
 	}
 	result, err := client.CreatePlatformEndpoint(ctx, getInput)
@@ -72,6 +82,7 @@ func (s *SNSRepository) CreateIOSVoipPlatformEndpoint(pushToken string) (entity.
 	response := entity.CreatePlatformEndpointResponse{EndpointArn: *result.EndpointArn}
 	return response, nil
 }
+
 
 // func (d *DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error) {
 // 	ctx := context.Background()
