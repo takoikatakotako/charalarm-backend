@@ -12,7 +12,7 @@ func TestCreateVoipPlatformEndpoint(t *testing.T) {
 	repository := SNSRepository{IsLocal: true}
 
 	token := uuid.New().String()
-	response, err := repository.CreateIOSVoipPlatformEndpoint(token)
+	response, err := repository.CreateIOSVoipPushPlatformEndpoint(token)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -24,12 +24,12 @@ func TestDuplcateVoipPlatformEndpoint(t *testing.T) {
 	repository := SNSRepository{IsLocal: true}
 
 	token := uuid.New().String()
-	_, err := repository.CreateIOSVoipPlatformEndpoint(token)
+	_, err := repository.CreateIOSVoipPushPlatformEndpoint(token)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
-	_, err = repository.CreateIOSVoipPlatformEndpoint(token)
+	_, err = repository.CreateIOSVoipPushPlatformEndpoint(token)
 	message := fmt.Sprint(err)
 	assert.Equal(t, strings.Contains(message, "DuplicateEndpoint"), true)
 }
