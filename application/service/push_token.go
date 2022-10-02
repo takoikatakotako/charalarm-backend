@@ -4,7 +4,7 @@ import (
 	"errors"
 	// "math"
 
-	// "github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/entity"
 	charalarm_error "github.com/takoikatakotako/charalarm-backend/error"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	// "github.com/takoikatakotako/charalarm-backend/validator"
@@ -28,17 +28,18 @@ func (a *PushTokenService) AddIOSVoipPushToken(userID string, userToken string, 
 	}
 
 	// 既に作成されてるか確認する
-	for _, v := range anonymousUser.IOSVoIPPushTokens {
-		if v["token"] == userToken {
-			return nil
-		}
+	if anonymousUser.IOSVoIPPushToken.Token == pushToken {
+		return nil
 	}
 
-
-
-	// PlatformApplicationを追加
+	// PlatformApplicationを作成
+	response, err := a.SNSRepository.CreateIOSVoipPlatformEndpoint(pushToken)
+	if err != nil {
+		return err
+	}
 
 	// DynamoDBに追加
-
-	return nil
+	snsEndpointArn := response.EndpointArn
+	anonymousUser.IOSVoIPPushToken = entity.PushToken{Token: pushToken, SNSEndpointArn: snsEndpointArn}
+	return a.DynamoDBRepository.InsertAnonymousUser(anonymousUser)
 }

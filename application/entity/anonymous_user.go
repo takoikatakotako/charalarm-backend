@@ -3,7 +3,7 @@ package entity
 type AnonymousUser struct {
 	UserID    string `dynamodbav:"userID"`
 	UserToken string `dynamodbav:"userToken"`
-	IOSVoIPPushTokens []map[string]string `json:"iosVoIPPushTokens"`
+	IOSVoIPPushToken PushToken `json:"iosVoIPPushTokens"`
 }
 
 type AnonymousUserRequest struct {
