@@ -5,7 +5,7 @@ import (
 
 	"github.com/takoikatakotako/charalarm-backend/entity"
 	charalarm_error "github.com/takoikatakotako/charalarm-backend/error"
-	repository "github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/validator"
 )
 
@@ -25,6 +25,7 @@ func (a *AnonymousUserService) GetAnonymousUser(userID string, userToken string)
 		return anonymousUser, nil
 	}
 
+	// 一致しない場合
 	return entity.AnonymousUser{}, errors.New(charalarm_error.AUTHENTICATION_FAILURE)
 }
 

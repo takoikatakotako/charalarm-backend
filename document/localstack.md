@@ -10,13 +10,23 @@ docker-compose up -d
 ```
 
 
-## テーブルの一覧を表示
+# S3
+
+```
+aws s3 ls --endpoint-url=http://localhost:4572
+```
+
+
+
+## DynamoDB
+
+### テーブルの一覧を表示
 
 ```
 $ aws dynamodb list-tables --endpoint-url=http://localhost:4566
 ```
 
-## テーブルの作成
+### テーブルの作成
 
 ```
 $ aws dynamodb create-table \
@@ -27,7 +37,7 @@ $ aws dynamodb create-table \
     --endpoint-url=http://localhost:4566 | jq
 ```
 
-## テーブルの詳細を表示
+### テーブルの詳細を表示
 
 ```
 $ aws dynamodb describe-table \
@@ -67,7 +77,7 @@ $ aws dynamodb query \
 ```
 
 
-## スキャン
+### スキャン
 
 ```
 $ aws dynamodb scan \
@@ -91,5 +101,68 @@ $ aws dynamodb delete-table \
 ```
 
 
+## SNS
 
+### PlatformApplicationを作成
+
+```
+$ aws sns create-platform-application \
+    --name ios-voip-push-platform-application \
+    --platform APNS \
+    --attributes PlatformCredential=DAMMY \
+    --endpoint-url http://localhost:4566 | jq
+```
+
+### PlatformApplicationの一覧を表示
+
+```
+$ aws sns list-platform-applications \
+    --endpoint-url http://localhost:4566 | jq
+```
+
+```
+{
+  "PlatformApplications": [
+    {
+      "PlatformApplicationArn": "arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-voip-push-platform-application",
+      "Attributes": {
+        "PlatformCredential": "DAMMY"
+      }
+    }
+  ]
+}
+```
+
+
+### PlatformEndpointを作成
+
+```
+aws sns create-platform-endpoint \
+  --platform-application-arn arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-voip-push-platform-application \
+  --token MY_TOKEN2 \
+  --endpoint-url http://localhost:4566 | jq
+```
+
+### PlatformEndpointのEndpointsの一覧を確認
+
+```
+aws sns list-endpoints-by-platform-application \
+  --platform-application-arn arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-voip-push-platform-application \
+  --endpoint-url http://localhost:4566
+
+```
+
+```
+aws sns   delete-platform-application \
+  --platform-application-arn arn:aws:sns:ap-northeast-1:000000000000:app/APNS/my-topic3 \
+  --endpoint-url http://localhost:4575
+```
+
+
+```
+aws sns list-topics \
+  --endpoint-url http://localhost:4575
+```
+  --platform-application-arn arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-push-platform-application \
+  --endpoint-url http://localhost:4575
 

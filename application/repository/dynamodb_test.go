@@ -174,7 +174,6 @@ func TestInsertAndDelete(t *testing.T) {
 	assert.Equal(t, len(alarmList), 0)
 }
 
-
 func TestInsertAndDeleteAlarmList(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 
@@ -225,11 +224,10 @@ func TestInsertAndDeleteAlarmList(t *testing.T) {
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
-	
+
 	// Assert
 	assert.Equal(t, len(alarmList), 0)
 }
-
 
 func createAlarm() entity.Alarm {
 	alarmID := uuid.New().String()

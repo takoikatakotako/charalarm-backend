@@ -18,11 +18,6 @@ import (
 	"github.com/takoikatakotako/charalarm-backend/validator"
 )
 
-const (
-	awsRegion          = "ap-northeast-1"
-	localstackEndpoint = "http://localhost:4566"
-)
-
 type DynamoDBRepository struct {
 	IsLocal bool
 }
@@ -294,7 +289,7 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 	}
 
 	// 検索結果から一括削除のためのrequestItemsを作成
-	requestItems :=[]types.WriteRequest{}
+	requestItems := []types.WriteRequest{}
 	for _, item := range output.Items {
 		// alarmIDを取得
 		alarm := entity.Alarm{}
@@ -315,14 +310,14 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 	}
 
 	// アラームを削除
-    _, err = client.BatchWriteItem(ctx, &dynamodb.BatchWriteItemInput{
-        RequestItems: map[string][]types.WriteRequest{
-            table.ALARM_TABLE: requestItems,
-        },
-    })
-    if err != nil {
-        return err
-    }
+	_, err = client.BatchWriteItem(ctx, &dynamodb.BatchWriteItemInput{
+		RequestItems: map[string][]types.WriteRequest{
+			table.ALARM_TABLE: requestItems,
+		},
+	})
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

@@ -13,15 +13,9 @@ import (
 	"github.com/takoikatakotako/charalarm-backend/service"
 )
 
-func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	body := name.Body
-	request := entity.AnonymousUserRequest{}
-
-	fmt.Println("-------")
-	fmt.Println(ctx)
-	fmt.Println(name)
-	fmt.Println(body)
-	fmt.Println("-------")
+func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	body := event.Body
+	request := entity.AnonymousAddPushTokenRequest{}
 
 	if err := json.Unmarshal([]byte(body), &request); err != nil {
 		return events.APIGatewayProxyResponse{
@@ -32,9 +26,14 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 
 	userID := request.UserID
 	userToken := request.UserToken
+	pushToken := request.PushToken
 
-	s := service.AnonymousUserService{Repository: repository.DynamoDBRepository{}}
-	anonymousUser, err := s.GetAnonymousUser(userID, userToken)
+	s := service.PushTokenService{
+		DynamoDBRepository: repository.DynamoDBRepository{},
+		SNSRepository:      repository.SNSRepository{},
+	}
+
+	err := s.AddIOSVoipPushToken(userID, userToken, pushToken)
 	if err != nil {
 		fmt.Println(err)
 		response := entity.MessageResponse{Message: "ユーザー情報の取得に失敗しました"}
@@ -45,7 +44,7 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 		}, nil
 	}
 
-	jsonBytes, _ := json.Marshal(anonymousUser)
+	jsonBytes, _ := json.Marshal("登録完了")
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
 		StatusCode: http.StatusOK,
