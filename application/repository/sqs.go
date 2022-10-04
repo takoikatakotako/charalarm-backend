@@ -2,8 +2,8 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"encoding/json"
+	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
@@ -44,7 +44,7 @@ func (s *SQSRepository) createSQSClient() (*sqs.Client, error) {
 ////////////////////////////////////
 // SQS
 ////////////////////////////////////
-func (s *SQSRepository) SendAlarmInfoMessage(alarmInfo entity.AlarmInfo) (error) {
+func (s *SQSRepository) SendAlarmInfoMessage(alarmInfo entity.AlarmInfo) error {
 	queueURL := "http://localhost:4566/000000000000/voip-push-queue.fifo"
 	return s.sendMessage(queueURL, "XXXX", alarmInfo)
 }
@@ -54,25 +54,25 @@ func (s *SQSRepository) RecieveAlarmInfoMessage() ([]types.Message, error) {
 	return s.recieveMessage(queueURL)
 }
 
-func (s *SQSRepository) PurgeQueue() (error) {
+func (s *SQSRepository) PurgeQueue() error {
 	queueURL := "http://localhost:4566/000000000000/voip-push-queue.fifo"
-	
+
 	// SQSClient作成
 	client, err := s.createSQSClient()
 	if err != nil {
 		return err
 	}
-	
+
 	// purge queue
 	input := &sqs.PurgeQueueInput{
-		QueueUrl:    aws.String(queueURL),
+		QueueUrl: aws.String(queueURL),
 	}
 	_, err = client.PurgeQueue(context.Background(), input)
 	return err
 }
 
 // Private Methods
-func (s *SQSRepository) sendMessage(queueURL string, messageGroupId string, alarmInfo entity.AlarmInfo) (error) {
+func (s *SQSRepository) sendMessage(queueURL string, messageGroupId string, alarmInfo entity.AlarmInfo) error {
 	// SQSClient作成
 	client, err := s.createSQSClient()
 	if err != nil {
@@ -88,14 +88,13 @@ func (s *SQSRepository) sendMessage(queueURL string, messageGroupId string, alar
 	// sent message
 	sMInput := &sqs.SendMessageInput{
 		MessageAttributes: map[string]types.MessageAttributeValue{},
-		MessageGroupId: aws.String(messageGroupId),
-		MessageBody: aws.String(string(jsonBytes)),
-		QueueUrl:    aws.String(queueURL),
+		MessageGroupId:    aws.String(messageGroupId),
+		MessageBody:       aws.String(string(jsonBytes)),
+		QueueUrl:          aws.String(queueURL),
 	}
 	_, err = client.SendMessage(context.Background(), sMInput)
 	return err
 }
-
 
 func (s *SQSRepository) recieveMessage(queueURL string) ([]types.Message, error) {
 	// SQSClient作成
@@ -119,9 +118,6 @@ func (s *SQSRepository) recieveMessage(queueURL string) ([]types.Message, error)
 
 	return resp.Messages, nil
 }
-
-
-
 
 // func (s *SNSRepository) CreateIOSVoipPushPlatformEndpoint(pushToken string) (entity.CreatePlatformEndpointResponse, error) {
 // 	platformApplicationArn := "arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-voip-push-platform-application"

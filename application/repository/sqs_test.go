@@ -2,10 +2,10 @@ package repository
 
 import (
 	"encoding/json"
-	"testing"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/takoikatakotako/charalarm-backend/entity"
+	"testing"
 )
 
 // func TestCreateVoipPlatformEndpoint(t *testing.T) {

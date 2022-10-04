@@ -14,12 +14,15 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	// 現在時刻取得
 	t := time.Now()
-    hour := t.Hour()
-    minute := t.Minute()
+	hour := t.Hour()
+	minute := t.Minute()
 	weekday := t.Weekday()
 
-	s := service.BatchService{Repository: repository.DynamoDBRepository{}}
-	anonymousUser, err := s.GetAnonymousUser(userID, userToken)
+	s := service.BatchService{
+		DynamoDBRepository: repository.DynamoDBRepository{},
+		SQSRepository:      repository.SQSRepository{},
+	}
+	anonymousUser, err := s.QueryDynamoDBAndSendMessage(hour, minute, weekday)
 	if err != nil {
 		fmt.Println(err)
 		response := entity.MessageResponse{Message: "ユーザー情報の取得に失敗しました"}
@@ -35,17 +38,9 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 		Body:       string(jsonBytes),
 		StatusCode: http.StatusOK,
 	}, nil
-	
-	
-	
-	
+
 	response := entity.MessageResponse{Message: "healthy!"}
 	jsonBytes, _ := json.Marshal(response)
-
-
-
-
-
 
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
@@ -56,5 +51,3 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 func main() {
 	lambda.Start(Handler)
 }
-
-
