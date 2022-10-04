@@ -63,7 +63,6 @@ func (s *SQSRepository) sendMessage(queueURL string, alarmInfo entity.AlarmInfo)
 	sMInput := &sqs.SendMessageInput{
 		MessageAttributes: map[string]types.MessageAttributeValue{},
 		MessageGroupId: aws.String("XXXX"),
-		MessageDeduplicationId: aws.String("XXXX"),
 		MessageBody: aws.String("In bestseller for the week of 12/11/2016."),
 		QueueUrl:    aws.String(queueURL),
 	}
