@@ -1,11 +1,10 @@
 package repository
 
 import (
-// 	"fmt"
-// 	"github.com/google/uuid"
-// 	"github.com/stretchr/testify/assert"
-// 	"strings"
+	"encoding/json"
 	"testing"
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
 	"github.com/takoikatakotako/charalarm-backend/entity"
 )
 
@@ -21,12 +20,31 @@ import (
 // 	assert.NotEqual(t, len(response.EndpointArn), 0)
 // }
 
-func TestDuplcateVoipPlatformEndpoint2(t *testing.T) {
+func TestSendMessage(t *testing.T) {
 	repository := SQSRepository{IsLocal: true}
-	alarmInfo := entity.AlarmInfo{}
 
-	err := repository.SendAlarmInfoMessage(alarmInfo)
+	// Purge
+	err := repository.PurgeQueue()
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
+
+	alarmID := uuid.New().String()
+	alarmInfo := entity.AlarmInfo{AlarmID: alarmID}
+
+	err = repository.SendAlarmInfoMessage(alarmInfo)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	messages, err := repository.RecieveAlarmInfoMessage()
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	assert.Equal(t, len(messages), 1)
+	getAlarmInfo := entity.AlarmInfo{}
+	body := *messages[0].Body
+	json.Unmarshal([]byte(body), &getAlarmInfo)
+	assert.Equal(t, getAlarmInfo.AlarmID, alarmID)
 }
