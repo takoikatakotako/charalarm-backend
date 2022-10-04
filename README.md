@@ -3,10 +3,9 @@
 
 ## ドキュメント
 
-- [MySQLについて](documents/MySQL.md)
-- [Curlについて](documents/Curl.md)
-- [Localstackについて](documents/Localstack.md)
-- [APIのエンドポイントについて](documents/Endpoint.md)
+- [APIのエンドポイントについて](document/api-endpoint.md)
+- [Curlについて](document/curl.md)
+- [Localstackについて](document/localstack.md)
 - [Conohaサーバーのセットアップについて](documents/Conoha-Setup.md)
 - [ConohaサーバーのAPIセットアップについて](documents/Conoha-API.md)
 - [ConohaサーバーのBatchセットアップについて](documents/Conoha-Batch.md)

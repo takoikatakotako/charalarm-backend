@@ -155,14 +155,58 @@ aws sns list-endpoints-by-platform-application \
 ```
 aws sns   delete-platform-application \
   --platform-application-arn arn:aws:sns:ap-northeast-1:000000000000:app/APNS/my-topic3 \
-  --endpoint-url http://localhost:4575
+  --endpoint-url http://localhost:4566
 ```
 
 
 ```
 aws sns list-topics \
-  --endpoint-url http://localhost:4575
+  --endpoint-url http://localhost:4566
 ```
   --platform-application-arn arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-push-platform-application \
-  --endpoint-url http://localhost:4575
+  --endpoint-url http://localhost:4566
 
+
+# SQS
+
+### キューの一覧を表示
+
+```
+$ aws sqs list-queues \
+    --endpoint-url http://localhost:4566 | jq
+```
+
+### キューのメッセージ数を確認
+
+```
+$ aws sqs get-queue-attributes \
+    --queue-url http://localhost:4566/000000000000/voip-push-queue.fifo \
+    --attribute-names ApproximateNumberOfMessages \
+    --endpoint-url http://localhost:4566 | jq
+```
+
+### キューのNotVisible状態のメッセージ数を確認
+
+```
+$ aws sqs get-queue-attributes \
+    --queue-url http://localhost:4566/000000000000/voip-push-queue.fifo \
+    --attribute-names ApproximateNumberOfMessagesNotVisible \
+    --endpoint-url http://localhost:4566 | jq
+```
+
+### キューからメッセージを取得
+
+```
+$ aws sqs receive-message \
+    --queue-url http://localhost:4566/000000000000/voip-push-queue.fifo \
+    --max-number-of-messages 10 \
+    --endpoint-url http://localhost:4566 | jq
+```
+
+### キュー内のメッセージをすべて削除
+
+```
+$ aws sqs purge-queue \
+    --queue-url http://localhost:4566/000000000000/voip-push-queue.fifo \
+    --endpoint-url http://localhost:4566 | jq
+```
