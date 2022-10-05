@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	// "encoding/json"
 
@@ -13,7 +14,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/takoikatakotako/charalarm-backend/entity"
-	charalarm_error "github.com/takoikatakotako/charalarm-backend/error"
+	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/table"
 	"github.com/takoikatakotako/charalarm-backend/validator"
 )
@@ -77,7 +78,7 @@ func (d *DynamoDBRepository) GetAnonymousUser(userID string) (entity.AnonymousUs
 	gotUser := entity.AnonymousUser{}
 
 	if len(output.Item) == 0 {
-		return entity.AnonymousUser{}, errors.New(charalarm_error.INVAlID_VALUE)
+		return entity.AnonymousUser{}, errors.New(message.INVAlID_VALUE)
 	}
 
 	err = attributevalue.UnmarshalMap(output.Item, &gotUser)
@@ -174,7 +175,6 @@ func (d *DynamoDBRepository) DeleteAnonymousUser(userID string) error {
 // Alarm
 ////////////////////////////////////
 func (d *DynamoDBRepository) GetAlarmList(userID string) ([]entity.Alarm, error) {
-	ctx := context.Background()
 
 	client, err := d.createDynamoDBClient()
 	if err != nil {
@@ -182,7 +182,7 @@ func (d *DynamoDBRepository) GetAlarmList(userID string) ([]entity.Alarm, error)
 	}
 
 	// クエリ実行
-	output, err := client.Query(ctx, &dynamodb.QueryInput{
+	output, err := client.Query(context.Background(), &dynamodb.QueryInput{
 		TableName:              aws.String("alarm-table"),
 		IndexName:              aws.String("user-id-index"),
 		KeyConditionExpression: aws.String("userID = :userID"),
@@ -198,8 +198,10 @@ func (d *DynamoDBRepository) GetAlarmList(userID string) ([]entity.Alarm, error)
 	alarmList := []entity.Alarm{}
 	for _, item := range output.Items {
 		alarm := entity.Alarm{}
-		if err := attributevalue.UnmarshalMap(item, &alarm); err != nil {
-			return []entity.Alarm{}, err
+		err := attributevalue.UnmarshalMap(item, &alarm)
+		if err != nil {
+			// TODO ログを出す
+			continue
 		}
 		alarmList = append(alarmList, alarm)
 	}
@@ -207,9 +209,75 @@ func (d *DynamoDBRepository) GetAlarmList(userID string) ([]entity.Alarm, error)
 	return alarmList, nil
 }
 
-func (d *DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
-	ctx := context.Background()
+func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time.Weekday) ([]entity.Alarm, error) {
+	alarmTime := fmt.Sprintf("%02d-%02d", hour, minute)
+	
+	// clientの作成
+	client, err := d.createDynamoDBClient()
+	if err != nil {
+		return []entity.Alarm{}, err
+	}
 
+	// クエリ実行
+	output, err := client.Query(context.Background(), &dynamodb.QueryInput{
+		TableName:              aws.String("alarm-table"),
+		IndexName:              aws.String("alarm-time-index"),
+		KeyConditionExpression: aws.String("alarmTime = :alarmTime"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":alarmTime": &types.AttributeValueMemberS{Value: alarmTime},
+		},
+	})
+	if err != nil {
+		return []entity.Alarm{}, err
+	}
+
+	// 取得結果を struct の配列に変換
+	alarmList := []entity.Alarm{}
+	for _, item := range output.Items {
+		alarm := entity.Alarm{}
+		err := attributevalue.UnmarshalMap(item, &alarm)
+		if err != nil {
+			// TODO ログを出す
+			continue
+		}
+
+		// 曜日が一致するもの
+		switch weekday {
+		case time.Sunday:
+			if alarm.Sunday {
+				alarmList = append(alarmList, alarm)
+			}
+		case time.Monday:
+			if alarm.Monday {
+				alarmList = append(alarmList, alarm)
+			}		
+		case time.Tuesday:
+			if alarm.Tuesday {
+				alarmList = append(alarmList, alarm)
+			}	
+		case time.Wednesday:
+			if alarm.Wednesday {
+				alarmList = append(alarmList, alarm)
+			}	
+		case time.Thursday:
+			if alarm.Thursday {
+				alarmList = append(alarmList, alarm)
+			}	
+		case time.Friday:
+			if alarm.Friday {
+				alarmList = append(alarmList, alarm)
+			}	
+		case time.Saturday:
+			if alarm.Saturday {
+				alarmList = append(alarmList, alarm)
+			}	
+		}
+	}
+
+	return alarmList, nil
+}
+
+func (d *DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
 	client, err := d.createDynamoDBClient()
 	if err != nil {
 		fmt.Printf("err, %v", err)
@@ -217,8 +285,10 @@ func (d *DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
 	}
 
 	// Alarm のバリデーション
-	if !validator.IsValidateAlarm(alarm) {
-		return errors.New(charalarm_error.INVAlID_VALUE)
+	err = validator.ValidateAlarm(alarm)
+	if err != nil {
+		fmt.Printf("err, %v", err)
+		return err
 	}
 
 	// 新規レコードの追加
@@ -227,7 +297,7 @@ func (d *DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
 		fmt.Printf("dynamodb marshal: %s\n", err.Error())
 		return err
 	}
-	_, err = client.PutItem(ctx, &dynamodb.PutItemInput{
+	_, err = client.PutItem(context.Background(), &dynamodb.PutItemInput{
 		TableName: aws.String(table.ALARM_TABLE),
 		Item:      av,
 	})

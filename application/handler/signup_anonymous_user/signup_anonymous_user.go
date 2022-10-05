@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/takoikatakotako/charalarm-backend/entity"
-	charalarm_error "github.com/takoikatakotako/charalarm-backend/error"
+	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/service"
 )
@@ -27,7 +27,7 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 	// Decode Body
 	if err := json.Unmarshal([]byte(body), &request); err != nil {
 		return events.APIGatewayProxyResponse{
-			Body:       string(charalarm_error.FAILED_TO_DECODE_REQUEST_BODY),
+			Body:       string(message.FAILED_TO_DECODE),
 			StatusCode: 500,
 		}, nil
 	}

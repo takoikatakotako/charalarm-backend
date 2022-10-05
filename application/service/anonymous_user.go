@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/takoikatakotako/charalarm-backend/entity"
-	charalarm_error "github.com/takoikatakotako/charalarm-backend/error"
+	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/validator"
 )
@@ -26,13 +26,13 @@ func (a *AnonymousUserService) GetAnonymousUser(userID string, userToken string)
 	}
 
 	// 一致しない場合
-	return entity.AnonymousUser{}, errors.New(charalarm_error.AUTHENTICATION_FAILURE)
+	return entity.AnonymousUser{}, errors.New(message.AUTHENTICATION_FAILURE)
 }
 
 func (a *AnonymousUserService) Signup(userID string, userToken string) error {
 	// バリデーション
 	if !validator.IsValidUUID(userID) || !validator.IsValidUUID(userToken) {
-		return errors.New(charalarm_error.INVAlID_VALUE)
+		return errors.New(message.INVAlID_VALUE)
 	}
 
 	// Check User Is Exist
@@ -54,7 +54,7 @@ func (a *AnonymousUserService) Signup(userID string, userToken string) error {
 func (a *AnonymousUserService) Withdraw(userID string, userToken string) error {
 	// バリデーション
 	if !validator.IsValidUUID(userID) || !validator.IsValidUUID(userToken) {
-		return errors.New(charalarm_error.INVAlID_VALUE)
+		return errors.New(message.INVAlID_VALUE)
 	}
 
 	// ユーザーを取得
@@ -69,5 +69,5 @@ func (a *AnonymousUserService) Withdraw(userID string, userToken string) error {
 	}
 
 	// 認証失敗
-	return errors.New(charalarm_error.AUTHENTICATION_FAILURE)
+	return errors.New(message.AUTHENTICATION_FAILURE)
 }

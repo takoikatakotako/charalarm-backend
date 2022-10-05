@@ -4,7 +4,7 @@ import (
 	"errors"
 	// "math"
 	"github.com/takoikatakotako/charalarm-backend/entity"
-	charalarm_error "github.com/takoikatakotako/charalarm-backend/error"
+	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	// "github.com/takoikatakotako/charalarm-backend/validator"
 )
@@ -25,7 +25,7 @@ func (a *PushTokenService) AddIOSPushToken(userID string, userToken string, push
 	if anonymousUser.UserID == userID && anonymousUser.UserToken == userToken {
 		// Nothing
 	} else {
-		return errors.New(charalarm_error.AUTHENTICATION_FAILURE)
+		return errors.New(message.AUTHENTICATION_FAILURE)
 	}
 
 	// 既に作成されてるか確認
@@ -56,7 +56,7 @@ func (a *PushTokenService) AddIOSVoipPushToken(userID string, userToken string, 
 	if anonymousUser.UserID == userID && anonymousUser.UserToken == userToken {
 		// Nothing
 	} else {
-		return errors.New(charalarm_error.AUTHENTICATION_FAILURE)
+		return errors.New(message.AUTHENTICATION_FAILURE)
 	}
 
 	// 既に作成されてるか確認

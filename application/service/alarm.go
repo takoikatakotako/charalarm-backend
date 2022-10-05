@@ -5,7 +5,7 @@ import (
 	"math"
 
 	"github.com/takoikatakotako/charalarm-backend/entity"
-	charalarm_error "github.com/takoikatakotako/charalarm-backend/error"
+	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/validator"
 )
@@ -27,12 +27,13 @@ func (a *AlarmService) AddAlarm(userID string, userToken string, alarm entity.Al
 
 	// UserID, UserTokenが一致するか確認する
 	if anonymousUser.UserID != userID || anonymousUser.UserToken != userToken {
-		return errors.New(charalarm_error.AUTHENTICATION_FAILURE)
+		return errors.New(message.AUTHENTICATION_FAILURE)
 	}
 
 	// アラームのバリデーションを行う
-	if !validator.IsValidateAlarm(alarm) {
-		return errors.New(charalarm_error.INVAlID_VALUE)
+	err = validator.ValidateAlarm(alarm)
+	if err != nil {
+		return err
 	}
 
 	// 既に登録されたアラームの件数を取得
@@ -59,7 +60,7 @@ func (a *AlarmService) DeleteAlarm(userID string, userToken string, alarmID stri
 
 	// UserID, UserTokenが一致するか確認する
 	if anonymousUser.UserID != userID || anonymousUser.UserToken != userToken {
-		return errors.New(charalarm_error.AUTHENTICATION_FAILURE)
+		return errors.New(message.AUTHENTICATION_FAILURE)
 	}
 
 	// アラームを削除する
@@ -81,6 +82,6 @@ func (a *AlarmService) GetAlarmList(userID string, userToken string) ([]entity.A
 		}
 		return alarmList, nil
 	} else {
-		return []entity.Alarm{}, errors.New(charalarm_error.AUTHENTICATION_FAILURE)
+		return []entity.Alarm{}, errors.New(message.AUTHENTICATION_FAILURE)
 	}
 }
