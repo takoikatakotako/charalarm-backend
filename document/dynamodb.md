@@ -32,12 +32,13 @@ DynamoDBのテーブル構造についてです。
 {
   "alarmID":"{UUID}",
   "userID":"{UUID}",
-  "alarmType":"{XXXX or XXXXX or XXXXX or XXXX}",
+  "alarmType":"{VOICE_CALL_ALARM or NEWS_CALL_ALARM or CALENDER_CALL_ALARM}",
   "alarmEnable":"{Bool}",
   "alarmName":"{String}",
   "alarmHour":"{Int}",
   "alarmMinute":"{Int}",
   "alarmTime":"{String}",
+  "charaID":"{String}",
   "charaName":"{String}",
   "voiceFileURL":"{String}",  
   "sunday":"{Bool}",
@@ -69,4 +70,23 @@ DynamoDBのテーブル構造についてです。
 
 ### alarmTime
 
+インデックス用のフィールドです。
+`("%02d-%02d", alarmHour, alarmMinute)` が入ります。
 
+
+### charaID
+
+キャラクターのIDです。
+ランダムの場合は `RANDOM` が入ります。
+
+
+### charaName
+
+キャラクター名です。
+ランダムの場合は `RANDOM` が入ります。
+
+
+### voiceFileURL
+
+ボイス用のURLが入ります。
+ランダムの場合は `RANDOM` が入ります。
