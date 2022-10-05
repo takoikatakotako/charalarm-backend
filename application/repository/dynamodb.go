@@ -211,7 +211,7 @@ func (d *DynamoDBRepository) GetAlarmList(userID string) ([]entity.Alarm, error)
 
 func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time.Weekday) ([]entity.Alarm, error) {
 	alarmTime := fmt.Sprintf("%02d-%02d", hour, minute)
-	
+
 	// clientの作成
 	client, err := d.createDynamoDBClient()
 	if err != nil {
@@ -250,27 +250,27 @@ func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time
 		case time.Monday:
 			if alarm.Monday {
 				alarmList = append(alarmList, alarm)
-			}		
+			}
 		case time.Tuesday:
 			if alarm.Tuesday {
 				alarmList = append(alarmList, alarm)
-			}	
+			}
 		case time.Wednesday:
 			if alarm.Wednesday {
 				alarmList = append(alarmList, alarm)
-			}	
+			}
 		case time.Thursday:
 			if alarm.Thursday {
 				alarmList = append(alarmList, alarm)
-			}	
+			}
 		case time.Friday:
 			if alarm.Friday {
 				alarmList = append(alarmList, alarm)
-			}	
+			}
 		case time.Saturday:
 			if alarm.Saturday {
 				alarmList = append(alarmList, alarm)
-			}	
+			}
 		}
 	}
 

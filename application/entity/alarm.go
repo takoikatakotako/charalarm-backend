@@ -14,7 +14,12 @@ type Alarm struct {
 	AlarmMinute int    `json:"alarmMinute" dynamodbav:"alarmMinute"`
 	AlarmTime   string `json:"alarmTime" dynamodbav:"alarmTime"`
 
-	// Day Of Weeks
+	// Chara INfo
+	CharaID      string `json:"charaID" dynamodbav:"charaID"`
+	CharaName    string `json:"charaName" dynamodbav:"charaName"`
+	VoiceFileURL string `json:"voiceFileURL" dynamodbav:"voiceFileURL"`
+
+	// Weekday
 	Sunday    bool `json:"sunday" dynamodbav:"sunday"`
 	Monday    bool `json:"monday" dynamodbav:"monday"`
 	Tuesday   bool `json:"tuesday" dynamodbav:"tuesday"`

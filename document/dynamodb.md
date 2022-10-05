@@ -22,6 +22,8 @@ DynamoDBのテーブル構造についてです。
 }
 ```
 
+
+
 ## alarm-table
 
 アラームの情報が入るテーブルです。
@@ -36,6 +38,8 @@ DynamoDBのテーブル構造についてです。
   "alarmHour":"{Int}",
   "alarmMinute":"{Int}",
   "alarmTime":"{String}",
+  "charaName":"{String}",
+  "voiceFileURL":"{String}",  
   "sunday":"{Bool}",
   "monday":"{Bool}",
   "tuesday":"{Bool}",
@@ -45,3 +49,24 @@ DynamoDBのテーブル構造についてです。
   "saturday":"{Bool}"
 }
 ```
+
+### alarmType
+
+アラームの種類です。
+
+- VOICE_CALL_ALARM
+
+キャラクターから電話がかかってきて、事前録音されたボイスを再生します。
+
+- NEWS_CALL_ALARM
+
+キャラクターから電話がかかってきて、音声合成されたニュースを再生します。
+
+- CALENDER_CALL_ALARM
+
+キャラクターから電話がかかってきて、音声合成された今日の予定を再生します。
+
+
+### alarmTime
+
+

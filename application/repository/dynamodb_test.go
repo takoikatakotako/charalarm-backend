@@ -1,11 +1,11 @@
 package repository
 
 import (
-	"testing"
-
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/takoikatakotako/charalarm-backend/entity"
+	"testing"
+	"time"
 )
 
 ////////////////////////////////////
@@ -135,6 +135,49 @@ func TestInsertAlarmAndGet(t *testing.T) {
 	assert.Equal(t, alarmList[0], insertAlarm)
 }
 
+func TestInsertAndQueryByAlarmTime(t *testing.T) {
+	repository := DynamoDBRepository{IsLocal: true}
+
+	// 現在時刻取得
+	currentTime := time.Now()
+	hour := currentTime.Hour()
+	minute := currentTime.Minute()
+	weekday := currentTime.Weekday()
+
+	// Create Alarms
+	alarm0 := createAlarm()
+	alarm0.AlarmHour = hour
+	alarm0.AlarmMinute = minute
+	alarm0.SetAlarmTime()
+
+	alarm1 := createAlarm()
+	alarm1.AlarmHour = hour
+	alarm1.AlarmMinute = minute
+	alarm1.SetAlarmTime()
+
+	alarm2 := createAlarm()
+	alarm2.AlarmHour = hour
+	alarm2.AlarmMinute = minute
+	alarm2.SetAlarmTime()
+
+	// Insert Alarms
+	err := repository.InsertAlarm(alarm0)
+	err = repository.InsertAlarm(alarm1)
+	err = repository.InsertAlarm(alarm2)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Query
+	alarmList, err := repository.QueryByAlarmTime(hour, minute, weekday)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Assert
+	assert.Equal(t, len(alarmList), 3)
+}
+
 func TestInsertAndDelete(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 
@@ -239,11 +282,11 @@ func createAlarm() entity.Alarm {
 	alarmMinute := 15
 	alarmTime := "08-15"
 	sunday := true
-	monday := false
+	monday := true
 	tuesday := true
-	wednesday := false
+	wednesday := true
 	thursday := true
-	friday := false
+	friday := true
 	saturday := true
 
 	return entity.Alarm{
