@@ -27,6 +27,6 @@ Charalarmの新しいアーキテクチャです。
 
 - [APIのエンドポイントについて](document/api-endpoint.md)
 - [Localstackについて](document/localstack.md)
-- [証明書などのアップデートについて](documents/update.md)
+- [証明書などのアップデートについて](document/update.md)
 - [DynamoDBについて](document/dynamodb.md)
 - [SQSについて](documents/sqs.md)
