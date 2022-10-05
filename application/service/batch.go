@@ -15,5 +15,9 @@ type BatchService struct {
 }
 
 func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday time.Weekday) error {
+	// クエリでアラームを取得
+
+	// SQSに送信
+	
 	return nil
 }

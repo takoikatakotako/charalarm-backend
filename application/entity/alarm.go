@@ -10,6 +10,7 @@ type Alarm struct {
 	AlarmName   string `json:"alarmName" dynamodbav:"alarmName"`
 	AlarmHour   int    `json:"alarmHour" dynamodbav:"alarmHour"`
 	AlarmMinute int    `json:"alarmMinute" dynamodbav:"alarmMinute"`
+	AlarmTime   string `json:"alarmTime" dynamodbav:"alarmTime"`
 
 	// Day Of Weeks
 	Sunday    bool `json:"sunday" dynamodbav:"sunday"`
@@ -19,16 +20,4 @@ type Alarm struct {
 	Thursday  bool `json:"thursday" dynamodbav:"thursday"`
 	Friday    bool `json:"friday" dynamodbav:"friday"`
 	Saturday  bool `json:"saturday" dynamodbav:"saturday"`
-}
-
-type AnonymousDeleteAlarmRequest struct {
-	UserID    string `json:"userID"`
-	UserToken string `json:"userToken"`
-	AlarmID   string `json:"alarmID"`
-}
-
-type AnonymousAddAlarmRequest struct {
-	UserID    string `json:"userID"`
-	UserToken string `json:"userToken"`
-	Alarm     Alarm  `json:"alarm"`
 }

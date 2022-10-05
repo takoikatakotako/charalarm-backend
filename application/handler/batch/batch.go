@@ -1,13 +1,15 @@
 package main
 
 import (
+	"time"
 	"context"
 	"encoding/json"
 	"net/http"
-
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/service"
+	"github.com/takoikatakotako/charalarm-backend/repository"
 )
 
 func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -22,9 +24,8 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 		DynamoDBRepository: repository.DynamoDBRepository{},
 		SQSRepository:      repository.SQSRepository{},
 	}
-	anonymousUser, err := s.QueryDynamoDBAndSendMessage(hour, minute, weekday)
+	err := s.QueryDynamoDBAndSendMessage(hour, minute, weekday)
 	if err != nil {
-		fmt.Println(err)
 		response := entity.MessageResponse{Message: "ユーザー情報の取得に失敗しました"}
 		jsonBytes, _ := json.Marshal(response)
 		return events.APIGatewayProxyResponse{
@@ -32,12 +33,6 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 			StatusCode: http.StatusInternalServerError,
 		}, nil
 	}
-
-	jsonBytes, _ := json.Marshal(anonymousUser)
-	return events.APIGatewayProxyResponse{
-		Body:       string(jsonBytes),
-		StatusCode: http.StatusOK,
-	}, nil
 
 	response := entity.MessageResponse{Message: "healthy!"}
 	jsonBytes, _ := json.Marshal(response)
