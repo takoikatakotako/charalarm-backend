@@ -285,7 +285,7 @@ func (d *DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
 	}
 
 	// Alarm のバリデーション
-	err = validator.IsValidateAlarm(alarm)
+	err = validator.ValidateAlarm(alarm)
 	if err != nil {
 		fmt.Printf("err, %v", err)
 		return err

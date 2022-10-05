@@ -31,8 +31,9 @@ func (a *AlarmService) AddAlarm(userID string, userToken string, alarm entity.Al
 	}
 
 	// アラームのバリデーションを行う
-	if !validator.IsValidateAlarm(alarm) {
-		return errors.New(message.INVAlID_VALUE)
+	err = validator.ValidateAlarm(alarm)
+	if err != nil {
+		return err
 	}
 
 	// 既に登録されたアラームの件数を取得

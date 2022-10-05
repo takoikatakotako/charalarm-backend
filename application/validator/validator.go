@@ -13,7 +13,7 @@ func IsValidUUID(u string) bool {
     return err == nil
 }
 
-func IsValidateAlarm(alarm entity.Alarm) error {
+func ValidateAlarm(alarm entity.Alarm) error {
 	// AlarmID
 	if !IsValidUUID(alarm.AlarmID) {
 		return errors.New(message.INVAlID_VALUE + ": AlarmID")
