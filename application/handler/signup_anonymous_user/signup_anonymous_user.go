@@ -27,7 +27,7 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 	// Decode Body
 	if err := json.Unmarshal([]byte(body), &request); err != nil {
 		return events.APIGatewayProxyResponse{
-			Body:       string(message.FAILED_TO_DECODE_REQUEST_BODY),
+			Body:       string(message.FAILED_TO_DECODE),
 			StatusCode: 500,
 		}, nil
 	}
