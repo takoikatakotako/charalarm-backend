@@ -26,11 +26,5 @@ Charalarmの新しいアーキテクチャです。
 ## ドキュメント
 
 - [APIのエンドポイントについて](document/api-endpoint.md)
-- [Curlについて](document/curl.md)
 - [Localstackについて](document/localstack.md)
-- [Conohaサーバーのセットアップについて](documents/Conoha-Setup.md)
-- [ConohaサーバーのAPIセットアップについて](documents/Conoha-API.md)
-- [ConohaサーバーのBatchセットアップについて](documents/Conoha-Batch.md)
-- [ConohaサーバーのWorkerセットアップについて](documents/Conoha-Worker.md)
-- [Conohaサーバーのアップデートについて](documents/Conoha-Update.md)
-
+- [証明書などのアップデートについて](documents/update.md)
