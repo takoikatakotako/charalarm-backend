@@ -14,7 +14,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/takoikatakotako/charalarm-backend/entity"
-	charalarm_error "github.com/takoikatakotako/charalarm-backend/error"
+	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/table"
 	"github.com/takoikatakotako/charalarm-backend/validator"
 )
@@ -78,7 +78,7 @@ func (d *DynamoDBRepository) GetAnonymousUser(userID string) (entity.AnonymousUs
 	gotUser := entity.AnonymousUser{}
 
 	if len(output.Item) == 0 {
-		return entity.AnonymousUser{}, errors.New(charalarm_error.INVAlID_VALUE)
+		return entity.AnonymousUser{}, errors.New(message.INVAlID_VALUE)
 	}
 
 	err = attributevalue.UnmarshalMap(output.Item, &gotUser)
@@ -285,8 +285,10 @@ func (d *DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
 	}
 
 	// Alarm のバリデーション
-	if !validator.IsValidateAlarm(alarm) {
-		return errors.New(charalarm_error.INVAlID_VALUE)
+	err = validator.IsValidateAlarm(alarm)
+	if err != nil {
+		fmt.Printf("err, %v", err)
+		return err
 	}
 
 	// 新規レコードの追加

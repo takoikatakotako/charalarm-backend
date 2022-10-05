@@ -1,6 +1,8 @@
 package message
 
 const (
-	awsRegion          = "ap-northeast-1"
-	localstackEndpoint = "http://localhost:4566"
+	// Error
+	INVAlID_VALUE          = "Invalid value"
+	AUTHENTICATION_FAILURE = "Authentication failure"
+	FAILED_TO_DECODE = "Failed to decode"
 )

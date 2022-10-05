@@ -1,5 +1,7 @@
 package entity
 
+import "fmt"
+
 type Alarm struct {
 	AlarmID string `json:"alarmID" dynamodbav:"alarmID"`
 	UserID  string `json:"userID" dynamodbav:"userID"`
@@ -20,4 +22,8 @@ type Alarm struct {
 	Thursday  bool `json:"thursday" dynamodbav:"thursday"`
 	Friday    bool `json:"friday" dynamodbav:"friday"`
 	Saturday  bool `json:"saturday" dynamodbav:"saturday"`
+}
+
+func (a *Alarm) SetAlarmTime() {
+	a.AlarmTime = fmt.Sprintf("%02d-%02d", a.AlarmHour, a.AlarmMinute)
 }

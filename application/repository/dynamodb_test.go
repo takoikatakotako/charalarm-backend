@@ -237,6 +237,7 @@ func createAlarm() entity.Alarm {
 	alarmName := "My Alarm"
 	alarmHour := 8
 	alarmMinute := 15
+	alarmTime := "08-15"
 	sunday := true
 	monday := false
 	tuesday := true
@@ -252,6 +253,7 @@ func createAlarm() entity.Alarm {
 		AlarmEnable: alarmEnable,
 		AlarmName:   alarmName,
 		AlarmHour:   alarmHour,
+		AlarmTime:   alarmTime,
 		AlarmMinute: alarmMinute,
 		Sunday:      sunday,
 		Monday:      monday,
