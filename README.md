@@ -1,5 +1,27 @@
 # CharalarmBackend
 
+## 概要
+
+Charalarm は2次元のキャラクターに起こされたい！というtakoikatakotakoの思いを叶えてお金も稼ぐために作る個人開発のモバイルアプリです。 ユーザーはモーニングコールをして欲しいキャラクターをアプリ内で選択しアラームをセットします。 アラームをセットした時間に電話に女の子から電話がかかってきて幸せな起床を実現できます。
+
+またキャラクターは同人ゲーム界隈の人から素材を頂こうと思っています。 同人ゲームサークルの人は既存の素材などからアラームアプリを作ることができる、小野はアプリ内にキャラクターが増えて幸せ。というWinWinの関係になるのが目標です。
+
+
+## 現行アーキテクチャ
+
+Charalarm の現行のアーキテクチャです。 
+お金がないのでRDS, SNS, SSQ, S3だけ使って、API, Batch, Worker はConohaVPSに詰め込んでいます。
+
+![Architecture](./document/image/current-architecture.png)
+
+
+## 新アーキテクチャ
+
+Charalarmの新しいアーキテクチャです。
+現行のアーキテクチャではサービスの維持手数料が高い & スケールアップが面倒なのでサーバーレス中心の構成にしました。
+
+![Architecture](./document/image/architecture.png)
+
 
 ## ドキュメント
 
@@ -11,123 +33,4 @@
 - [ConohaサーバーのBatchセットアップについて](documents/Conoha-Batch.md)
 - [ConohaサーバーのWorkerセットアップについて](documents/Conoha-Worker.md)
 - [Conohaサーバーのアップデートについて](documents/Conoha-Update.md)
-
-
-
-
-
-
-
-	// fmt.Println("------")
-	// bs, _ := json.Marshal(output)
-	// fmt.Println(string(bs))
-	// fmt.Println("------")
-
-
-
-
-
-
-
-### API Server
-
-Charalarm の API です。
-
-### Alarm Batch
-
-毎分起動するアラーム用のバッチです。送るべきアラームを取得し、加工し、SQSにプッシュします。
-
-1. アラームテーブルから送るべきアラームを取得する。
-2. アラームの送り先のSNS ARNを取得する。
-3. 良い感じに加工してSQSにプッシュする
-
-### Worker
-
-常時稼働しているWorkerです。
-SQSの情報を取得し、良い感じにパースし、APNs(Apple Push Notification Service)に電話をかけるように依頼します。
-
-
-## Databaseとデータの流れ
-
-### 匿名ユーザー(v1で実装)
-
-1. アプリをダウンロードし、初回起動時に匿名ユーザー名とトークンがアプリ内で発行される。共にUUID。
-2. 発行された匿名ユーザー名とトークンを送りサインアップを行う。
-3. アラームを追加したり削除したりする。APIを叩く度に匿名ユーザー名とパスワードをリクエストに含める。(セキュリティ的には良くない気がするが、自動生成したパスワードなのと、匿名ユーザーで投稿とかはさせる気がないのでセーフの認識)
-
-### 匿名ユーザー -> 認証済みユーザー(v2で実装、未実装)
-
-1. Cognitoにサインアップし、AuthToken と Cognitoユーザー名を取得する。
-2. SignUpAPIを叩き、認証済みユーザーを作成する。匿名ユーザー名とCognito を紐づける。紐づけるというより、匿名ユーザー時に作ったデータを新しく作った認証済みユーザーの方に移行する。
-
-![er](./material/er.png)
-
-
-## 環境構築
-
-header に APIバージョンを追加
-
-```
-curl -H "X-API-VERSION: 0" http://localhost:8080/api/news/list
-```
-
-
-イメージのビルド
-
-```
-docker build -t takoikatakotako/charalarm:latest .
-docker run -d -p 8080:8080 -e TWILIO_ACCOUNT_SID=xxxx -e TWILIO_AUTH_TOKEN=xxxxx takoikatakotako/charalarm:latest
-```
-
-イメージの中に入る
-
-```
-docker run --rm -it charalarm-api /bin/sh
-```
-
-テスト実行
-
-```
-./gradlew test -i
-./gradlew cleanTest
-```
-
-ECR へのプッシュ
-
-```
-aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 071766756112.dkr.ecr.ap-northeast-1.amazonaws.com
-docker build -t charalarm-api .
-docker tag charalarm-api:latest 071766756112.dkr.ecr.ap-northeast-1.amazonaws.com/charalarm-api:latest
-docker push 071766756112.dkr.ecr.ap-northeast-1.amazonaws.com/charalarm-api:latest
-```
-
-DBを作り直す
-
-```
-docker-compose up -d
-
-mysql --host 127.0.0.1 --port 3306 -u root -p
-
-drop database charalarm;
-create database charalarm;
-use charalarm;
-```
-
-ER図を作成（TODO: Docker化したいね）
-
-```
-brew install graphviz --with-librsvg --with-pango
-cd sql
-java -jar schemaspy-6.1.0.jar -t mysql -dp ./schemaspy/drivers/mysql-connector-java-8.0.20.jar -host 127.0.0.1 -port 3306 -db charalarm -s charalarm -u root -p charalarm -o ./schemaspy/output -vizjs
-```
-
-
-## DB変更
-
-テーブルにカラムを追加する場合などは `charalarm.ddl` に Alter文などを日付と共に追記する。
-
-```
-alter table user add token VARCHAR(255) NULL;
-```
-
 
