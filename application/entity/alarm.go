@@ -14,7 +14,7 @@ type Alarm struct {
 	AlarmMinute int    `json:"alarmMinute" dynamodbav:"alarmMinute"`
 	AlarmTime   string `json:"alarmTime" dynamodbav:"alarmTime"`
 
-	// Chara INfo
+	// Chara Info
 	CharaID      string `json:"charaID" dynamodbav:"charaID"`
 	CharaName    string `json:"charaName" dynamodbav:"charaName"`
 	VoiceFileURL string `json:"voiceFileURL" dynamodbav:"voiceFileURL"`
