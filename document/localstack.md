@@ -55,6 +55,30 @@ $ aws dynamodb get-item \
     --endpoint-url=http://localhost:4566 | jq
 ```
 
+```
+aws dynamodb get-item \
+    --table-name chara-table \
+    --key '{"charaID": {"S": "com.charalarm.yui"}}' \
+    --endpoint-url=http://localhost:4566 | jq
+```
+
+
+### Itemを追加
+
+```
+$ aws dynamodb put-item \
+    --table-name chara-table \
+    --item '{ "charaID": { "S": "com.charalarm.yui" }, "charaEnable": { "BOOL": true }, "charaName": { "S": "井上結衣" }, "charaDescription": { "S": "井上結衣です。プログラマーとして働いていてこのアプリを作っています。このアプリをたくさん使ってくれると嬉しいです、よろしくね！" }, "charaProfile": { "L": [{"M": {"title": {"S": "イラストレーター"}, "name": {"S": "さいもん"}, "url": {"S": "https://twitter.com/simon_ns"} }}, {"M": {"title": {"S": "声優"}, "name": {"S": "Mai"}, "url": {"S": "https://twitter.com/mai_mizuiro"} }} ] } }' \
+    --endpoint-url=http://localhost:4566 | jq
+```
+
+```
+$ aws dynamodb put-item \
+    --table-name chara-table \
+    --item '{ "charaID": { "S": "com.senpu-ki-soft.momiji" }, "charaEnable": { "BOOL": true }, "charaName": { "S": "井上結衣" }, "charaDescription": { "S": "井上結衣です。プログラマーとして働いていてこのアプリを作っています。このアプリをたくさん使ってくれると嬉しいです、よろしくね！" }, "charaProfile": { "L": [{"M": {"title": {"S": "イラストレーター"}, "name": {"S": "さいもん"}, "url": {"S": "https://twitter.com/simon_ns"} }}, {"M": {"title": {"S": "声優"}, "name": {"S": "Mai"}, "url": {"S": "https://twitter.com/mai_mizuiro"} }}, {"M": {"title": {"S": "スクリプト"}, "name": {"S": "小旗ふたる！"}, "url": {"S": "https://twitter.com/Kass_kobataku"} }} ] } }' \
+    --endpoint-url=http://localhost:4566 | jq
+```
+
 
 ### クエリ
 
