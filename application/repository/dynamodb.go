@@ -391,3 +391,40 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 
 	return nil
 }
+
+
+////////////////////////////////////
+// Chara
+////////////////////////////////////
+func (d *DynamoDBRepository) GetCharaList() ([]entity.Chara, error) {
+	// クライアント作成
+	client, err := d.createDynamoDBClient()
+	if err != nil {
+		return []entity.Chara{}, err
+	}
+
+	// クエリ実行
+	input := &dynamodb.ScanInput{
+		TableName: aws.String("chara-table"),
+	}
+
+	output, err := client.Scan(context.Background(), input)
+	if err != nil {
+		return []entity.Chara{}, err
+	}
+
+	// 取得結果を struct の配列に変換
+	charaList := []entity.Chara{}
+	for _, item := range output.Items {
+		chara := entity.Chara{}
+		err := attributevalue.UnmarshalMap(item, &chara)
+		if err != nil {
+			// TODO ログを出す
+			fmt.Println(err)
+			continue
+		}
+		charaList = append(charaList, chara)
+	}
+
+	return charaList, nil
+}

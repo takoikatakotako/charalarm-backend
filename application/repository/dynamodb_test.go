@@ -135,6 +135,8 @@ func TestInsertAlarmAndGet(t *testing.T) {
 	assert.Equal(t, alarmList[0], insertAlarm)
 }
 
+// 1分以内にテストを実行すると失敗するので注意
+// 1回からにした方が良い？
 func TestInsertAndQueryByAlarmTime(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 
@@ -270,6 +272,18 @@ func TestInsertAndDeleteAlarmList(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, len(alarmList), 0)
+}
+
+func TestGetCharaList(t *testing.T) {
+	repository := DynamoDBRepository{IsLocal: true}
+
+	charaList, err := repository.GetCharaList()
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Assert
+	assert.Equal(t, len(charaList), 2)
 }
 
 func createAlarm() entity.Alarm {

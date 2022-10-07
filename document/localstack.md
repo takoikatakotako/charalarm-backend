@@ -115,6 +115,11 @@ $ aws dynamodb scan \
     --endpoint-url=http://localhost:4566 | jq
 ```
 
+```
+$ aws dynamodb scan \
+    --table-name chara-table \
+    --endpoint-url=http://localhost:4566 | jq
+```
 
 ### テーブルの削除
 
