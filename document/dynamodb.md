@@ -94,9 +94,20 @@ DynamoDBのテーブル構造についてです。
 
 ## chara-table
 
-"charaID": { "S": "com.charalarm.yui" }
-"charaEnable": { "BOOL": true }
-"charaName": { "S": "井上結衣" }
-"charaDescription": { "S": "井上結衣です。プログラマーとして働いていてこのアプリを作っています。このアプリをたくさん使ってくれると嬉しいです、よろしくね！" }
-"charaProfile": { "L": [{"M": {"title": {"S": "イラストレーター"}
-"name": {"S": "さいもん"}"url": {"S": "https://twitter.com/simon_ns"} }}, {"M": {"title": {"S": "声優"}, "name": {"S": "Mai"}, "url": {"S": "https://twitter.com/mai_mizuiro"} }} ] } }'
+```
+{
+  "charaID":"{UUID}",
+  "charaEnable":"{Bool}",
+  "charaName":"{String}",
+  "charaDescription":"{String}",
+  "charaProfiles":[
+    {
+      "title":{String},
+      "name":{String},
+      "url":{String}
+    }
+  ]
+
+}
+```
+¥

@@ -5,7 +5,7 @@ type Chara struct {
 	CharaEnable      bool       `json:"charaEnable" dynamodbav:"charaEnable"`
 	CharaName        string       `json:"charaName" dynamodbav:"charaName"`
 	CharaDescription string       `json:"charaDescription" dynamodbav:"charaDescription"`
-	CharaProfile     []CharaProfile `json:"charaProfile" dynamodbav:"charaProfile"`
+	CharaProfiles    []CharaProfile `json:"charaProfile" dynamodbav:"charaProfile"`
 }
 
 type CharaProfile struct {
