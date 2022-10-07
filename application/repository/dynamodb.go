@@ -5,9 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"time"
-
-	// "encoding/json"
-
+	"math/rand"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
@@ -219,14 +217,15 @@ func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time
 	}
 
 	// クエリ実行
-	output, err := client.Query(context.Background(), &dynamodb.QueryInput{
+	queryInput := &dynamodb.QueryInput{
 		TableName:              aws.String("alarm-table"),
 		IndexName:              aws.String("alarm-time-index"),
 		KeyConditionExpression: aws.String("alarmTime = :alarmTime"),
 		ExpressionAttributeValues: map[string]types.AttributeValue{
 			":alarmTime": &types.AttributeValueMemberS{Value: alarmTime},
 		},
-	})
+	}
+	output, err := client.Query(context.Background(), queryInput)
 	if err != nil {
 		return []entity.Alarm{}, err
 	}
@@ -317,12 +316,14 @@ func (d *DynamoDBRepository) DeleteAlarm(alarmID string) error {
 		return err
 	}
 
-	_, err = client.DeleteItem(ctx, &dynamodb.DeleteItemInput{
+	deleteInput := &dynamodb.DeleteItemInput{
 		TableName: aws.String(table.ALARM_TABLE),
 		Key: map[string]types.AttributeValue{
 			"alarmID": &types.AttributeValueMemberS{Value: alarmID},
 		},
-	})
+	}
+
+	_, err = client.DeleteItem(ctx, deleteInput)
 	if err != nil {
 		return err
 	}
@@ -407,7 +408,6 @@ func (d *DynamoDBRepository) GetCharaList() ([]entity.Chara, error) {
 	input := &dynamodb.ScanInput{
 		TableName: aws.String("chara-table"),
 	}
-
 	output, err := client.Scan(context.Background(), input)
 	if err != nil {
 		return []entity.Chara{}, err
@@ -428,3 +428,38 @@ func (d *DynamoDBRepository) GetCharaList() ([]entity.Chara, error) {
 
 	return charaList, nil
 }
+
+// ランダムにキャラを1つ取得する
+// キャラ数が増えてきた場合は改良する
+func (d *DynamoDBRepository) GetRandomChara() (entity.Chara, error) {
+	// クライアント作成
+	client, err := d.createDynamoDBClient()
+	if err != nil {
+		return entity.Chara{}, err
+	}
+
+	// クエリ実行
+	input := &dynamodb.ScanInput{
+		TableName: aws.String("chara-table"),
+		Limit: aws.Int32(5),
+	}
+	output, err := client.Scan(context.Background(), input)
+	if err != nil {
+		return entity.Chara{}, err
+	}
+
+	// ランダムに1件取得
+	rand.Seed(time.Now().UnixNano())
+	index := rand.Intn(len(output.Items))
+	item := output.Items[index]
+
+	// 取得結果をcharaに変換
+	chara := entity.Chara{}
+	err = attributevalue.UnmarshalMap(item, &chara)
+	if err != nil {
+		return chara, err
+	}
+
+	return chara, nil
+}
+

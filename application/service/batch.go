@@ -15,12 +15,16 @@ type BatchService struct {
 
 func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday time.Weekday) error {
 	// クエリでアラームを取得
-	alarmList, err := repository.QueryByAlarmTime(hour, minute, weekday)
+	alarmList, err := b.DynamoDBRepository.QueryByAlarmTime(hour, minute, weekday)
 	if err != nil {
 		return err
 	}
 
 	// ランダム再生用のキャラクターのボイスを取得
+	chara, err := b.DynamoDBRepository.GetRandomChara()
+	if err != nil {
+		return err
+	}
 
 	// AlarmInfoに変換
 
