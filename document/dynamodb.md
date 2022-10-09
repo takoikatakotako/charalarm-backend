@@ -107,7 +107,7 @@ DynamoDBのテーブル構造についてです。
       "url":{String}
     }
   ],
-  "resource":{
+  "charaResource":{
     "images":[
       {String}
     ],
@@ -115,7 +115,7 @@ DynamoDBのテーブル構造についてです。
       {String}
     ]
   },
-  "expression":{
+  "charaExpression":{
     "{String}":{
       "images":[
         "{String}"
@@ -125,7 +125,7 @@ DynamoDBのテーブル構造についてです。
       ]
     }
   },
-  "call":{
+  "charaCall":{
     "voices":[
       "{String}"
     ]

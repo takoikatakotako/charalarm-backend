@@ -4,8 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
-	"math/rand"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
@@ -15,6 +13,8 @@ import (
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/table"
 	"github.com/takoikatakotako/charalarm-backend/validator"
+	"math/rand"
+	"time"
 )
 
 type DynamoDBRepository struct {
@@ -393,7 +393,6 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 	return nil
 }
 
-
 ////////////////////////////////////
 // Chara
 ////////////////////////////////////
@@ -441,7 +440,7 @@ func (d *DynamoDBRepository) GetRandomChara() (entity.Chara, error) {
 	// クエリ実行
 	input := &dynamodb.ScanInput{
 		TableName: aws.String("chara-table"),
-		Limit: aws.Int32(5),
+		Limit:     aws.Int32(5),
 	}
 	output, err := client.Scan(context.Background(), input)
 	if err != nil {
@@ -462,4 +461,3 @@ func (d *DynamoDBRepository) GetRandomChara() (entity.Chara, error) {
 
 	return chara, nil
 }
-
