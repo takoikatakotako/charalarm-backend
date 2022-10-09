@@ -106,8 +106,30 @@ DynamoDBのテーブル構造についてです。
       "name":{String},
       "url":{String}
     }
-  ]
-
+  ],
+  "resource":{
+    "images":[
+      {String}
+    ],
+    "voices":[
+      {String}
+    ]
+  },
+  "expression":{
+    "{String}":{
+      "images":[
+        "{String}"
+      ],
+      "voices":[
+        "{String}"
+      ]
+    }
+  },
+  "call":{
+    "voices":[
+      "{String}"
+    ]
+  }
 }
 ```
-¥
+
