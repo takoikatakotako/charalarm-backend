@@ -3,7 +3,8 @@ package service
 import (
 	// "errors"
 	"time"
-	// "github.com/takoikatakotako/charalarm-backend/entity"
+	"math/rand"
+	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	// "github.com/takoikatakotako/charalarm-backend/validator"
 )
@@ -21,14 +22,34 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	}
 
 	// ランダム再生用のキャラクターのボイスを取得
-	chara, err := b.DynamoDBRepository.GetRandomChara()
+	randomChara, err := b.DynamoDBRepository.GetRandomChara()
 	if err != nil {
 		return err
 	}
+	callVoicesCount := len(randomChara.CharaCall.Voices)
+	if callVoicesCount == 0 {
+		// エラーだよ
+	}
+	index := rand.Intn(callVoicesCount)
+	randomVoice := chara.CharaCall.Voices[index]
 
-	// AlarmInfoに変換
+	// AlarmInfoに変換してSQSに送信
+	for _, alarm := range alarmList {
+		// AlarmInfoに変換
+		alarmInfo := entity.AlarmInfo{}
+		alarmInfo.AlarmID = alarm.AlarmID
+		alarmInfo.UserID = alarm.UserID
 
-	// SQSに送信
+		alarmInfo.SNSEndpointArn = "xxx"
+		alarmInfo.CharaName = "xxx"
+		alarmInfo.FileURL = randomVoice
+
+		// SQSに送信
+		err := b.SQSRepository.SendAlarmInfoMessage(alarmInfo)
+		if err != nil {
+			// エラーをログに送ってなんとか
+		}
+	}
 
 	return nil
 }
