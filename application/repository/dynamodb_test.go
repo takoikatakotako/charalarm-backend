@@ -273,6 +273,30 @@ func TestInsertAndDeleteAlarmList(t *testing.T) {
 	assert.Equal(t, len(alarmList), 0)
 }
 
+func TestGetChara(t *testing.T) {
+	repository := DynamoDBRepository{IsLocal: true}
+
+	chara, err := repository.GetChara("com.charalarm.yui")
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Assert
+	assert.Equal(t, chara.CharaID, "com.charalarm.yui")
+	assert.Equal(t, chara.CharaEnable, true)
+	assert.Equal(t, chara.CharaName, "井上結衣")
+	assert.Equal(t, chara.CharaID, "com.charalarm.yui")
+	assert.Equal(t, chara.CharaProfiles[0].Title, "イラストレーター")
+	assert.Equal(t, chara.CharaProfiles[0].Name, "さいもん")
+	assert.Equal(t, chara.CharaProfiles[0].URL, "https://twitter.com/simon_ns")
+	assert.Equal(t, chara.CharaProfiles[1].Title, "声優")
+	assert.Equal(t, chara.CharaProfiles[1].Name, "Mai")
+	assert.Equal(t, chara.CharaProfiles[1].URL, "https://twitter.com/mai_mizuiro")
+	assert.Equal(t, chara.CharaProfiles[2].Title, "スクリプト")
+	assert.Equal(t, chara.CharaProfiles[2].Name, "小旗ふたる！")
+	assert.Equal(t, chara.CharaProfiles[2].URL, "https://twitter.com/Kass_kobataku")
+}
+
 func TestGetCharaList(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 

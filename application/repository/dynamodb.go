@@ -396,6 +396,37 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 ////////////////////////////////////
 // Chara
 ////////////////////////////////////
+func (d *DynamoDBRepository) GetChara(charaID string) (entity.Chara, error) {
+	// クライアント作成
+	client, err := d.createDynamoDBClient()
+	if err != nil {
+		return entity.Chara{}, err
+	}
+
+	// クエリ実行
+	input := &dynamodb.GetItemInput{
+		TableName: aws.String(table.CHARA_TABLE),
+		Key: map[string]types.AttributeValue{
+			"charaID": &types.AttributeValueMemberS{
+				Value: charaID,
+			},
+		},
+	}
+	output, err := client.GetItem(context.Background(), input)
+	if err != nil {
+		return entity.Chara{}, err
+	}
+
+	// 取得結果をcharaに変換
+	chara := entity.Chara{}
+	err = attributevalue.UnmarshalMap(output.Item, &chara)
+	if err != nil {
+		return chara, err
+	}
+
+	return chara, nil
+}
+
 func (d *DynamoDBRepository) GetCharaList() ([]entity.Chara, error) {
 	// クライアント作成
 	client, err := d.createDynamoDBClient()

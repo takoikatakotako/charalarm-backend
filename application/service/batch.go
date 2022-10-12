@@ -2,10 +2,10 @@ package service
 
 import (
 	// "errors"
-	"time"
-	"math/rand"
 	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/repository"
+	"math/rand"
+	"time"
 	// "github.com/takoikatakotako/charalarm-backend/validator"
 )
 
@@ -35,11 +35,12 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 		// エラーだよ
 	}
 	index := rand.Intn(callVoicesCount)
-	randomVoice := chara.CharaCall.Voices[index]
+	randomCharaName := randomChara.CharaName
+	randomVoiceFileURL := randomChara.CharaCall.Voices[index]
 
 	// ランダム用のメモを作成
-	randomCharaVoiceMap := map[string]string{}
-	randomCharaVoiceMap["RANDOM"] = randomVoice
+	randomCharaVoiceMap := map[string]entity.CharaNameAndVoiceFileURL{}
+	randomCharaVoiceMap["RANDOM"] = entity.CharaNameAndVoiceFileURL{CharaName: randomCharaName, VoiceFileURL: randomVoiceFileURL}
 
 	// AlarmInfoに変換してSQSに送信
 	for _, alarm := range alarmList {
@@ -49,10 +50,10 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 		alarmInfo.UserID = alarm.UserID
 
 		// randomCharaVoiceMap にキーがあるか確認する
-		if val, ok := dict[alarm.CharaID]; ok {
+		if val, ok := randomCharaVoiceMap[alarm.CharaID]; ok {
 			// キーある場合
-			alarmInfo.CharaName = "xxx"
-			alarmInfo.FileURL = "xxxx"	
+			alarmInfo.CharaName = val.CharaName
+			alarmInfo.FileURL = val.VoiceFileURL
 		} else {
 			// キーがないのでDynamoDBから取得するよ
 
@@ -61,9 +62,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 			// エラーが出たらログ出してcontinue
 		}
 
-
 		alarmInfo.SNSEndpointArn = "xxx"
-
 
 		// SQSに送信
 		err := b.SQSRepository.SendAlarmInfoMessage(alarmInfo)

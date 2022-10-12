@@ -5,7 +5,7 @@ type Chara struct {
 	CharaEnable      bool                       `json:"charaEnable" dynamodbav:"charaEnable"`
 	CharaName        string                     `json:"charaName" dynamodbav:"charaName"`
 	CharaDescription string                     `json:"charaDescription" dynamodbav:"charaDescription"`
-	CharaProfiles    []CharaProfile             `json:"charaProfile" dynamodbav:"charaProfile"`
+	CharaProfiles    []CharaProfile             `json:"charaProfiles" dynamodbav:"charaProfiles"`
 	CharaResource    CharaResource              `json:"charaResource" dynamodbav:"charaResource"`
 	CharaExpression  map[string]CharaExpression `json:"charaExpression" dynamodbav:"charaExpression"`
 	CharaCall        CharaCall                  `json:"charaCall" dynamodbav:"charaCall"`
@@ -29,4 +29,9 @@ type CharaExpression struct {
 
 type CharaCall struct {
 	Voices []string `json:"voices" dynamodbav:"voices"`
+}
+
+type CharaNameAndVoiceFileURL struct {
+	CharaName    string
+	VoiceFileURL string
 }
