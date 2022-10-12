@@ -1,7 +1,7 @@
 package service
 
 import (
-	// "errors"
+	"errors"
 	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"math/rand"
@@ -22,25 +22,28 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	}
 
 	// 何回もDynamoDBにアクセスすると結構大変だからメモ化する
-	// メモしてメモする
 
 	// ランダム再生用のキャラクターのボイスを取得
 	randomChara, err := b.DynamoDBRepository.GetRandomChara()
 	if err != nil {
 		return err
 	}
-	callVoicesCount := len(randomChara.CharaCall.Voices)
+	randomCharaCallVoicesCount := len(randomChara.CharaCall.Voices)
 	if callVoicesCount == 0 {
 		// TODO. エラーを収集する仕組みを追加
 		// エラーだよ
+		return errors.New("ボイスがないぞ")
 	}
-	index := rand.Intn(callVoicesCount)
+	randomCharaVoiceIndex := rand.Intn(randomCharaCallVoicesCount)
 	randomCharaName := randomChara.CharaName
-	randomVoiceFileURL := randomChara.CharaCall.Voices[index]
+	randomVoiceFileURL := randomChara.CharaCall.Voices[randomCharaVoiceIndex]
 
 	// ランダム用のメモを作成
-	randomCharaVoiceMap := map[string]entity.CharaNameAndVoiceFileURL{}
-	randomCharaVoiceMap["RANDOM"] = entity.CharaNameAndVoiceFileURL{CharaName: randomCharaName, VoiceFileURL: randomVoiceFileURL}
+	randomCharaNameAndVoiceFileURL := map[string]entity.CharaNameAndVoiceFileURL{}
+	randomCharaNameAndVoiceFileURL["RANDOM"] = entity.CharaNameAndVoiceFileURL{
+		CharaName: randomCharaName, 
+		VoiceFileURL: randomVoiceFileURL
+	}
 
 	// AlarmInfoに変換してSQSに送信
 	for _, alarm := range alarmList {
@@ -49,17 +52,35 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 		alarmInfo.AlarmID = alarm.AlarmID
 		alarmInfo.UserID = alarm.UserID
 
-		// randomCharaVoiceMap にキーがあるか確認する
-		if val, ok := randomCharaVoiceMap[alarm.CharaID]; ok {
+		// randomCharaNameAndVoiceFileURL にキーがあるか確認する
+		if val, ok := randomCharaNameAndVoiceFileURL[alarm.CharaID]; ok {
 			// キーある場合
 			alarmInfo.CharaName = val.CharaName
 			alarmInfo.FileURL = val.VoiceFileURL
 		} else {
-			// キーがないのでDynamoDBから取得するよ
+			// キーがないのでDynamoDBから取得する
+			chara, err := b.DynamoDBRepository.GetChara(alarm.CharaID)
+			if err != nil {
+				// TODO. エラーを収集する仕組みを追加
+				continue
+			}
 
 			// メモ化ようのアレにも登録するよ
+			charaCallVoicesCount := len(chara.CharaCall.Voices)
+			if charaCallVoicesCount == 0 {
+				// TODO. エラーを収集する仕組みを追加
+				// エラーだよ
+				return errors.New("ボイスがないぞ")
+			}
+			charaCallVoiceIndex := rand.Intn(charaCallVoicesCount)
+			randomCharaVoiceMap[alarm.CharaID] = entity.CharaNameAndVoiceFileURL{
+				CharaName: chara.CharaName, 
+				VoiceFileURL: chara.CharaCall.Voices[charaCallVoiceIndex]
+			}
 
-			// エラーが出たらログ出してcontinue
+			// XXX
+			alarmInfo.CharaName = val.CharaName
+			alarmInfo.FileURL = val.VoiceFileURL
 		}
 
 		alarmInfo.SNSEndpointArn = "xxx"
