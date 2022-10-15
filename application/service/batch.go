@@ -29,7 +29,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 		return err
 	}
 	randomCharaCallVoicesCount := len(randomChara.CharaCall.Voices)
-	if callVoicesCount == 0 {
+	if randomCharaCallVoicesCount == 0 {
 		// TODO. エラーを収集する仕組みを追加
 		// エラーだよ
 		return errors.New("ボイスがないぞ")
@@ -40,10 +40,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 
 	// ランダム用のメモを作成
 	randomCharaNameAndVoiceFileURL := map[string]entity.CharaNameAndVoiceFileURL{}
-	randomCharaNameAndVoiceFileURL["RANDOM"] = entity.CharaNameAndVoiceFileURL{
-		CharaName: randomCharaName, 
-		VoiceFileURL: randomVoiceFileURL
-	}
+	randomCharaNameAndVoiceFileURL["RANDOM"] = entity.CharaNameAndVoiceFileURL{CharaName: randomCharaName, VoiceFileURL: randomVoiceFileURL}
 
 	// AlarmInfoに変換してSQSに送信
 	for _, alarm := range alarmList {
@@ -73,10 +70,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 				return errors.New("ボイスがないぞ")
 			}
 			charaCallVoiceIndex := rand.Intn(charaCallVoicesCount)
-			randomCharaVoiceMap[alarm.CharaID] = entity.CharaNameAndVoiceFileURL{
-				CharaName: chara.CharaName, 
-				VoiceFileURL: chara.CharaCall.Voices[charaCallVoiceIndex]
-			}
+			randomCharaNameAndVoiceFileURL[alarm.CharaID] = entity.CharaNameAndVoiceFileURL{CharaName: chara.CharaName, VoiceFileURL: chara.CharaCall.Voices[charaCallVoiceIndex]}
 
 			// XXX
 			alarmInfo.CharaName = val.CharaName
