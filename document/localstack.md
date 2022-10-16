@@ -18,15 +18,15 @@ aws s3 ls --endpoint-url=http://localhost:4572
 
 
 
-## DynamoDB
+# DynamoDB
 
-### テーブルの一覧を表示
+## テーブル一覧を表示
 
 ```
 $ aws dynamodb list-tables --endpoint-url=http://localhost:4566
 ```
 
-### テーブルの作成
+## テーブルの作成
 
 ```
 $ aws dynamodb create-table \
@@ -37,7 +37,7 @@ $ aws dynamodb create-table \
     --endpoint-url=http://localhost:4566 | jq
 ```
 
-### テーブルの詳細を表示
+## テーブルの詳細を表示
 
 ```
 $ aws dynamodb describe-table \
@@ -46,12 +46,53 @@ $ aws dynamodb describe-table \
 ```
 
 
-### Itemを取得
+## Itemを取得
+
+### アラームを取得
 
 ```
 $ aws dynamodb get-item \
     --table-name alarm-table \
     --key '{"alarmID": {"S": "fd5fda81-194a-488e-80f1-52b02b0d6cc9"}}' \
+    --endpoint-url=http://localhost:4566 | jq
+```
+
+### キャラ（com.charalarm.yui）を取得
+
+```
+$ aws dynamodb get-item \
+    --table-name chara-table \
+    --key '{"charaID": {"S": "com.charalarm.yui"}}' \
+    --endpoint-url=http://localhost:4566 | jq
+```
+
+### キャラ（com.senpu-ki-soft.momiji）を取得
+
+```
+$ aws dynamodb get-item \
+    --table-name chara-table \
+    --key '{"charaID": {"S": "com.senpu-ki-soft.momiji"}}' \
+    --endpoint-url=http://localhost:4566 | jq
+```
+
+
+## Itemを追加
+
+### キャラ（com.charalarm.yui）を追加
+
+```
+$ aws dynamodb put-item \
+    --table-name chara-table \
+    --item '{"charaID":{"S":"com.charalarm.yui"},"charaEnable":{"BOOL":true},"charaName":{"S":"井上結衣"}}' \
+    --endpoint-url=http://localhost:4566 | jq
+```
+
+### キャラ（com.senpu-ki-soft.momiji）を追加
+
+```
+$ aws dynamodb put-item \
+    --table-name chara-table \
+    --item '{"charaID":{"S":"com.senpu-ki-soft.momiji"},"charaEnable":{"BOOL":true},"charaName":{"S":"紅葉"}}' \
     --endpoint-url=http://localhost:4566 | jq
 ```
 
@@ -91,6 +132,11 @@ $ aws dynamodb scan \
     --endpoint-url=http://localhost:4566 | jq
 ```
 
+```
+$ aws dynamodb scan \
+    --table-name chara-table \
+    --endpoint-url=http://localhost:4566 | jq
+```
 
 ### テーブルの削除
 
@@ -153,7 +199,7 @@ aws sns list-endpoints-by-platform-application \
 ```
 
 ```
-aws sns   delete-platform-application \
+aws sns delete-platform-application \
   --platform-application-arn arn:aws:sns:ap-northeast-1:000000000000:app/APNS/my-topic3 \
   --endpoint-url http://localhost:4566
 ```

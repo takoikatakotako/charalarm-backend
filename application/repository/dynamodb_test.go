@@ -1,11 +1,11 @@
 package repository
 
 import (
-	"testing"
-
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/takoikatakotako/charalarm-backend/entity"
+	"testing"
+	"time"
 )
 
 ////////////////////////////////////
@@ -135,6 +135,50 @@ func TestInsertAlarmAndGet(t *testing.T) {
 	assert.Equal(t, alarmList[0], insertAlarm)
 }
 
+// 1分以内にテストを実行すると失敗するので注意
+func TestInsertAndQueryByAlarmTime(t *testing.T) {
+	repository := DynamoDBRepository{IsLocal: true}
+
+	// 現在時刻取得
+	currentTime := time.Now()
+	hour := currentTime.Hour()
+	minute := currentTime.Minute()
+	weekday := currentTime.Weekday()
+
+	// Create Alarms
+	alarm0 := createAlarm()
+	alarm0.AlarmHour = hour
+	alarm0.AlarmMinute = minute
+	alarm0.SetAlarmTime()
+
+	alarm1 := createAlarm()
+	alarm1.AlarmHour = hour
+	alarm1.AlarmMinute = minute
+	alarm1.SetAlarmTime()
+
+	alarm2 := createAlarm()
+	alarm2.AlarmHour = hour
+	alarm2.AlarmMinute = minute
+	alarm2.SetAlarmTime()
+
+	// Insert Alarms
+	err := repository.InsertAlarm(alarm0)
+	err = repository.InsertAlarm(alarm1)
+	err = repository.InsertAlarm(alarm2)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Query
+	alarmList, err := repository.QueryByAlarmTime(hour, minute, weekday)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Assert
+	assert.Equal(t, len(alarmList), 3)
+}
+
 func TestInsertAndDelete(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 
@@ -229,6 +273,54 @@ func TestInsertAndDeleteAlarmList(t *testing.T) {
 	assert.Equal(t, len(alarmList), 0)
 }
 
+func TestGetChara(t *testing.T) {
+	repository := DynamoDBRepository{IsLocal: true}
+
+	chara, err := repository.GetChara("com.charalarm.yui")
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Assert
+	assert.Equal(t, chara.CharaID, "com.charalarm.yui")
+	assert.Equal(t, chara.CharaEnable, true)
+	assert.Equal(t, chara.CharaName, "井上結衣")
+	assert.Equal(t, chara.CharaID, "com.charalarm.yui")
+	assert.Equal(t, chara.CharaProfiles[0].Title, "イラストレーター")
+	assert.Equal(t, chara.CharaProfiles[0].Name, "さいもん")
+	assert.Equal(t, chara.CharaProfiles[0].URL, "https://twitter.com/simon_ns")
+	assert.Equal(t, chara.CharaProfiles[1].Title, "声優")
+	assert.Equal(t, chara.CharaProfiles[1].Name, "Mai")
+	assert.Equal(t, chara.CharaProfiles[1].URL, "https://twitter.com/mai_mizuiro")
+	assert.Equal(t, chara.CharaProfiles[2].Title, "スクリプト")
+	assert.Equal(t, chara.CharaProfiles[2].Name, "小旗ふたる！")
+	assert.Equal(t, chara.CharaProfiles[2].URL, "https://twitter.com/Kass_kobataku")
+}
+
+func TestGetCharaList(t *testing.T) {
+	repository := DynamoDBRepository{IsLocal: true}
+
+	charaList, err := repository.GetCharaList()
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Assert
+	assert.Equal(t, len(charaList), 2)
+}
+
+func TestGetRandomChara(t *testing.T) {
+	repository := DynamoDBRepository{IsLocal: true}
+
+	chara, err := repository.GetRandomChara()
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Assert
+	assert.NotEqual(t, len(chara.CharaID), 0)
+}
+
 func createAlarm() entity.Alarm {
 	alarmID := uuid.New().String()
 	userID := uuid.New().String()
@@ -239,11 +331,11 @@ func createAlarm() entity.Alarm {
 	alarmMinute := 15
 	alarmTime := "08-15"
 	sunday := true
-	monday := false
+	monday := true
 	tuesday := true
-	wednesday := false
+	wednesday := true
 	thursday := true
-	friday := false
+	friday := true
 	saturday := true
 
 	return entity.Alarm{

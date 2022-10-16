@@ -22,6 +22,8 @@ DynamoDBのテーブル構造についてです。
 }
 ```
 
+
+
 ## alarm-table
 
 アラームの情報が入るテーブルです。
@@ -30,12 +32,15 @@ DynamoDBのテーブル構造についてです。
 {
   "alarmID":"{UUID}",
   "userID":"{UUID}",
-  "alarmType":"{XXXX or XXXXX or XXXXX or XXXX}",
+  "alarmType":"{VOICE_CALL_ALARM or NEWS_CALL_ALARM or CALENDER_CALL_ALARM}",
   "alarmEnable":"{Bool}",
   "alarmName":"{String}",
   "alarmHour":"{Int}",
   "alarmMinute":"{Int}",
   "alarmTime":"{String}",
+  "charaID":"{String}",
+  "charaName":"{String}",
+  "voiceFileURL":"{String}",  
   "sunday":"{Bool}",
   "monday":"{Bool}",
   "tuesday":"{Bool}",
@@ -45,3 +50,86 @@ DynamoDBのテーブル構造についてです。
   "saturday":"{Bool}"
 }
 ```
+
+### alarmType
+
+アラームの種類です。
+
+- VOICE_CALL_ALARM
+
+キャラクターから電話がかかってきて、事前録音されたボイスを再生します。
+
+- NEWS_CALL_ALARM
+
+キャラクターから電話がかかってきて、音声合成されたニュースを再生します。
+
+- CALENDER_CALL_ALARM
+
+キャラクターから電話がかかってきて、音声合成された今日の予定を再生します。
+
+
+### alarmTime
+
+インデックス用のフィールドです。
+`("%02d-%02d", alarmHour, alarmMinute)` が入ります。
+
+
+### charaID
+
+キャラクターのIDです。
+ランダムの場合は `RANDOM` が入ります。
+
+
+### charaName
+
+キャラクター名です。
+ランダムの場合は `RANDOM` が入ります。
+
+
+### voiceFileURL
+
+ボイス用のURLが入ります。
+ランダムの場合は `RANDOM` が入ります。
+
+
+## chara-table
+
+```
+{
+  "charaID":"{UUID}",
+  "charaEnable":"{Bool}",
+  "charaName":"{String}",
+  "charaDescription":"{String}",
+  "charaProfiles":[
+    {
+      "title":{String},
+      "name":{String},
+      "url":{String}
+    }
+  ],
+  "charaResource":{
+    "images":[
+      {String}
+    ],
+    "voices":[
+      {String}
+    ]
+  },
+  "charaExpression":{
+    "{String}":{
+      "images":[
+        "{String}"
+      ],
+      "voices":[
+        "{String}"
+      ]
+    }
+  },
+  "charaCall":{
+    "voices":[
+      "{String}"
+    ]
+  }
+}
+```
+
