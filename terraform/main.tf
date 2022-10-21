@@ -31,6 +31,6 @@ module "web_api" {
 
 
 module "batch" {
-  source                  = "./batch"
+  source = "./batch"
 
 }
