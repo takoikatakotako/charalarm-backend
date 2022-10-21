@@ -28,3 +28,9 @@ module "web_api" {
   application_version     = local.application_version
   application_bucket_name = local.application_bucket_name
 }
+
+
+module "batch" {
+  source                  = "./batch"
+
+}
