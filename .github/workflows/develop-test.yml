@@ -1,5 +1,5 @@
 name: DevelopTest
-description: Developブランチのプッシュ時のテスト
+# Developブランチのプッシュ時のテスト
 
 on:
   workflow_dispatch:

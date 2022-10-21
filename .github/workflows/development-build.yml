@@ -1,5 +1,5 @@
 name: Development Build
-description: DevelopmentのBuildしてS3にバイナリをアップロードする
+# DevelopmentのBuildしてS3にバイナリをアップロードする
 
 on:
   workflow_dispatch:
