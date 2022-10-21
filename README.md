@@ -12,21 +12,22 @@ Charalarm は2次元のキャラクターに起こされたい！というtakoik
 Charalarm の現行のアーキテクチャです。 
 お金がないのでRDS, SNS, SSQ, S3だけ使って、API, Batch, Worker はConohaVPSに詰め込んでいます。
 
-![Architecture](./document/image/current-architecture.png)
+![Architecture](document/image/current-architecture.png)
 
 
 ## 新アーキテクチャ
 
 Charalarmの新しいアーキテクチャです。
-現行のアーキテクチャではサービスの維持手数料が高い & スケールアップが面倒なのでサーバーレス中心の構成にしました。
+現行アーキテクチャではサービスの維持手数料が高い & サーバー管理が面倒なのでサーバーレス中心の構成にしました。
 
-![Architecture](./document/image/architecture.png)
+![Architecture](document/image/architecture.png)
 
 
 ## ドキュメント
 
+- [アーキテクチャーについて](document/architecture.md)
 - [APIのエンドポイントについて](document/api-endpoint.md)
 - [Localstackについて](document/localstack.md)
 - [証明書などのアップデートについて](document/update.md)
 - [DynamoDBについて](document/dynamodb.md)
-- [SQSについて](documents/sqs.md)
+- [SQSについて](document/sqs.md)

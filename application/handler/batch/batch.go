@@ -10,15 +10,17 @@ import (
 	"github.com/takoikatakotako/charalarm-backend/service"
 	"net/http"
 	"time"
+	"fmt"
 )
 
 func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-
 	// 現在時刻取得
 	t := time.Now()
 	hour := t.Hour()
 	minute := t.Minute()
 	weekday := t.Weekday()
+
+	fmt.Println("hour: %d minute: %d", hour, minute)
 
 	s := service.BatchService{
 		DynamoDBRepository: repository.DynamoDBRepository{},
