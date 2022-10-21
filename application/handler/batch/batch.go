@@ -20,7 +20,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	minute := t.Minute()
 	weekday := t.Weekday()
 
-	fmt.Println("hour: %d minute: %d", hour, minute)
+	fmt.Printf("hour: %d minute: %d\n", hour, minute)
 
 	s := service.BatchService{
 		DynamoDBRepository: repository.DynamoDBRepository{},
