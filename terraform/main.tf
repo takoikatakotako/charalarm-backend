@@ -34,3 +34,10 @@ module "batch" {
   source = "./batch"
 
 }
+
+
+
+module "datadog" {
+  source = "./datadog"
+  dd_api_key = "DD_API_KEY"
+}

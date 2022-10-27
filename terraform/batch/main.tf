@@ -34,6 +34,14 @@ resource "aws_cloudwatch_log_group" "batch_log_group" {
   retention_in_days = 90
 }
 
+# resource "aws_cloudwatch_log_subscription_filter" "datadog_log_subscription_filter" {
+#   name            = "datadog_log_subscription_filter"
+#   log_group_name  = <CLOUDWATCH_LOG_GROUP_NAME> # for example, /aws/lambda/my_lambda_name
+#   destination_arn = <DATADOG_FORWARDER_ARN> # for example,  arn:aws:lambda:us-east-1:123:function:datadog-forwarder
+#   filter_pattern  = ""
+# }
+
+
 
 ##################################################
 # Event Target
@@ -57,6 +65,11 @@ resource "aws_lambda_permission" "batch_lambda_permission" {
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.batch_event_rule.arn
 }
+
+
+
+
+
 
 
 
