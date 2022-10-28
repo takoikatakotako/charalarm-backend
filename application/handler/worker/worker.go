@@ -14,18 +14,18 @@ import (
 )
 
 func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	// 現在時刻取得
-	t := time.Now()
-	hour := t.Hour()
-	minute := t.Minute()
-	weekday := t.Weekday()
-
-	fmt.Printf("hour: %d minute: %d\n", hour, minute)
-
-	s := service.BatchService{
+	s := service.WorkerhService{
 		DynamoDBRepository: repository.DynamoDBRepository{},
 		SQSRepository:      repository.SQSRepository{},
 	}
+
+
+    for record in event['Records']:
+        body['messages'].append(record["body"])
+
+
+
+
 	err := s.QueryDynamoDBAndSendMessage(hour, minute, weekday)
 	if err != nil {
 		response := entity.MessageResponse{Message: "ユーザー情報の取得に失敗しました"}
