@@ -81,3 +81,9 @@ func (s *SNSRepository) createPlatformEndpoint(platformApplicationArn string, pu
 	response := entity.CreatePlatformEndpointResponse{EndpointArn: *result.EndpointArn}
 	return response, nil
 }
+
+
+func FireXXXXXX(alarmInfo AlarmInfo) error {
+
+}
+

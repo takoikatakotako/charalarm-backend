@@ -13,11 +13,26 @@ import (
 	"fmt"
 )
 
-func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func Handler(ctx context.Context, event events.SQSEvent) (events.APIGatewayProxyResponse, error) {
 	s := service.WorkerhService{
-		DynamoDBRepository: repository.DynamoDBRepository{},
-		SQSRepository:      repository.SQSRepository{},
+		SNSRepository: repository.SNSRepository{},
+		SQSRepository: repository.SQSRepository{},
 	}
+
+
+	fmt.Println("--------")
+
+    for _, message := range event.Records {
+		// メッセージを取得して処理する
+		err := s.SendAlarmInfoMessage
+
+		// エラーの場合はデッドレターキューに格納する
+
+
+	}
+	fmt.Println("--------")
+
+
 
 
     for record in event['Records']:

@@ -14,12 +14,18 @@ type WorkerService struct {
 	SQSRepository      repository.SQSRepository
 }
 
-// func (w *WorkerService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday time.Weekday) error {
-// 	// クエリでアラームを取得
-// 	alarmList, err := b.DynamoDBRepository.QueryByAlarmTime(hour, minute, weekday)
-// 	if err != nil {
-// 		return err
-// 	}
+// メッセージをなんとかする
+func (w *WorkerService) FirePlatformApplication(message string) error {
+	// デコードする
+	alarmInfo := entity.AlarmInfo{}
+	err := json.Unmarshal([]byte(message), &alarmInfo)
+	if err != nil {
+		return err
+	}
+
+	// メッセージを送信
+	return SNSRepository.FireXXXXXX(alarmInfo)
+}
 
 // 	// 何回もDynamoDBにアクセスすると結構大変だからメモ化する
 
