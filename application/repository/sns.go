@@ -61,8 +61,6 @@ func (s *SNSRepository) CreateIOSVoipPushPlatformEndpoint(pushToken string) (ent
 }
 
 func (s *SNSRepository) createPlatformEndpoint(platformApplicationArn string, pushToken string) (entity.CreatePlatformEndpointResponse, error) {
-	ctx := context.Background()
-
 	client, err := s.createSNSClient()
 	if err != nil {
 		return entity.CreatePlatformEndpointResponse{}, err
@@ -73,7 +71,7 @@ func (s *SNSRepository) createPlatformEndpoint(platformApplicationArn string, pu
 		PlatformApplicationArn: aws.String(platformApplicationArn),
 		Token:                  aws.String(pushToken),
 	}
-	result, err := client.CreatePlatformEndpoint(ctx, getInput)
+	result, err := client.CreatePlatformEndpoint(context.Background(), getInput)
 	if err != nil {
 		return entity.CreatePlatformEndpointResponse{}, err
 	}
@@ -82,8 +80,49 @@ func (s *SNSRepository) createPlatformEndpoint(platformApplicationArn string, pu
 	return response, nil
 }
 
+func (s *SNSRepository) PublishPlatformApplication(alarmInfo entity.AlarmInfo) error {
+	client, err := s.createSNSClient()
+	if err != nil {
+		return err
+	}
 
-func FireXXXXXX(alarmInfo AlarmInfo) error {
+	// エンドポイントを取得
+	getEndpointAttributesInput := &sns.GetEndpointAttributesInput{
+		EndpointArn: aws.String(alarmInfo.SNSEndpointArn),
+	}
+	getEndpointAttributesOutputclient, err := client.GetEndpointAttributes(context.Background(), getEndpointAttributesInput)
+	if err != nil {
+		return err
+	}
+	isEnabled := getEndpointAttributesOutputclient.Attributes["Enabled"]
+	if (isEnabled == "True" || isEnabled == "true") {
+		return nil
+	}
 
+	// プッシュ通知
+	publishInput := &sns.PublishInput{
+		Message:  aws.String("Hello"),
+		TopicArn: aws.String(alarmInfo.SNSEndpointArn),
+	}
+	result, err := client.Publish(context.Background(), publishInput)
+
+
+	fmt.Println(result)
+
+
+	return nil;
+
+	// SnsClient snsClient = createSnsClient();
+	// GetEndpointAttributesRequest getEndpointAttributesRequest = GetEndpointAttributesRequest.builder().endpointArn(endpointArn).build();
+	// GetEndpointAttributesResponse getEndpointAttributesResponse = snsClient.getEndpointAttributes(getEndpointAttributesRequest);
+	// String isEnabled = getEndpointAttributesResponse.attributes().get("Enabled");
+	// if (isEnabled.equals("True") || isEnabled.equals("true")) {
+
+	// 	// VoipInfo を　JSON にする
+	// 	ObjectMapper objectMapper = new ObjectMapper();
+	// 	String voipPushInfoString = objectMapper.writeValueAsString(voipPushInfo);
+	// 	PublishRequest publishRequest = PublishRequest.builder().targetArn(endpointArn).message(voipPushInfoString).build();
+	// 	snsClient.publish(publishRequest);
+	// }
 }
 
