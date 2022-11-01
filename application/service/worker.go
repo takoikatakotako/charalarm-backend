@@ -16,8 +16,8 @@ type WorkerService struct {
 }
 
 // メッセージをなんとかする
-func (w *WorkerService) FirePlatformApplication(message string) error {
-	// デコードする
+func (w *WorkerService) PublishPlatformApplication(message string) error {
+	// デコード
 	alarmInfo := entity.AlarmInfo{}
 	err := json.Unmarshal([]byte(message), &alarmInfo)
 	if err != nil {
