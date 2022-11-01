@@ -112,7 +112,7 @@ func (s *SNSRepository) PublishPlatformApplication(alarmInfo entity.AlarmInfo) e
 		Message:   aws.String(string(jsonBytes)),
 		TargetArn: aws.String(alarmInfo.SNSEndpointArn),
 	}
-	result, err := client.Publish(context.Background(), publishInput)
+	_, err = client.Publish(context.Background(), publishInput)
 	if err != nil {
 		return err
 	}

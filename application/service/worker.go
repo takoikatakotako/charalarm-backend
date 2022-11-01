@@ -1,11 +1,12 @@
 package service
 
 import (
-	"errors"
+	// "errors"
+	// "math/rand"
+	// "time"
+	"encoding/json"
 	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/repository"
-	"math/rand"
-	"time"
 	// "github.com/takoikatakotako/charalarm-backend/validator"
 )
 
@@ -24,7 +25,7 @@ func (w *WorkerService) FirePlatformApplication(message string) error {
 	}
 
 	// メッセージを送信
-	return SNSRepository.FireXXXXXX(alarmInfo)
+	return w.SNSRepository.PublishPlatformApplication(alarmInfo)
 }
 
 // 	// 何回もDynamoDBにアクセスすると結構大変だからメモ化する
