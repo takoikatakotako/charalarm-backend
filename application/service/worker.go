@@ -10,8 +10,8 @@ import (
 )
 
 type WorkerService struct {
-	SNSRepository      repository.SNSRepository
-	SQSRepository      repository.SQSRepository
+	SNSRepository repository.SNSRepository
+	SQSRepository repository.SQSRepository
 }
 
 // メッセージをなんとかする

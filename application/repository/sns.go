@@ -3,18 +3,16 @@ package repository
 import (
 	"context"
 	// "errors"
+	"encoding/json"
 	"fmt"
-
-	// "encoding/json"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	// "github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	// "github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	"github.com/takoikatakotako/charalarm-backend/entity"
 	// "github.com/takoikatakotako/charalarm-backend/table"
 	// "github.com/takoikatakotako/charalarm-backend/validator"
+	"github.com/takoikatakotako/charalarm-backend/entity"
 )
 
 type SNSRepository struct {
@@ -90,39 +88,34 @@ func (s *SNSRepository) PublishPlatformApplication(alarmInfo entity.AlarmInfo) e
 	getEndpointAttributesInput := &sns.GetEndpointAttributesInput{
 		EndpointArn: aws.String(alarmInfo.SNSEndpointArn),
 	}
-	getEndpointAttributesOutputclient, err := client.GetEndpointAttributes(context.Background(), getEndpointAttributesInput)
+	getEndpointAttributesOutput, err := client.GetEndpointAttributes(context.Background(), getEndpointAttributesInput)
 	if err != nil {
 		return err
 	}
-	isEnabled := getEndpointAttributesOutputclient.Attributes["Enabled"]
-	if (isEnabled == "True" || isEnabled == "true") {
+
+	isEnabled := getEndpointAttributesOutput.Attributes["Enabled"]
+	if isEnabled == "False" || isEnabled == "false" {
 		return nil
+	}
+
+	// メッセージを作成
+	voipPushInfo := entity.VoIPPushInfo{}
+	voipPushInfo.CharaName = alarmInfo.CharaName
+	voipPushInfo.FilePath = alarmInfo.FileURL
+	jsonBytes, err := json.Marshal(voipPushInfo)
+	if err != nil {
+		return err
 	}
 
 	// プッシュ通知
 	publishInput := &sns.PublishInput{
-		Message:  aws.String("Hello"),
-		TopicArn: aws.String(alarmInfo.SNSEndpointArn),
+		Message:   aws.String(string(jsonBytes)),
+		TargetArn: aws.String(alarmInfo.SNSEndpointArn),
 	}
 	result, err := client.Publish(context.Background(), publishInput)
+	if err != nil {
+		return err
+	}
 
-
-	fmt.Println(result)
-
-
-	return nil;
-
-	// SnsClient snsClient = createSnsClient();
-	// GetEndpointAttributesRequest getEndpointAttributesRequest = GetEndpointAttributesRequest.builder().endpointArn(endpointArn).build();
-	// GetEndpointAttributesResponse getEndpointAttributesResponse = snsClient.getEndpointAttributes(getEndpointAttributesRequest);
-	// String isEnabled = getEndpointAttributesResponse.attributes().get("Enabled");
-	// if (isEnabled.equals("True") || isEnabled.equals("true")) {
-
-	// 	// VoipInfo を　JSON にする
-	// 	ObjectMapper objectMapper = new ObjectMapper();
-	// 	String voipPushInfoString = objectMapper.writeValueAsString(voipPushInfo);
-	// 	PublishRequest publishRequest = PublishRequest.builder().targetArn(endpointArn).message(voipPushInfoString).build();
-	// 	snsClient.publish(publishRequest);
-	// }
+	return nil
 }
-
