@@ -3,18 +3,16 @@ package repository
 import (
 	"context"
 	// "errors"
+	"encoding/json"
 	"fmt"
-
-	// "encoding/json"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	// "github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	// "github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	"github.com/takoikatakotako/charalarm-backend/entity"
 	// "github.com/takoikatakotako/charalarm-backend/table"
 	// "github.com/takoikatakotako/charalarm-backend/validator"
+	"github.com/takoikatakotako/charalarm-backend/entity"
 )
 
 type SNSRepository struct {
@@ -61,8 +59,6 @@ func (s *SNSRepository) CreateIOSVoipPushPlatformEndpoint(pushToken string) (ent
 }
 
 func (s *SNSRepository) createPlatformEndpoint(platformApplicationArn string, pushToken string) (entity.CreatePlatformEndpointResponse, error) {
-	ctx := context.Background()
-
 	client, err := s.createSNSClient()
 	if err != nil {
 		return entity.CreatePlatformEndpointResponse{}, err
@@ -73,11 +69,53 @@ func (s *SNSRepository) createPlatformEndpoint(platformApplicationArn string, pu
 		PlatformApplicationArn: aws.String(platformApplicationArn),
 		Token:                  aws.String(pushToken),
 	}
-	result, err := client.CreatePlatformEndpoint(ctx, getInput)
+	result, err := client.CreatePlatformEndpoint(context.Background(), getInput)
 	if err != nil {
 		return entity.CreatePlatformEndpointResponse{}, err
 	}
 
 	response := entity.CreatePlatformEndpointResponse{EndpointArn: *result.EndpointArn}
 	return response, nil
+}
+
+func (s *SNSRepository) PublishPlatformApplication(alarmInfo entity.AlarmInfo) error {
+	client, err := s.createSNSClient()
+	if err != nil {
+		return err
+	}
+
+	// エンドポイントを取得
+	getEndpointAttributesInput := &sns.GetEndpointAttributesInput{
+		EndpointArn: aws.String(alarmInfo.SNSEndpointArn),
+	}
+	getEndpointAttributesOutput, err := client.GetEndpointAttributes(context.Background(), getEndpointAttributesInput)
+	if err != nil {
+		return err
+	}
+
+	isEnabled := getEndpointAttributesOutput.Attributes["Enabled"]
+	if isEnabled == "False" || isEnabled == "false" {
+		return nil
+	}
+
+	// メッセージを作成
+	voipPushInfo := entity.VoIPPushInfo{}
+	voipPushInfo.CharaName = alarmInfo.CharaName
+	voipPushInfo.FilePath = alarmInfo.FileURL
+	jsonBytes, err := json.Marshal(voipPushInfo)
+	if err != nil {
+		return err
+	}
+
+	// プッシュ通知
+	publishInput := &sns.PublishInput{
+		Message:   aws.String(string(jsonBytes)),
+		TargetArn: aws.String(alarmInfo.SNSEndpointArn),
+	}
+	_, err = client.Publish(context.Background(), publishInput)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
