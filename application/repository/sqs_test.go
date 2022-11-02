@@ -32,7 +32,7 @@ func TestSendMessage(t *testing.T) {
 	alarmID := uuid.New().String()
 	alarmInfo := entity.AlarmInfo{AlarmID: alarmID}
 
-	err = repository.SendAlarmInfoMessage(alarmInfo)
+	err = repository.SendAlarmInfoToVoIPPushQueue(alarmInfo)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}

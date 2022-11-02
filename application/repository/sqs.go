@@ -3,7 +3,10 @@ package repository
 import (
 	"context"
 	"encoding/json"
+	"os"
 	"fmt"
+	"errors"
+	"github.com/google/uuid"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
@@ -45,9 +48,15 @@ func (s *SQSRepository) createSQSClient() (*sqs.Client, error) {
 ////////////////////////////////////
 // SQS
 ////////////////////////////////////
-func (s *SQSRepository) SendAlarmInfoMessage(alarmInfo entity.AlarmInfo) error {
-	queueURL := "http://localhost:4566/000000000000/voip-push-queue.fifo"
-	return s.sendMessage(queueURL, "XXXX", alarmInfo)
+func (s *SQSRepository) SendAlarmInfoToVoIPPushQueue(alarmInfo entity.AlarmInfo) error {
+	queueURL, err := s.getVoIPPushQueueURL()
+	if err != nil {
+		return err
+	}
+
+	messageGroupId := uuid.New().String()
+
+	return s.sendAlarmInfoMessage(queueURL, messageGroupId, alarmInfo)
 }
 
 func (s *SQSRepository) RecieveAlarmInfoMessage() ([]types.Message, error) {
@@ -72,8 +81,10 @@ func (s *SQSRepository) PurgeQueue() error {
 	return err
 }
 
+////////////////////////////////////
 // Private Methods
-func (s *SQSRepository) sendMessage(queueURL string, messageGroupId string, alarmInfo entity.AlarmInfo) error {
+////////////////////////////////////
+func (s *SQSRepository) sendAlarmInfoMessage(queueURL string, messageGroupId string, alarmInfo entity.AlarmInfo) error {
 	// SQSClient作成
 	client, err := s.createSQSClient()
 	if err != nil {
@@ -118,4 +129,18 @@ func (s *SQSRepository) recieveMessage(queueURL string) ([]types.Message, error)
 	}
 
 	return resp.Messages, nil
+}
+
+// Get Queue URL
+func (s *SQSRepository) getVoIPPushQueueURL() (string, error) {
+	if (s.IsLocal) {
+		return charalarm_config.LocalVoIPPushQueueURL, nil
+	} else {
+		voIPPushQueueURL, ok := os.LookupEnv(charalarm_config.VoIPPushQueueURLKey)
+		if ok {
+			return voIPPushQueueURL, nil
+		} else {
+		  return "", errors.New("VoIPPushQueueUrl is not found")
+		}
+	}
 }
