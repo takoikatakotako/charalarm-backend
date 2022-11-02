@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"github.com/takoikatakotako/charalarm-backend/entity"
+	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
 )
 
 type SQSRepository struct {
@@ -19,7 +20,7 @@ func (s *SQSRepository) createSQSClient() (*sqs.Client, error) {
 	ctx := context.Background()
 
 	// SQS クライアントの生成
-	c, err := config.LoadDefaultConfig(ctx, config.WithRegion(awsRegion))
+	c, err := config.LoadDefaultConfig(ctx, config.WithRegion(charalarm_config.AWSRegion))
 	if err != nil {
 		fmt.Printf("load aws config: %s\n", err.Error())
 		return nil, err
@@ -29,8 +30,8 @@ func (s *SQSRepository) createSQSClient() (*sqs.Client, error) {
 	if s.IsLocal {
 		c.EndpointResolverWithOptions = aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...interface{}) (aws.Endpoint, error) {
 			return aws.Endpoint{
-				URL:           localstackEndpoint,
-				SigningRegion: awsRegion,
+				URL:           charalarm_config.LocalstackEndpoint,
+				SigningRegion: charalarm_config.AWSRegion,
 			}, nil
 		})
 		if err != nil {

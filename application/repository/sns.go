@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	// "errors"
+	"errors"
 	"encoding/json"
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -13,6 +13,7 @@ import (
 	// "github.com/takoikatakotako/charalarm-backend/table"
 	// "github.com/takoikatakotako/charalarm-backend/validator"
 	"github.com/takoikatakotako/charalarm-backend/entity"
+	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
 )
 
 type SNSRepository struct {
@@ -23,7 +24,7 @@ func (s *SNSRepository) createSNSClient() (*sns.Client, error) {
 	ctx := context.Background()
 
 	// SNS クライアントの生成
-	c, err := config.LoadDefaultConfig(ctx, config.WithRegion(awsRegion))
+	c, err := config.LoadDefaultConfig(ctx, config.WithRegion(charalarm_config.AWSRegion))
 	if err != nil {
 		fmt.Printf("load aws config: %s\n", err.Error())
 		return nil, err
@@ -33,8 +34,8 @@ func (s *SNSRepository) createSNSClient() (*sns.Client, error) {
 	if s.IsLocal {
 		c.EndpointResolverWithOptions = aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...interface{}) (aws.Endpoint, error) {
 			return aws.Endpoint{
-				URL:           localstackEndpoint,
-				SigningRegion: awsRegion,
+				URL:           charalarm_config.LocalstackEndpoint,
+				SigningRegion: charalarm_config.AWSRegion,
 			}, nil
 		})
 		if err != nil {
@@ -95,7 +96,7 @@ func (s *SNSRepository) PublishPlatformApplication(alarmInfo entity.AlarmInfo) e
 
 	isEnabled := getEndpointAttributesOutput.Attributes["Enabled"]
 	if isEnabled == "False" || isEnabled == "false" {
-		return nil
+		return errors.New("EndpointがFalse")
 	}
 
 	// メッセージを作成

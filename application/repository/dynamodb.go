@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math/rand"
+	"time"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
@@ -13,8 +15,7 @@ import (
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/table"
 	"github.com/takoikatakotako/charalarm-backend/validator"
-	"math/rand"
-	"time"
+	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
 )
 
 type DynamoDBRepository struct {
@@ -25,7 +26,7 @@ func (d *DynamoDBRepository) createDynamoDBClient() (*dynamodb.Client, error) {
 	ctx := context.Background()
 
 	// DynamoDB クライアントの生成
-	c, err := config.LoadDefaultConfig(ctx, config.WithRegion(awsRegion))
+	c, err := config.LoadDefaultConfig(ctx, config.WithRegion(charalarm_config.AWSRegion))
 	if err != nil {
 		fmt.Printf("load aws config: %s\n", err.Error())
 		return nil, err
@@ -35,8 +36,8 @@ func (d *DynamoDBRepository) createDynamoDBClient() (*dynamodb.Client, error) {
 	if d.IsLocal {
 		c.EndpointResolverWithOptions = aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...interface{}) (aws.Endpoint, error) {
 			return aws.Endpoint{
-				URL:           localstackEndpoint,
-				SigningRegion: awsRegion,
+				URL:           charalarm_config.LocalstackEndpoint,
+				SigningRegion: charalarm_config.AWSRegion,
 			}, nil
 		})
 		if err != nil {
