@@ -2,8 +2,8 @@ package repository
 
 import (
 	"context"
-	"errors"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -12,8 +12,8 @@ import (
 	// "github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	// "github.com/takoikatakotako/charalarm-backend/table"
 	// "github.com/takoikatakotako/charalarm-backend/validator"
-	"github.com/takoikatakotako/charalarm-backend/entity"
 	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
+	"github.com/takoikatakotako/charalarm-backend/entity"
 )
 
 type SNSRepository struct {

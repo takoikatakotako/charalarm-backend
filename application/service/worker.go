@@ -17,10 +17,10 @@ type WorkerService struct {
 }
 
 // VoIPのプッシュ通知をする
-func (w *WorkerService) PublishPlatformApplication(message string) error {
+func (w *WorkerService) PublishPlatformApplication(messageBody string) error {
 	// デコード
 	alarmInfo := entity.AlarmInfo{}
-	err := json.Unmarshal([]byte(message), &alarmInfo)
+	err := json.Unmarshal([]byte(messageBody), &alarmInfo)
 	if err != nil {
 		return err
 	}
@@ -29,4 +29,8 @@ func (w *WorkerService) PublishPlatformApplication(message string) error {
 	return w.SNSRepository.PublishPlatformApplication(alarmInfo)
 }
 
-// エラーのあるメッセージをデッドレターする
+// エラーのあるメッセージをデッドレターに送信
+func (w *WorkerService) SendMessageToDeadLetter(messageBody string) error {
+	// キューに送信
+	return w.SQSRepository.SendMessageToVoIPPushDeadLetterQueue(messageBody)
+}

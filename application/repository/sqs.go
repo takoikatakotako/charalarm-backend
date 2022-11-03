@@ -3,16 +3,16 @@ package repository
 import (
 	"context"
 	"encoding/json"
-	"os"
-	"fmt"
 	"errors"
-	"github.com/google/uuid"
+	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
-	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/google/uuid"
 	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
+	"github.com/takoikatakotako/charalarm-backend/entity"
+	"os"
 )
 
 type SQSRepository struct {
@@ -53,10 +53,21 @@ func (s *SQSRepository) SendAlarmInfoToVoIPPushQueue(alarmInfo entity.AlarmInfo)
 	if err != nil {
 		return err
 	}
-
 	messageGroupId := uuid.New().String()
 
+	// メッセージ送信
 	return s.sendAlarmInfoMessage(queueURL, messageGroupId, alarmInfo)
+}
+
+func (s *SQSRepository) SendMessageToVoIPPushDeadLetterQueue(messageBody string) error {
+	queueURL, err := s.getVoIPPushDeadLetterQueueURL()
+	if err != nil {
+		return err
+	}
+	messageGroupId := uuid.New().String()
+
+	// メッセージ送信
+	return s.sendMessage(queueURL, messageGroupId, messageBody)
 }
 
 func (s *SQSRepository) RecieveAlarmInfoMessage() ([]types.Message, error) {
@@ -85,14 +96,19 @@ func (s *SQSRepository) PurgeQueue() error {
 // Private Methods
 ////////////////////////////////////
 func (s *SQSRepository) sendAlarmInfoMessage(queueURL string, messageGroupId string, alarmInfo entity.AlarmInfo) error {
-	// SQSClient作成
-	client, err := s.createSQSClient()
+	// decode
+	jsonBytes, err := json.Marshal(alarmInfo)
 	if err != nil {
 		return err
 	}
+	messageBody := string(jsonBytes)
 
-	// decode
-	jsonBytes, err := json.Marshal(alarmInfo)
+	return s.sendMessage(queueURL, messageGroupId, messageBody)
+}
+
+func (s *SQSRepository) sendMessage(queueURL string, messageGroupId string, messageBody string) error {
+	// SQSClient作成
+	client, err := s.createSQSClient()
 	if err != nil {
 		return err
 	}
@@ -101,7 +117,7 @@ func (s *SQSRepository) sendAlarmInfoMessage(queueURL string, messageGroupId str
 	sMInput := &sqs.SendMessageInput{
 		MessageAttributes: map[string]types.MessageAttributeValue{},
 		MessageGroupId:    aws.String(messageGroupId),
-		MessageBody:       aws.String(string(jsonBytes)),
+		MessageBody:       aws.String(messageBody),
 		QueueUrl:          aws.String(queueURL),
 	}
 	_, err = client.SendMessage(context.Background(), sMInput)
@@ -133,14 +149,27 @@ func (s *SQSRepository) recieveMessage(queueURL string) ([]types.Message, error)
 
 // Get Queue URL
 func (s *SQSRepository) getVoIPPushQueueURL() (string, error) {
-	if (s.IsLocal) {
+	if s.IsLocal {
 		return charalarm_config.LocalVoIPPushQueueURL, nil
 	} else {
 		voIPPushQueueURL, ok := os.LookupEnv(charalarm_config.VoIPPushQueueURLKey)
 		if ok {
 			return voIPPushQueueURL, nil
 		} else {
-		  return "", errors.New("VoIPPushQueueUrl is not found")
+			return "", errors.New("VoIPPushQueueUrl is not found")
+		}
+	}
+}
+
+func (s *SQSRepository) getVoIPPushDeadLetterQueueURL() (string, error) {
+	if s.IsLocal {
+		return charalarm_config.LocalVoIPPushDeadLetterQueueURL, nil
+	} else {
+		voIPPushDeadLetterQueueURL, ok := os.LookupEnv(charalarm_config.VoIPPushDeadLetterQueueURLKey)
+		if ok {
+			return voIPPushDeadLetterQueueURL, nil
+		} else {
+			return "", errors.New("VoIPPushDeadLetterQueueUrl is not found")
 		}
 	}
 }

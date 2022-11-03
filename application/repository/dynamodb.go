@@ -4,18 +4,18 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"math/rand"
-	"time"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
 	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/table"
 	"github.com/takoikatakotako/charalarm-backend/validator"
-	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
+	"math/rand"
+	"time"
 )
 
 type DynamoDBRepository struct {
