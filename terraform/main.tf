@@ -9,7 +9,8 @@ module "dynamodb" {
 }
 
 module "sqs" {
-  source = "./sqs"
+  source                     = "./sqs"
+  worker_lambda_function_arn = module.worker.worker_lambda_function_arn
 }
 
 # module "application" {

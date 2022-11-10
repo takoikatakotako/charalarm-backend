@@ -6,7 +6,7 @@ resource "aws_lambda_function" "worker_lambda_function" {
   role          = aws_iam_role.worker_lambda_role.arn
   runtime       = "go1.x"
   handler       = "worker"
-  timeout       = 300
+  timeout       = 30
 
   # Lambda生成に必要なのでダミーファイルを渡している。デプロイはCLIから行う。
   filename         = "${path.module}/source/dummy.zip"

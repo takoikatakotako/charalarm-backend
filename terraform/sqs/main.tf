@@ -17,3 +17,7 @@ resource "aws_sqs_queue" "voip_push_dead_letter_queue" {
   message_retention_seconds   = 1209600 # メッセージを14日間保持（最大値）
 }
 
+resource "aws_lambda_event_source_mapping" "voip_push_queue_lambda_event_source_mapping" {
+  event_source_arn = aws_sqs_queue.voip_push_queue.arn
+  function_name    = var.worker_lambda_function_arn
+}

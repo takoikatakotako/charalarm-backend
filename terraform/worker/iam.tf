@@ -41,3 +41,8 @@ resource "aws_iam_role_policy_attachment" "worker_lambda_role_basic_execution_po
   role       = aws_iam_role.worker_lambda_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
+
+resource "aws_iam_role_policy_attachment" "worker_lambda_role_sqs_execution_policy_attachment" {
+  role       = aws_iam_role.worker_lambda_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole"
+}
