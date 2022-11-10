@@ -80,7 +80,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 		alarmInfo.SNSEndpointArn = "xxx"
 
 		// SQSに送信
-		err := b.SQSRepository.SendAlarmInfoMessage(alarmInfo)
+		err := b.SQSRepository.SendAlarmInfoToVoIPPushQueue(alarmInfo)
 		if err != nil {
 			// エラーをログに送ってなんとか
 		}

@@ -5,7 +5,7 @@ import (
 	// "math/rand"
 	// "time"
 	"encoding/json"
-	"github.com/takoikatakotako/charalarm-backend/config"
+	// "github.com/takoikatakotako/charalarm-backend/config"
 	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	// "github.com/takoikatakotako/charalarm-backend/validator"
