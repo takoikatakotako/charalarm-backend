@@ -8,6 +8,10 @@ module "dynamodb" {
   source = "./dynamodb"
 }
 
+module "sqs" {
+  source = "./sqs"
+}
+
 # module "application" {
 #   source = "./application"
 #   bucket_name = local.application_bucket_name
@@ -32,12 +36,13 @@ module "web_api" {
 
 module "batch" {
   source = "./batch"
-
 }
 
-
+module "worker" {
+  source = "./worker"
+}
 
 module "datadog" {
-  source = "./datadog"
+  source     = "./datadog"
   dd_api_key = "DD_API_KEY"
 }
