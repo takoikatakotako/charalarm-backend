@@ -23,7 +23,8 @@ func Handler(ctx context.Context, event events.SQSEvent) (events.APIGatewayProxy
 
 		// エラーの場合はデッドレターキューに格納する
 		if err != nil {
-
+			err := s.SendMessageToDeadLetter(message.Body)
+			fmt.Println(err)
 		}
 	}
 	fmt.Println("--------")
