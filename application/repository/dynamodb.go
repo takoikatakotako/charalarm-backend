@@ -309,6 +309,40 @@ func (d *DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
 	return nil
 }
 
+func (d *DynamoDBRepository) UpdateAlarm(alarm entity.Alarm) error {
+	client, err := d.createDynamoDBClient()
+	if err != nil {
+		fmt.Printf("err, %v", err)
+		return err
+	}
+
+	// Alarm のバリデーション
+	err = validator.ValidateAlarm(alarm)
+	if err != nil {
+		fmt.Printf("err, %v", err)
+		return err
+	}
+
+	// ここでレコードを更新する
+
+	// 新規レコードの追加
+	av, err := attributevalue.MarshalMap(alarm)
+	if err != nil {
+		fmt.Printf("dynamodb marshal: %s\n", err.Error())
+		return err
+	}
+	_, err = client.PutItem(context.Background(), &dynamodb.PutItemInput{
+		TableName: aws.String(table.ALARM_TABLE),
+		Item:      av,
+	})
+	if err != nil {
+		fmt.Printf("put item: %s\n", err.Error())
+		return err
+	}
+
+	return nil
+}
+
 func (d *DynamoDBRepository) DeleteAlarm(alarmID string) error {
 	ctx := context.Background()
 

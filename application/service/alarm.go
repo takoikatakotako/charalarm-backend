@@ -51,6 +51,31 @@ func (a *AlarmService) AddAlarm(userID string, userToken string, alarm entity.Al
 	return a.Repository.InsertAlarm(alarm)
 }
 
+func (a *AlarmService) UpdateAlarm(userID string, userToken string, alarm entity.Alarm) error {
+	// ユーザーを取得
+	anonymousUser, err := a.Repository.GetAnonymousUser(userID)
+	if err != nil {
+		return err
+	}
+
+	// UserID, UserTokenが一致するか確認する
+	if anonymousUser.UserID != userID || anonymousUser.UserToken != userToken {
+		return errors.New(message.AUTHENTICATION_FAILURE)
+	}
+
+	// アラームのバリデーションを行う
+	err = validator.ValidateAlarm(alarm)
+	if err != nil {
+		return err
+	}
+
+	// アラームの所持者を確認が必要?
+
+
+	// アラームを更新する
+	return a.Repository.UpdateAlarm(alarm)
+}
+
 func (a *AlarmService) DeleteAlarm(userID string, userToken string, alarmID string) error {
 	// ユーザーを取得
 	anonymousUser, err := a.Repository.GetAnonymousUser(userID)
