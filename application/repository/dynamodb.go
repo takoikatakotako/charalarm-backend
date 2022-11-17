@@ -323,9 +323,7 @@ func (d *DynamoDBRepository) UpdateAlarm(alarm entity.Alarm) error {
 		return err
 	}
 
-	// ここでレコードを更新する
-
-	// 新規レコードの追加
+	// レコードを更新する
 	av, err := attributevalue.MarshalMap(alarm)
 	if err != nil {
 		fmt.Printf("dynamodb marshal: %s\n", err.Error())

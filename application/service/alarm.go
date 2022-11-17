@@ -18,6 +18,9 @@ type AlarmService struct {
 	Repository repository.DynamoDBRepository
 }
 
+////////////////////////////////////////
+// アラームを追加
+////////////////////////////////////////
 func (a *AlarmService) AddAlarm(userID string, userToken string, alarm entity.Alarm) error {
 	// ユーザーを取得
 	anonymousUser, err := a.Repository.GetAnonymousUser(userID)
@@ -51,6 +54,9 @@ func (a *AlarmService) AddAlarm(userID string, userToken string, alarm entity.Al
 	return a.Repository.InsertAlarm(alarm)
 }
 
+////////////////////////////////////////
+// アラームを更新
+////////////////////////////////////////
 func (a *AlarmService) UpdateAlarm(userID string, userToken string, alarm entity.Alarm) error {
 	// ユーザーを取得
 	anonymousUser, err := a.Repository.GetAnonymousUser(userID)
@@ -76,6 +82,9 @@ func (a *AlarmService) UpdateAlarm(userID string, userToken string, alarm entity
 	return a.Repository.UpdateAlarm(alarm)
 }
 
+////////////////////////////////////////
+// アラームを削除
+////////////////////////////////////////
 func (a *AlarmService) DeleteAlarm(userID string, userToken string, alarmID string) error {
 	// ユーザーを取得
 	anonymousUser, err := a.Repository.GetAnonymousUser(userID)
