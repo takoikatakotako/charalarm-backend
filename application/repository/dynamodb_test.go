@@ -135,7 +135,8 @@ func TestInsertAlarmAndGet(t *testing.T) {
 	assert.Equal(t, alarmList[0], insertAlarm)
 }
 
-// 1分以内にテストを実行すると失敗するので注意
+// 追加したアラームをアラームタイムで検索できる
+// * 現在時刻を使っているため、1分以内にテストを実行すると失敗するので注意
 func TestInsertAndQueryByAlarmTime(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 
@@ -179,6 +180,39 @@ func TestInsertAndQueryByAlarmTime(t *testing.T) {
 	assert.Equal(t, len(alarmList), 3)
 }
 
+// 追加したアラームを更新できる
+func TestInsertAndUpdate(t *testing.T) {
+	repository := DynamoDBRepository{IsLocal: true}
+
+	alarm := createAlarm()
+	userID := alarm.UserID
+	newAlarmName := "Updated Alarm"
+
+	// Insert
+	err := repository.InsertAlarm(alarm)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	
+	// Update
+	alarm.AlarmName = newAlarmName
+	err = repository.UpdateAlarm(alarm)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Get
+	alarmList, err := repository.GetAlarmList(userID)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	updatedAlarm := alarmList[0]
+
+	// Assert
+	assert.Equal(t, updatedAlarm.AlarmName, newAlarmName)
+}
+
+// 追加したアラームを削除できる
 func TestInsertAndDelete(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 
