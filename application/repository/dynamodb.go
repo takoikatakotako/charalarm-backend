@@ -309,6 +309,7 @@ func (d *DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
 	return nil
 }
 
+// TODO: 少し危険な方法で更新しているので、更新対象の数だけメソッドを作成する
 func (d *DynamoDBRepository) UpdateAlarm(alarm entity.Alarm) error {
 	client, err := d.createDynamoDBClient()
 	if err != nil {
