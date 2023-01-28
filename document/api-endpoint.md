@@ -1,10 +1,16 @@
 
-## GET:  /healthcheck
+## GET: /healthcheck
 
 ヘルスチェックに使用するエンドポイントです。
 
 ```
 $ curl https://api.sandbox.swiswiswift.com/healthcheck | jq
+```
+
+```
+{
+  "message": "healthy!"
+}
 ```
 
 ## POST: /user/signup/anonymous
@@ -17,6 +23,11 @@ $ curl -X POST https://api.sandbox.swiswiswift.com/user/signup/anonymous \
     -d '{"userID":"20f0c1cd-9c2a-411a-878c-9bd0bb15dc35","userToken":"038a5e28-15ce-46b4-8f46-4934202faa85"}' | jq
 ```
 
+```
+{
+  "message": "登録完了しました"
+}
+```
 
 
 ## POST: /user/withdraw/anonymous
