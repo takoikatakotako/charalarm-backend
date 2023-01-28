@@ -32,11 +32,18 @@ $ curl -X POST https://api.sandbox.swiswiswift.com/user/signup/anonymous \
 
 ## POST: /user/withdraw/anonymous
 
+退会するエンドポイント
 
 ```
 $ curl -X POST https://api.sandbox.swiswiswift.com/user/withdraw/anonymous \
     -H 'Content-Type: application/json' \
     -d '{"userID":"20f0c1cd-9c2a-411a-878c-9bd0bb15dc35","userToken":"038a5e28-15ce-46b4-8f46-4934202faa85"}' | jq
+```
+
+```
+{
+  "message": "退会完了しました"
+}
 ```
 
 ## POST: /user/info/anonymous
