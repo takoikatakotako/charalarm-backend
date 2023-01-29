@@ -13,6 +13,7 @@ import (
 
 const (
 	Endpoint = "https://api.sandbox.swiswiswift.com"
+	HeaderApplicationJson = "application/json"
 )
 
 func TestHealthCheck(t *testing.T) {
@@ -87,7 +88,7 @@ func signUp(t *testing.T, userID string, userToken string) (int, entity.MessageR
 		return 0, entity.MessageResponse{}, err
     }
 
-	response, err := http.Post(Endpoint + "/user/signup/anonymous",  "application/json", bytes.NewBuffer(jsonString))
+	response, err := http.Post(Endpoint + "/user/signup/anonymous", HeaderApplicationJson, bytes.NewBuffer(jsonString))
 	if err != nil {
 		return response.StatusCode, entity.MessageResponse{}, err
 	}
@@ -106,7 +107,6 @@ func signUp(t *testing.T, userID string, userToken string) (int, entity.MessageR
 	return response.StatusCode, signUpResponse, nil
 }
 
-
 // POST: /user/withdraw/anonymous
 func withdraw(t *testing.T, userID string, userToken string) (int, entity.MessageResponse, error) {
     requestBody := &entity.WithdrawRequest{
@@ -119,7 +119,38 @@ func withdraw(t *testing.T, userID string, userToken string) (int, entity.Messag
 		return 0, entity.MessageResponse{}, err
     }
 
-	response, err := http.Post(Endpoint + "/user/withdraw/anonymous",  "application/json", bytes.NewBuffer(jsonString))
+	response, err := http.Post(Endpoint + "/user/withdraw/anonymous", HeaderApplicationJson, bytes.NewBuffer(jsonString))
+	if err != nil {
+		return response.StatusCode, entity.MessageResponse{}, err
+	}
+
+	responseBody, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return response.StatusCode, entity.MessageResponse{}, err
+	}
+
+	var signUpResponse entity.MessageResponse
+	err = json.Unmarshal(responseBody, &signUpResponse)
+	if err != nil {
+		return response.StatusCode, entity.MessageResponse{}, err
+	}
+
+	return response.StatusCode, signUpResponse, nil
+}
+
+// POST: /user/info/anonymous
+func withdraw(t *testing.T, userID string, userToken string) (int, entity.MessageResponse, error) {
+    requestBody := &entity.WithdrawRequest{
+        UserID: userID,
+		UserToken: userToken,
+    }
+
+	jsonString, err := json.Marshal(requestBody)
+    if err != nil {
+		return 0, entity.MessageResponse{}, err
+    }
+
+	response, err := http.Post(Endpoint + "/user/info/anonymous", HeaderApplicationJson, bytes.NewBuffer(jsonString))
 	if err != nil {
 		return response.StatusCode, entity.MessageResponse{}, err
 	}
