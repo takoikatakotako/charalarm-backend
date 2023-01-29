@@ -23,7 +23,7 @@ func TestHealthCheck(t *testing.T) {
     }
 
 	assert.Equal(t, statusCode, 200)
-	assert.Equal(t, healthCheckResponse.Message, "healthy!")
+	assert.Equal(t, healthCheckResponse.Message, "Healthy!")
 }
 
 func TestSignUpAndWithdraw(t *testing.T) {
@@ -36,7 +36,7 @@ func TestSignUpAndWithdraw(t *testing.T) {
     }
 
 	assert.Equal(t, statusCode, 200)
-	assert.Equal(t, signUpResponse.Message, "登録完了しました")
+	assert.Equal(t, signUpResponse.Message, "Sign Up Success!")
 
 
 	// Withdraw
@@ -46,7 +46,7 @@ func TestSignUpAndWithdraw(t *testing.T) {
     }
 
 	assert.Equal(t, statusCode, 200)
-	assert.Equal(t, withdrawResponse.Message, "退会完了しました")
+	assert.Equal(t, withdrawResponse.Message, "Withdraw Success!")
 }
 
 
