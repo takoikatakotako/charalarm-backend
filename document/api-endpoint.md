@@ -9,7 +9,7 @@ $ curl https://api.sandbox.swiswiswift.com/healthcheck | jq
 
 ```
 {
-  "message": "healthy!"
+  "message": "Healthy!"
 }
 ```
 
@@ -25,7 +25,13 @@ $ curl -X POST https://api.sandbox.swiswiswift.com/user/signup/anonymous \
 
 ```
 {
-  "message": "登録完了しました"
+  "message": "Sign Up Success!"
+}
+```
+
+```
+{
+  "message": "Sign Up Failure..."
 }
 ```
 
@@ -42,9 +48,16 @@ $ curl -X POST https://api.sandbox.swiswiswift.com/user/withdraw/anonymous \
 
 ```
 {
-  "message": "退会完了しました"
+  "message": "Withdraw Success!"
 }
 ```
+
+```
+{
+  "message": "Withdraw Failure..."
+}
+```
+
 
 ## POST: /user/info/anonymous
 

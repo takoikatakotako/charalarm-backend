@@ -37,7 +37,20 @@ func TestSignUpAndWithdraw(t *testing.T) {
 
 	assert.Equal(t, statusCode, 200)
 	assert.Equal(t, signUpResponse.Message, "登録完了しました")
+
+
+	// Withdraw
+	statusCode, withdrawResponse, err := withdraw(t, userID, userToken)
+    if err != nil {
+		t.Errorf("unexpected error: %v", err)
+    }
+
+	assert.Equal(t, statusCode, 200)
+	assert.Equal(t, withdrawResponse.Message, "退会完了しました")
 }
+
+
+
 
 
 
@@ -75,6 +88,38 @@ func signUp(t *testing.T, userID string, userToken string) (int, entity.MessageR
     }
 
 	response, err := http.Post(Endpoint + "/user/signup/anonymous",  "application/json", bytes.NewBuffer(jsonString))
+	if err != nil {
+		return response.StatusCode, entity.MessageResponse{}, err
+	}
+
+	responseBody, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return response.StatusCode, entity.MessageResponse{}, err
+	}
+
+	var signUpResponse entity.MessageResponse
+	err = json.Unmarshal(responseBody, &signUpResponse)
+	if err != nil {
+		return response.StatusCode, entity.MessageResponse{}, err
+	}
+
+	return response.StatusCode, signUpResponse, nil
+}
+
+
+// POST: /user/withdraw/anonymous
+func withdraw(t *testing.T, userID string, userToken string) (int, entity.MessageResponse, error) {
+    requestBody := &entity.WithdrawRequest{
+        UserID: userID,
+		UserToken: userToken,
+    }
+
+	jsonString, err := json.Marshal(requestBody)
+    if err != nil {
+		return 0, entity.MessageResponse{}, err
+    }
+
+	response, err := http.Post(Endpoint + "/user/withdraw/anonymous",  "application/json", bytes.NewBuffer(jsonString))
 	if err != nil {
 		return response.StatusCode, entity.MessageResponse{}, err
 	}

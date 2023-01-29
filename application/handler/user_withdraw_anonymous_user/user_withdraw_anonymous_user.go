@@ -38,7 +38,7 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 
 	if err := s.Withdraw(userID, userToken); err != nil {
 		fmt.Println(err)
-		response := entity.MessageResponse{Message: "退会失敗しました"}
+		response := entity.MessageResponse{Message: "Withdraw Failure..."}
 		jsonBytes, _ := json.Marshal(response)
 		return events.APIGatewayProxyResponse{
 			Body:       string(jsonBytes),
@@ -46,8 +46,11 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 		}, nil
 	}
 
+	response := entity.MessageResponse{Message: "Withdraw Success!"}
+	jsonBytes, _ := json.Marshal(response)
+
 	return events.APIGatewayProxyResponse{
-		Body:       "退会完了しました",
+		Body:       string(jsonBytes),
 		StatusCode: http.StatusOK,
 	}, nil
 }
