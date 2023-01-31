@@ -7,6 +7,7 @@ import (
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/validator"
+	"github.com/takoikatakotako/charalarm-backend/database"
 )
 
 type AnonymousUserService struct {
@@ -15,14 +16,14 @@ type AnonymousUserService struct {
 
 func (a *AnonymousUserService) GetAnonymousUser(userID string, userToken string) (entity.AnonymousUser, error) {
 	// ユーザーを取得
-	anonymousUser, err := a.Repository.GetAnonymousUser(userID)
+	user, err := a.Repository.GetAnonymousUser(userID)
 	if err != nil {
 		return entity.AnonymousUser{}, err
 	}
 
 	// UserID, UserTokenが一致するか確認する
-	if anonymousUser.UserID == userID && anonymousUser.UserToken == userToken {
-		return anonymousUser, nil
+	if user.UserID == userID && user.UserToken == userToken {
+		return a.convertDatabaseUserToEntityUser(user), nil
 	}
 
 	// 一致しない場合
@@ -47,8 +48,8 @@ func (a *AnonymousUserService) Signup(userID string, userToken string) error {
 	}
 
 	// ユーザー作成
-	anonymousUser := entity.AnonymousUser{UserID: userID, UserToken: userToken}
-	return a.Repository.InsertAnonymousUser(anonymousUser)
+	user := database.User{UserID: userID, UserToken: userToken}
+	return a.Repository.InsertAnonymousUser(user)
 }
 
 func (a *AnonymousUserService) Withdraw(userID string, userToken string) error {
@@ -70,4 +71,14 @@ func (a *AnonymousUserService) Withdraw(userID string, userToken string) error {
 
 	// 認証失敗
 	return errors.New(message.AUTHENTICATION_FAILURE)
+}
+
+// database.User を entity.AnonymousUser に変換
+func (a *AnonymousUserService) convertDatabaseUserToEntityUser(user database.User) (entity.AnonymousUser) {
+	return entity.AnonymousUser {
+		UserID: user.UserID,
+		UserToken: user.UserToken,
+		IOSVoIPPushToken: entity.PushToken{},
+		IOSPushToken: entity.PushToken{},
+	}
 }

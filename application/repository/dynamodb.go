@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
 	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/database"
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/table"
 	"github.com/takoikatakotako/charalarm-backend/validator"
@@ -51,12 +52,12 @@ func (d *DynamoDBRepository) createDynamoDBClient() (*dynamodb.Client, error) {
 ////////////////////////////////////
 // AnonymousUser
 ////////////////////////////////////
-func (d *DynamoDBRepository) GetAnonymousUser(userID string) (entity.AnonymousUser, error) {
+func (d *DynamoDBRepository) GetAnonymousUser(userID string) (database.User, error) {
 	ctx := context.Background()
 
 	client, err := d.createDynamoDBClient()
 	if err != nil {
-		return entity.AnonymousUser{}, err
+		return database.User{}, err
 	}
 
 	// 既存レコードの取得
@@ -72,17 +73,17 @@ func (d *DynamoDBRepository) GetAnonymousUser(userID string) (entity.AnonymousUs
 	// 取得
 	output, err := client.GetItem(ctx, getInput)
 	if err != nil {
-		return entity.AnonymousUser{}, err
+		return database.User{}, err
 	}
-	gotUser := entity.AnonymousUser{}
+	gotUser := database.User{}
 
 	if len(output.Item) == 0 {
-		return entity.AnonymousUser{}, errors.New(message.INVAlID_VALUE)
+		return database.User{}, errors.New(message.INVAlID_VALUE)
 	}
 
 	err = attributevalue.UnmarshalMap(output.Item, &gotUser)
 	if err != nil {
-		return entity.AnonymousUser{}, err
+		return database.User{}, err
 	}
 
 	return gotUser, nil
@@ -118,7 +119,7 @@ func (d *DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error) {
 	}
 }
 
-func (d *DynamoDBRepository) InsertAnonymousUser(anonymousUser entity.AnonymousUser) error {
+func (d *DynamoDBRepository) InsertAnonymousUser(anonymousUser database.User) error {
 	ctx := context.Background()
 
 	client, err := d.createDynamoDBClient()
