@@ -3,7 +3,7 @@ package repository
 import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/database"
 	"testing"
 	"time"
 )
@@ -18,7 +18,7 @@ func TestInsertUserAndGet(t *testing.T) {
 	userToken := uuid.New().String()
 
 	// Insert
-	insertUser := entity.AnonymousUser{UserID: userID, UserToken: userToken}
+	insertUser := database.User{UserID: userID, UserToken: userToken}
 	err := repository.InsertAnonymousUser(insertUser)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
@@ -53,7 +53,7 @@ func TestInsertUserAndExist(t *testing.T) {
 	assert.Equal(t, firstIsExist, false)
 
 	// Insert
-	insertUser := entity.AnonymousUser{UserID: userID, UserToken: userToken}
+	insertUser := database.User{UserID: userID, UserToken: userToken}
 	err = repository.InsertAnonymousUser(insertUser)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
@@ -78,7 +78,7 @@ func TestInsertUserAndDelete(t *testing.T) {
 	userToken := uuid.New().String()
 
 	// Insert
-	insertUser := entity.AnonymousUser{UserID: userID, UserToken: userToken}
+	insertUser := database.User{UserID: userID, UserToken: userToken}
 	err = repository.InsertAnonymousUser(insertUser)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)

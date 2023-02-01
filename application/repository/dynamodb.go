@@ -10,7 +10,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
-	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/database"
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/table"
@@ -174,11 +173,11 @@ func (d *DynamoDBRepository) DeleteAnonymousUser(userID string) error {
 ////////////////////////////////////
 // Alarm
 ////////////////////////////////////
-func (d *DynamoDBRepository) GetAlarmList(userID string) ([]entity.Alarm, error) {
+func (d *DynamoDBRepository) GetAlarmList(userID string) ([]database.Alarm, error) {
 
 	client, err := d.createDynamoDBClient()
 	if err != nil {
-		return []entity.Alarm{}, err
+		return []database.Alarm{}, err
 	}
 
 	// クエリ実行
@@ -191,13 +190,13 @@ func (d *DynamoDBRepository) GetAlarmList(userID string) ([]entity.Alarm, error)
 		},
 	})
 	if err != nil {
-		return []entity.Alarm{}, err
+		return []database.Alarm{}, err
 	}
 
 	// 取得結果を struct の配列に変換
-	alarmList := []entity.Alarm{}
+	alarmList := []database.Alarm{}
 	for _, item := range output.Items {
-		alarm := entity.Alarm{}
+		alarm := database.Alarm{}
 		err := attributevalue.UnmarshalMap(item, &alarm)
 		if err != nil {
 			// TODO ログを出す
@@ -209,13 +208,13 @@ func (d *DynamoDBRepository) GetAlarmList(userID string) ([]entity.Alarm, error)
 	return alarmList, nil
 }
 
-func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time.Weekday) ([]entity.Alarm, error) {
+func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time.Weekday) ([]database.Alarm, error) {
 	alarmTime := fmt.Sprintf("%02d-%02d", hour, minute)
 
 	// clientの作成
 	client, err := d.createDynamoDBClient()
 	if err != nil {
-		return []entity.Alarm{}, err
+		return []database.Alarm{}, err
 	}
 
 	// クエリ実行
@@ -229,13 +228,13 @@ func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time
 	}
 	output, err := client.Query(context.Background(), queryInput)
 	if err != nil {
-		return []entity.Alarm{}, err
+		return []database.Alarm{}, err
 	}
 
 	// 取得結果を struct の配列に変換
-	alarmList := []entity.Alarm{}
+	alarmList := []database.Alarm{}
 	for _, item := range output.Items {
-		alarm := entity.Alarm{}
+		alarm := database.Alarm{}
 		err := attributevalue.UnmarshalMap(item, &alarm)
 		if err != nil {
 			// TODO ログを出す
@@ -278,7 +277,7 @@ func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time
 	return alarmList, nil
 }
 
-func (d *DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
+func (d *DynamoDBRepository) InsertAlarm(alarm database.Alarm) error {
 	client, err := d.createDynamoDBClient()
 	if err != nil {
 		fmt.Printf("err, %v", err)
@@ -311,7 +310,7 @@ func (d *DynamoDBRepository) InsertAlarm(alarm entity.Alarm) error {
 }
 
 // TODO: 少し危険な方法で更新しているので、更新対象の数だけメソッドを作成する
-func (d *DynamoDBRepository) UpdateAlarm(alarm entity.Alarm) error {
+func (d *DynamoDBRepository) UpdateAlarm(alarm database.Alarm) error {
 	client, err := d.createDynamoDBClient()
 	if err != nil {
 		fmt.Printf("err, %v", err)
@@ -398,7 +397,7 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 	requestItems := []types.WriteRequest{}
 	for _, item := range output.Items {
 		// alarmIDを取得
-		alarm := entity.Alarm{}
+		alarm := database.Alarm{}
 		if err := attributevalue.UnmarshalMap(item, &alarm); err != nil {
 			return err
 		}
@@ -431,11 +430,11 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 ////////////////////////////////////
 // Chara
 ////////////////////////////////////
-func (d *DynamoDBRepository) GetChara(charaID string) (entity.Chara, error) {
+func (d *DynamoDBRepository) GetChara(charaID string) (database.Chara, error) {
 	// クライアント作成
 	client, err := d.createDynamoDBClient()
 	if err != nil {
-		return entity.Chara{}, err
+		return database.Chara{}, err
 	}
 
 	// クエリ実行
@@ -449,11 +448,11 @@ func (d *DynamoDBRepository) GetChara(charaID string) (entity.Chara, error) {
 	}
 	output, err := client.GetItem(context.Background(), input)
 	if err != nil {
-		return entity.Chara{}, err
+		return database.Chara{}, err
 	}
 
 	// 取得結果をcharaに変換
-	chara := entity.Chara{}
+	chara := database.Chara{}
 	err = attributevalue.UnmarshalMap(output.Item, &chara)
 	if err != nil {
 		return chara, err
@@ -462,11 +461,11 @@ func (d *DynamoDBRepository) GetChara(charaID string) (entity.Chara, error) {
 	return chara, nil
 }
 
-func (d *DynamoDBRepository) GetCharaList() ([]entity.Chara, error) {
+func (d *DynamoDBRepository) GetCharaList() ([]database.Chara, error) {
 	// クライアント作成
 	client, err := d.createDynamoDBClient()
 	if err != nil {
-		return []entity.Chara{}, err
+		return []database.Chara{}, err
 	}
 
 	// クエリ実行
@@ -475,13 +474,13 @@ func (d *DynamoDBRepository) GetCharaList() ([]entity.Chara, error) {
 	}
 	output, err := client.Scan(context.Background(), input)
 	if err != nil {
-		return []entity.Chara{}, err
+		return []database.Chara{}, err
 	}
 
 	// 取得結果を struct の配列に変換
-	charaList := []entity.Chara{}
+	charaList := []database.Chara{}
 	for _, item := range output.Items {
-		chara := entity.Chara{}
+		chara := database.Chara{}
 		err := attributevalue.UnmarshalMap(item, &chara)
 		if err != nil {
 			// TODO ログを出す
@@ -496,11 +495,11 @@ func (d *DynamoDBRepository) GetCharaList() ([]entity.Chara, error) {
 
 // ランダムにキャラを1つ取得する
 // キャラ数が増えてきた場合は改良する
-func (d *DynamoDBRepository) GetRandomChara() (entity.Chara, error) {
+func (d *DynamoDBRepository) GetRandomChara() (database.Chara, error) {
 	// クライアント作成
 	client, err := d.createDynamoDBClient()
 	if err != nil {
-		return entity.Chara{}, err
+		return database.Chara{}, err
 	}
 
 	// クエリ実行
@@ -510,7 +509,7 @@ func (d *DynamoDBRepository) GetRandomChara() (entity.Chara, error) {
 	}
 	output, err := client.Scan(context.Background(), input)
 	if err != nil {
-		return entity.Chara{}, err
+		return database.Chara{}, err
 	}
 
 	// ランダムに1件取得
@@ -519,7 +518,7 @@ func (d *DynamoDBRepository) GetRandomChara() (entity.Chara, error) {
 	item := output.Items[index]
 
 	// 取得結果をcharaに変換
-	chara := entity.Chara{}
+	chara := database.Chara{}
 	err = attributevalue.UnmarshalMap(item, &chara)
 	if err != nil {
 		return chara, err
