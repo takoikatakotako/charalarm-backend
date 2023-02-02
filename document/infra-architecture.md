@@ -1,8 +1,8 @@
 ## 新アーキテクチャ
 
-Charalarmのアーキテクチャです。
+Charalarmのインフラのアーキテクチャです。
 
-![Architecture](image/architecture.png)
+![Architecture](image/infra-architecture.png)
 
 
 ### API部

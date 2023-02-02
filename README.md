@@ -20,12 +20,13 @@ Charalarm の現行のアーキテクチャです。
 Charalarmの新しいアーキテクチャです。
 現行アーキテクチャではサービスの維持手数料が高い & サーバー管理が面倒なのでサーバーレス中心の構成にしました。
 
-![Architecture](document/image/architecture.png)
+![Architecture](document/image/infra-architecture.png)
 
 
 ## ドキュメント
 
-- [アーキテクチャーについて](document/architecture.md)
+- [インフラのアーキテクチャーについて](document/infra-architecture.md)
+- [アプリケーションのアーキテクチャーについて](document/app-architecture.md)
 - [APIのエンドポイントについて](document/api-endpoint.md)
 - [Localstackについて](document/localstack.md)
 - [証明書などのアップデートについて](document/update.md)
