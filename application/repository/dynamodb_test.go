@@ -355,7 +355,7 @@ func TestGetRandomChara(t *testing.T) {
 	assert.NotEqual(t, len(chara.CharaID), 0)
 }
 
-func createAlarm() entity.Alarm {
+func createAlarm() database.Alarm {
 	alarmID := uuid.New().String()
 	userID := uuid.New().String()
 	alarmType := "VOIP_NOTIFICATION"
@@ -372,7 +372,7 @@ func createAlarm() entity.Alarm {
 	friday := true
 	saturday := true
 
-	return entity.Alarm{
+	return database.Alarm{
 		AlarmID:     alarmID,
 		UserID:      userID,
 		AlarmType:   alarmType,
