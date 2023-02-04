@@ -9,7 +9,7 @@ import (
 
 func ValidateAlarm(alarm database.Alarm) error {
 	// AlarmID
-	if !IsValidUUID(alarm.AlarmID) {
+	if !IsValidUUID(alarm.ID) {
 		return errors.New(message.INVAlID_VALUE + ": AlarmID")
 	}
 
@@ -19,33 +19,33 @@ func ValidateAlarm(alarm database.Alarm) error {
 	}
 
 	// AlarmType
-	if alarm.AlarmType == "REMOTE_NOTIFICATION" || alarm.AlarmType == "VOIP_NOTIFICATION" {
+	if alarm.Type == "REMOTE_NOTIFICATION" || alarm.Type == "VOIP_NOTIFICATION" {
 		// Nothing
 	} else {
 		return errors.New(message.INVAlID_VALUE + ": AlarmType")
 	}
 
 	// AlarmName
-	if len(alarm.AlarmName) == 0 {
+	if len(alarm.Name) == 0 {
 		return errors.New(message.INVAlID_VALUE + ": AlarmName")
 	}
 
 	// AlarmHour
-	if 0 <= alarm.AlarmHour && alarm.AlarmHour <= 23 {
+	if 0 <= alarm.Hour && alarm.Hour <= 23 {
 		// Nothing
 	} else {
 		return errors.New(message.INVAlID_VALUE + ": AlarmHour")
 	}
 
 	// AlarmMinute
-	if 0 <= alarm.AlarmMinute && alarm.AlarmMinute <= 59 {
+	if 0 <= alarm.Minute && alarm.Minute <= 59 {
 		// Nothing
 	} else {
 		return errors.New(message.INVAlID_VALUE + ": AlarmMinute")
 	}
 
 	// AlarmTime
-	if alarm.AlarmTime == fmt.Sprintf("%02d-%02d", alarm.AlarmHour, alarm.AlarmMinute) {
+	if alarm.Time == fmt.Sprintf("%02d-%02d", alarm.Hour, alarm.Minute) {
 		// Nothing
 	} else {
 		return errors.New(message.INVAlID_VALUE + ": AlarmTime")

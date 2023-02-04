@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
@@ -63,7 +64,7 @@ func (d *DynamoDBRepository) GetAnonymousUser(userID string) (database.User, err
 	getInput := &dynamodb.GetItemInput{
 		TableName: aws.String(table.USER_TABLE),
 		Key: map[string]types.AttributeValue{
-			"userID": &types.AttributeValueMemberS{
+			"ID": &types.AttributeValueMemberS{
 				Value: userID,
 			},
 		},
@@ -101,7 +102,7 @@ func (d *DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error) {
 	getInput := &dynamodb.GetItemInput{
 		TableName: aws.String(table.USER_TABLE),
 		Key: map[string]types.AttributeValue{
-			"userID": &types.AttributeValueMemberS{
+			"ID": &types.AttributeValueMemberS{
 				Value: userID,
 			},
 		},
@@ -156,7 +157,7 @@ func (d *DynamoDBRepository) DeleteAnonymousUser(userID string) error {
 	deleteInput := &dynamodb.DeleteItemInput{
 		TableName: aws.String(table.USER_TABLE),
 		Key: map[string]types.AttributeValue{
-			"userID": &types.AttributeValueMemberS{
+			"ID": &types.AttributeValueMemberS{
 				Value: userID,
 			},
 		},
@@ -217,19 +218,61 @@ func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time
 		return []database.Alarm{}, err
 	}
 
-	// クエリ実行
-	queryInput := &dynamodb.QueryInput{
-		TableName:              aws.String("alarm-table"),
-		IndexName:              aws.String("alarm-time-index"),
-		KeyConditionExpression: aws.String("alarmTime = :alarmTime"),
-		ExpressionAttributeValues: map[string]types.AttributeValue{
-			":alarmTime": &types.AttributeValueMemberS{Value: alarmTime},
-		},
-	}
-	output, err := client.Query(context.Background(), queryInput)
+	// var err error
+	// var response *dynamodb.QueryOutput
+	// var movies []Movie
+
+	keyEx := expression.Key("time").Equal(expression.Value(alarmTime))
+	expr, err := expression.NewBuilder().WithKeyCondition(keyEx).Build()
+
+	output, err := client.Query(context.TODO(), &dynamodb.QueryInput{
+		TableName:                 aws.String("alarm-table"),
+		IndexName:                 aws.String("alarm-time-index"),
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		KeyConditionExpression:    expr.KeyCondition(),
+	})
 	if err != nil {
 		return []database.Alarm{}, err
 	}
+
+	// if err != nil {
+	// 	log.Printf("Couldn't build epxression for query. Here's why: %v\n", err)
+	// } else {
+	// 	response, err = client.Query(context.TODO(), &dynamodb.QueryInput{
+	// 		TableName:              aws.String("alarm-table"),
+	// 		IndexName:              aws.String("alarm-time-index"),
+	// 		ExpressionAttributeNames:  expr.Names(),
+	// 		ExpressionAttributeValues: expr.Values(),
+	// 		KeyConditionExpression:    expr.KeyCondition(),
+	// 	})
+	// 	if err != nil {
+	// 		log.Printf("Couldn't query for movies released in %v. Here's why: %v\n", releaseYear, err)
+	// 	} else {
+	// 		err = attributevalue.UnmarshalListOfMaps(response.Items, &movies)
+	// 		if err != nil {
+	// 			log.Printf("Couldn't unmarshal query response. Here's why: %v\n", err)
+	// 		}
+	// 	}
+	// }
+	// return movies, err
+
+	// クエリ実行
+	// queryInput := &dynamodb.QueryInput{
+	// 	TableName:              aws.String("alarm-table"),
+	// 	IndexName:              aws.String("alarm-time-index"),
+	// 	KeyConditionExpression: aws.String("#tm = :time"),
+	// 	ExpressionAttributeNames: map[string]*string{
+	// 		"#tm": "time",
+	// 	},
+	// 	ExpressionAttributeValues: map[string]types.AttributeValue{
+	// 		":tm": &types.AttributeValueMemberS{Value: alarmTime},
+	// 	},
+	// }
+	// output, err := client.Query(context.Background(), queryInput)
+	// if err != nil {
+	// 	return []database.Alarm{}, err
+	// }
 
 	// 取得結果を struct の配列に変換
 	alarmList := []database.Alarm{}
@@ -353,7 +396,7 @@ func (d *DynamoDBRepository) DeleteAlarm(alarmID string) error {
 	deleteInput := &dynamodb.DeleteItemInput{
 		TableName: aws.String(table.ALARM_TABLE),
 		Key: map[string]types.AttributeValue{
-			"alarmID": &types.AttributeValueMemberS{Value: alarmID},
+			"ID": &types.AttributeValueMemberS{Value: alarmID},
 		},
 	}
 
@@ -401,13 +444,13 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 		if err := attributevalue.UnmarshalMap(item, &alarm); err != nil {
 			return err
 		}
-		alarmID := alarm.AlarmID
+		alarmID := alarm.ID
 
 		// requestItemsを作成
 		requestItem := types.WriteRequest{
 			DeleteRequest: &types.DeleteRequest{
 				Key: map[string]types.AttributeValue{
-					"alarmID": &types.AttributeValueMemberS{Value: alarmID},
+					"ID": &types.AttributeValueMemberS{Value: alarmID},
 				},
 			},
 		}

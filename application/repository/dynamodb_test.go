@@ -9,7 +9,7 @@ import (
 )
 
 ////////////////////////////////////
-// AnonymousUser
+// User
 ////////////////////////////////////
 func TestInsertUserAndGet(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
@@ -148,18 +148,18 @@ func TestInsertAndQueryByAlarmTime(t *testing.T) {
 
 	// Create Alarms
 	alarm0 := createAlarm()
-	alarm0.AlarmHour = hour
-	alarm0.AlarmMinute = minute
+	alarm0.Hour = hour
+	alarm0.Minute = minute
 	alarm0.SetAlarmTime()
 
 	alarm1 := createAlarm()
-	alarm1.AlarmHour = hour
-	alarm1.AlarmMinute = minute
+	alarm1.Hour = hour
+	alarm1.Minute = minute
 	alarm1.SetAlarmTime()
 
 	alarm2 := createAlarm()
-	alarm2.AlarmHour = hour
-	alarm2.AlarmMinute = minute
+	alarm2.Hour = hour
+	alarm2.Minute = minute
 	alarm2.SetAlarmTime()
 
 	// Insert Alarms
@@ -195,7 +195,7 @@ func TestInsertAndUpdate(t *testing.T) {
 	}
 
 	// Update
-	alarm.AlarmName = newAlarmName
+	alarm.Name = newAlarmName
 	err = repository.UpdateAlarm(alarm)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
@@ -209,7 +209,7 @@ func TestInsertAndUpdate(t *testing.T) {
 	updatedAlarm := alarmList[0]
 
 	// Assert
-	assert.Equal(t, updatedAlarm.AlarmName, newAlarmName)
+	assert.Equal(t, updatedAlarm.Name, newAlarmName)
 }
 
 // 追加したアラームを削除できる
@@ -217,7 +217,7 @@ func TestInsertAndDelete(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 
 	alarm := createAlarm()
-	alarmID := alarm.AlarmID
+	alarmID := alarm.ID
 	userID := alarm.UserID
 
 	// Insert
@@ -373,20 +373,20 @@ func createAlarm() database.Alarm {
 	saturday := true
 
 	return database.Alarm{
-		AlarmID:     alarmID,
-		UserID:      userID,
-		AlarmType:   alarmType,
-		AlarmEnable: alarmEnable,
-		AlarmName:   alarmName,
-		AlarmHour:   alarmHour,
-		AlarmTime:   alarmTime,
-		AlarmMinute: alarmMinute,
-		Sunday:      sunday,
-		Monday:      monday,
-		Tuesday:     tuesday,
-		Wednesday:   wednesday,
-		Thursday:    thursday,
-		Friday:      friday,
-		Saturday:    saturday,
+		ID:        alarmID,
+		UserID:    userID,
+		Type:      alarmType,
+		Enable:    alarmEnable,
+		Name:      alarmName,
+		Hour:      alarmHour,
+		Time:      alarmTime,
+		Minute:    alarmMinute,
+		Sunday:    sunday,
+		Monday:    monday,
+		Tuesday:   tuesday,
+		Wednesday: wednesday,
+		Thursday:  thursday,
+		Friday:    friday,
+		Saturday:  saturday,
 	}
 }
