@@ -27,30 +27,14 @@ type Alarm struct {
 	Thursday  bool `dynamodbav:"thursday"`
 	Friday    bool `dynamodbav:"friday"`
 	Saturday  bool `dynamodbav:"saturday"`
-
-	// Key
-	// KEY_ID          = "ID"
-	// KEY_USER_ID     = "userID"
-	// KEY_TYPE        = "type"
-	// KEY_ENABLE      = "enable"
-	// KEY_NAME      = "name"
-	// KEY_HOUR      = "hour"
-	// KEY_MINUTE      = "minute"
-	// KEY_TIME      = "time"
-
-	// KEY_CHARA_ID      = "charaID"
-	// KEY_CHARA_NAME      = "charaName"
-	// KEY_VOICE_FILE_PATH      = "voiceFilePath"
-
-	// KEY_SUNDAY = "sunday"
-	// KEY_MONDAY = "monday"
-	// KEY_TUESDAY = "tuesday"
-	// KEY_WEDNESDAY = "wednesday"
-	// KEY_THURSDAY = "thursday"
-	// KEY_FRIDAY = "friday"
-	// KEY_SATURDAY = "saturday"
 }
 
 func (a *Alarm) SetAlarmTime() {
 	a.Time = fmt.Sprintf("%02d-%02d", a.Hour, a.Minute)
 }
+
+const (
+	ALAEM_TABLE_NAME = "alarm-table"
+	ALARM_TABLE_ID = "ID"
+	ALARM_TABLE_TIME  = "time"
+)

@@ -12,3 +12,8 @@ type User struct {
 	// KEY_IOS_VOIP_PUSH_TOKEN      = "iosVoIPPushToken"
 	// KEY_IOS_PUSH_TOKEN     = "iosPushToken"
 }
+
+const (
+	USER_TABLE_NAME = "alarm-table"
+	USER_TABLE_ID = "ID"
+)
