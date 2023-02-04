@@ -1,6 +1,6 @@
 package entity
 
-type AnonymousUser struct {
+type User struct {
 	UserID           string    `json:"userID"`
 	UserToken        string    `json:"userToken"`
 	IOSVoIPPushToken PushToken `json:"iosVoIPPushTokens"`

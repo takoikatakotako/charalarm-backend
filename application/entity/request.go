@@ -6,11 +6,6 @@ type AnonymousAddPushTokenRequest struct {
 	PushToken string `json:"pushToken"`
 }
 
-type AnonymousUserRequest struct {
-	UserID    string `json:"userID"`
-	UserToken string `json:"userToken"`
-}
-
 type AnonymousDeleteAlarmRequest struct {
 	UserID    string `json:"userID"`
 	UserToken string `json:"userToken"`

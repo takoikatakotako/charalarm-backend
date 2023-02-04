@@ -3,11 +3,10 @@ package service
 import (
 	"errors"
 	"math"
-
+	"github.com/takoikatakotako/charalarm-backend/converter"
 	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository"
-	"github.com/takoikatakotako/charalarm-backend/validator"
 )
 
 const (
@@ -33,12 +32,6 @@ func (a *AlarmService) AddAlarm(userID string, userToken string, alarm entity.Al
 		return errors.New(message.AUTHENTICATION_FAILURE)
 	}
 
-	// アラームのバリデーションを行う
-	err = validator.ValidateAlarm(alarm)
-	if err != nil {
-		return err
-	}
-
 	// 既に登録されたアラームの件数を取得
 	list, err := a.Repository.GetAlarmList(userID)
 	if err != nil {
@@ -50,8 +43,11 @@ func (a *AlarmService) AddAlarm(userID string, userToken string, alarm entity.Al
 		return errors.New("なんか登録してるアラームの件数多くね？")
 	}
 
+	// DatbaseAlarmに変換
+	databaseAalarm := converter.EntityAlarmToDatabaseAlarm(alarm)
+
 	// アラームを追加する
-	return a.Repository.InsertAlarm(alarm)
+	return a.Repository.InsertAlarm(databaseAalarm)
 }
 
 ////////////////////////////////////////
@@ -69,17 +65,14 @@ func (a *AlarmService) UpdateAlarm(userID string, userToken string, alarm entity
 		return errors.New(message.AUTHENTICATION_FAILURE)
 	}
 
-	// アラームのバリデーションを行う
-	err = validator.ValidateAlarm(alarm)
-	if err != nil {
-		return err
-	}
-
 	// アラームの所持者を確認が必要?
 
 
+	// DatbaseAlarmに変換
+	databaseAalarm := converter.EntityAlarmToDatabaseAlarm(alarm)
+
 	// アラームを更新する
-	return a.Repository.UpdateAlarm(alarm)
+	return a.Repository.UpdateAlarm(databaseAalarm)
 }
 
 ////////////////////////////////////////
@@ -110,11 +103,19 @@ func (a *AlarmService) GetAlarmList(userID string, userToken string) ([]entity.A
 
 	// UserID, UserTokenが一致するか確認する
 	if anonymousUser.UserID == userID && anonymousUser.UserToken == userToken {
-		alarmList, err := a.Repository.GetAlarmList(userID)
+		databaseAlarmList, err := a.Repository.GetAlarmList(userID)
 		if err != nil {
 			return []entity.Alarm{}, err
 		}
-		return alarmList, nil
+
+		// entityAlarmListに変換
+		entityAlarmList := []entity.Alarm{}
+		for i := 0; i < len(databaseAlarmList); i++ {
+			databaseAlarm := databaseAlarmList[i]
+			entityAlarm := converter.DatabaseAlarmToEntityAlarm(databaseAlarm)
+			entityAlarmList = append(entityAlarmList, entityAlarm)
+		}
+		return entityAlarmList, nil
 	} else {
 		return []entity.Alarm{}, errors.New(message.AUTHENTICATION_FAILURE)
 	}
