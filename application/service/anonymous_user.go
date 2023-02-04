@@ -3,11 +3,11 @@ package service
 import (
 	"errors"
 
+	"github.com/takoikatakotako/charalarm-backend/database"
 	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/validator"
-	"github.com/takoikatakotako/charalarm-backend/database"
 )
 
 type AnonymousUserService struct {
@@ -74,11 +74,11 @@ func (a *AnonymousUserService) Withdraw(userID string, userToken string) error {
 }
 
 // database.User を entity.AnonymousUser に変換
-func (a *AnonymousUserService) convertDatabaseUserToEntityUser(user database.User) (entity.AnonymousUser) {
-	return entity.AnonymousUser {
-		UserID: user.UserID,
-		UserToken: user.UserToken,
+func (a *AnonymousUserService) convertDatabaseUserToEntityUser(user database.User) entity.AnonymousUser {
+	return entity.AnonymousUser{
+		UserID:           user.UserID,
+		UserToken:        user.UserToken,
 		IOSVoIPPushToken: entity.PushToken{},
-		IOSPushToken: entity.PushToken{},
+		IOSPushToken:     entity.PushToken{},
 	}
 }

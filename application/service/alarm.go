@@ -2,11 +2,11 @@ package service
 
 import (
 	"errors"
-	"math"
 	"github.com/takoikatakotako/charalarm-backend/converter"
 	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository"
+	"math"
 )
 
 const (
@@ -66,7 +66,6 @@ func (a *AlarmService) UpdateAlarm(userID string, userToken string, alarm entity
 	}
 
 	// アラームの所持者を確認が必要?
-
 
 	// DatbaseAlarmに変換
 	databaseAalarm := converter.EntityAlarmToDatabaseAlarm(alarm)

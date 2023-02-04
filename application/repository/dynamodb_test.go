@@ -193,7 +193,7 @@ func TestInsertAndUpdate(t *testing.T) {
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
-	
+
 	// Update
 	alarm.AlarmName = newAlarmName
 	err = repository.UpdateAlarm(alarm)

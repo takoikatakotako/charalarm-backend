@@ -3,8 +3,8 @@ package database
 import "fmt"
 
 type Alarm struct {
-	ID string `dynamodbav:"id"`
-	UserID  string `dynamodbav:"userID"`
+	ID     string `dynamodbav:"ID"`
+	UserID string `dynamodbav:"userID"`
 
 	// REMOTE_NOTIFICATION VOIP_NOTIFICATION
 	Type   string `dynamodbav:"type"`
@@ -15,9 +15,9 @@ type Alarm struct {
 	Time   string `dynamodbav:"time"`
 
 	// Chara Info
-	CharaID      string `dynamodbav:"charaID"`
-	CharaName    string `dynamodbav:"charaName"`
-	VoiceFileURL string `dynamodbav:"voiceFileURL"`
+	CharaID       string `dynamodbav:"charaID"`
+	CharaName     string `dynamodbav:"charaName"`
+	VoiceFilePath string `dynamodbav:"voiceFilePath"`
 
 	// Weekday
 	Sunday    bool `dynamodbav:"sunday"`
@@ -32,4 +32,3 @@ type Alarm struct {
 func (a *Alarm) SetAlarmTime() {
 	a.AlarmTime = fmt.Sprintf("%02d-%02d", a.AlarmHour, a.AlarmMinute)
 }
-

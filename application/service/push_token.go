@@ -4,9 +4,9 @@ import (
 	"errors"
 	// "math"
 	// "github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/database"
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository"
-	"github.com/takoikatakotako/charalarm-backend/database"
 )
 
 type PushTokenService struct {
@@ -75,8 +75,6 @@ func (a *PushTokenService) AddIOSVoipPushToken(userID string, userToken string, 
 	anonymousUser.IOSVoIPPushToken = database.PushToken{Token: pushToken, SNSEndpointArn: snsEndpointArn}
 	return a.DynamoDBRepository.InsertAnonymousUser(anonymousUser)
 }
-
-
 
 // // database.User を entity.AnonymousUser に変換
 // func (a *PushTokenService) convertEntityUserToDatabaseUser(user entity.User) (database.User) {

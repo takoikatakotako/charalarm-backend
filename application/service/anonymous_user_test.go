@@ -6,8 +6,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	// "github.com/takoikatakotako/charalarm-backend/entity"
-	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/database"
+	"github.com/takoikatakotako/charalarm-backend/repository"
 )
 
 func TestInfoUser(t *testing.T) {
