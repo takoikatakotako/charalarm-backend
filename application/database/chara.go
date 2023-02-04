@@ -1,7 +1,7 @@
 package database
 
 type Chara struct {
-	CharaID          string                     `dynamodbav:"charaID"`
+	CharaID          string                     `dynamodbav:"ID"`
 	CharaEnable      bool                       `dynamodbav:"charaEnable"`
 	CharaName        string                     `dynamodbav:"charaName"`
 	CharaDescription string                     `dynamodbav:"charaDescription"`

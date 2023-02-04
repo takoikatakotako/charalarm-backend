@@ -14,11 +14,11 @@ type AnonymousUserService struct {
 	Repository repository.DynamoDBRepository
 }
 
-func (a *AnonymousUserService) GetAnonymousUser(userID string, userToken string) (entity.AnonymousUser, error) {
+func (a *AnonymousUserService) GetAnonymousUser(userID string, userToken string) (entity.User, error) {
 	// ユーザーを取得
 	user, err := a.Repository.GetAnonymousUser(userID)
 	if err != nil {
-		return entity.AnonymousUser{}, err
+		return entity.User{}, err
 	}
 
 	// UserID, UserTokenが一致するか確認する
@@ -27,7 +27,7 @@ func (a *AnonymousUserService) GetAnonymousUser(userID string, userToken string)
 	}
 
 	// 一致しない場合
-	return entity.AnonymousUser{}, errors.New(message.AUTHENTICATION_FAILURE)
+	return entity.User{}, errors.New(message.AUTHENTICATION_FAILURE)
 }
 
 func (a *AnonymousUserService) Signup(userID string, userToken string) error {
@@ -74,8 +74,8 @@ func (a *AnonymousUserService) Withdraw(userID string, userToken string) error {
 }
 
 // database.User を entity.AnonymousUser に変換
-func (a *AnonymousUserService) convertDatabaseUserToEntityUser(user database.User) entity.AnonymousUser {
-	return entity.AnonymousUser{
+func (a *AnonymousUserService) convertDatabaseUserToEntityUser(user database.User) entity.User {
+	return entity.User{
 		UserID:           user.UserID,
 		UserToken:        user.UserToken,
 		IOSVoIPPushToken: entity.PushToken{},

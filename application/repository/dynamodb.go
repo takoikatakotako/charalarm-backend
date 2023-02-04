@@ -218,10 +218,6 @@ func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time
 		return []database.Alarm{}, err
 	}
 
-	// var err error
-	// var response *dynamodb.QueryOutput
-	// var movies []Movie
-
 	keyEx := expression.Key("time").Equal(expression.Value(alarmTime))
 	expr, err := expression.NewBuilder().WithKeyCondition(keyEx).Build()
 
@@ -484,7 +480,7 @@ func (d *DynamoDBRepository) GetChara(charaID string) (database.Chara, error) {
 	input := &dynamodb.GetItemInput{
 		TableName: aws.String(table.CHARA_TABLE),
 		Key: map[string]types.AttributeValue{
-			"charaID": &types.AttributeValueMemberS{
+			"ID": &types.AttributeValueMemberS{
 				Value: charaID,
 			},
 		},
