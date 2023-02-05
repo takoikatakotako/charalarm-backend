@@ -8,51 +8,48 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/takoikatakotako/charalarm-backend/request"
+	"github.com/takoikatakotako/charalarm-backend/auth"
 	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/service"
 )
 
-func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	body := name.Body
-	request := request.AnonymousUserRequest{}
+func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	authorizationHeader := event.Headers["Authorization"]
 
 	fmt.Println("-------")
 	fmt.Println(ctx)
-	fmt.Println(name)
-	fmt.Println(body)
+	fmt.Println(event)
+	fmt.Println(authorizationHeader)
 	fmt.Println("-------")
 
-	if err := json.Unmarshal([]byte(body), &request); err != nil {
-		return events.APIGatewayProxyResponse{
-			Body:       "デコードに失敗しました",
-			StatusCode: http.StatusInternalServerError,
-		}, nil
+	userID, authToken, err := auth.Basic(authorizationHeader)
+	if err != nil {
+		return failureResponse()
 	}
-
-	userID := request.UserID
-	userToken := request.UserToken
 
 	// Withdraw
 	s := service.AnonymousUserService{Repository: repository.DynamoDBRepository{}}
-
-	if err := s.Withdraw(userID, userToken); err != nil {
-		fmt.Println(err)
-		response := entity.MessageResponse{Message: "Withdraw Failure..."}
-		jsonBytes, _ := json.Marshal(response)
-		return events.APIGatewayProxyResponse{
-			Body:       string(jsonBytes),
-			StatusCode: http.StatusInternalServerError,
-		}, nil
+	err = s.Withdraw(userID, authToken)
+	if err != nil {
+		return failureResponse()
 	}
 
+	// Success
 	response := entity.MessageResponse{Message: "Withdraw Success!"}
 	jsonBytes, _ := json.Marshal(response)
-
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
 		StatusCode: http.StatusOK,
+	}, nil
+}
+
+func failureResponse() (events.APIGatewayProxyResponse, error) {
+	response := entity.MessageResponse{Message: "Withdraw Failure..."}
+	jsonBytes, _ := json.Marshal(response)
+	return events.APIGatewayProxyResponse{
+		Body:       string(jsonBytes),
+		StatusCode: http.StatusInternalServerError,
 	}, nil
 }
 

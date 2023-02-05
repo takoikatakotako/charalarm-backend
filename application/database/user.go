@@ -14,6 +14,6 @@ type User struct {
 }
 
 const (
-	USER_TABLE_NAME = "user-table"
+	USER_TABLE_NAME    = "user-table"
 	USER_TABLE_USER_ID = "userID"
 )

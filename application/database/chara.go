@@ -37,6 +37,6 @@ type CharaNameAndVoiceFileURL struct {
 }
 
 const (
-	CHARA_TABLE_NAME = "chara-table"
+	CHARA_TABLE_NAME     = "chara-table"
 	CHARA_TABLE_CHARA_ID = "charaID"
 )
