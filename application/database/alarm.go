@@ -3,7 +3,7 @@ package database
 import "fmt"
 
 type Alarm struct {
-	ID     string `dynamodbav:"ID"`
+	ID     string `dynamodbav:"alarmID"`
 	UserID string `dynamodbav:"userID"`
 
 	// REMOTE_NOTIFICATION VOIP_NOTIFICATION
@@ -34,7 +34,10 @@ func (a *Alarm) SetAlarmTime() {
 }
 
 const (
-	ALAEM_TABLE_NAME = "alarm-table"
-	ALARM_TABLE_ID = "ID"
+	ALARM_TABLE_NAME = "alarm-table"
+	ALARM_TABLE_ALARM_TIME_INDEX_NAME = "alarm-time-index"
+	ALARM_TABLE_USER_ID_INDEX_NAME = "user-id-index"
+	ALARM_TABLE_ALARM_ID = "alarmID"
+	ALARM_TABLE_USER_ID = "userID"
 	ALARM_TABLE_TIME  = "time"
 )
