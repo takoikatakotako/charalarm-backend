@@ -60,13 +60,8 @@ func TestSignUpAndWithdraw(t *testing.T) {
     }
 
 	assert.Equal(t, statusCode, 200)
-	assert.Equal(t, withdrawResponse.Message, "Withdraw Success!")
+	assert.Equal(t, "Withdraw Success!", withdrawResponse.Message)
 }
-
-
-
-
-
 
 // Get: /healthcheck
 func healthcheck(t *testing.T) (int, entity.MessageResponse, error) {
