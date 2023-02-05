@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
@@ -37,7 +39,7 @@ func TestSignUp(t *testing.T) {
     }
 
 	assert.Equal(t, statusCode, 200)
-	assert.Equal(t, signUpResponse.Message, "Sign Up Success!")
+	assert.Equal(t, "Sign Up Success!", signUpResponse.Message)
 }
 
 func TestSignUpAndWithdraw(t *testing.T) {
@@ -86,7 +88,9 @@ func healthcheck(t *testing.T) (int, entity.MessageResponse, error) {
 
 // Post: /user/signup
 func signUp(t *testing.T, userID string, userToken string) (int, entity.MessageResponse, error) {
-    requestBody := &entity.SignUpRequest{
+	requestUrl := Endpoint + "/user/signup"
+
+	requestBody := &entity.WithdrawRequest{
         UserID: userID,
 		UserToken: userToken,
     }
@@ -96,7 +100,7 @@ func signUp(t *testing.T, userID string, userToken string) (int, entity.MessageR
 		return 0, entity.MessageResponse{}, err
     }
 
-	response, err := http.Post(Endpoint + "/user/signup", HeaderApplicationJson, bytes.NewBuffer(jsonString))
+	response, err := http.Post(requestUrl, HeaderApplicationJson, bytes.NewBuffer(jsonString))
 	if err != nil {
 		return response.StatusCode, entity.MessageResponse{}, err
 	}
@@ -117,20 +121,23 @@ func signUp(t *testing.T, userID string, userToken string) (int, entity.MessageR
 
 // POST: /user/withdraw
 func withdraw(t *testing.T, userID string, userToken string) (int, entity.MessageResponse, error) {
-    requestBody := &entity.WithdrawRequest{
-        UserID: userID,
-		UserToken: userToken,
-    }
+	requestUrl := Endpoint + "/user/withdraw"
 
-	jsonString, err := json.Marshal(requestBody)
-    if err != nil {
-		return 0, entity.MessageResponse{}, err
-    }
-
-	response, err := http.Post(Endpoint + "/user/withdraw", HeaderApplicationJson, bytes.NewBuffer(jsonString))
+	request, err := http.NewRequest("POST", requestUrl, nil)
 	if err != nil {
-		return response.StatusCode, entity.MessageResponse{}, err
+		return 0, entity.MessageResponse{}, err
 	}
+
+	request.Header.Add("Content-Type", "application/json")
+	request.Header.Add("Authorization", createBasicAhthorizationHeader(userID, userToken))
+
+	client := &http.Client{}
+	response, err := client.Do(request)
+	if err != nil {
+		return 0, entity.MessageResponse{}, err
+	}
+
+	defer response.Body.Close()
 
 	responseBody, err := ioutil.ReadAll(response.Body)
 	if err != nil {
@@ -176,3 +183,13 @@ func info(t *testing.T, userID string, userToken string) (int, entity.MessageRes
 
 	return response.StatusCode, signUpResponse, nil
 }
+
+
+
+func createBasicAhthorizationHeader(userID string, authToken string) string {
+	xxx := fmt.Sprintf("%s:%s", userID, authToken)
+	src := []byte(xxx)
+	enc := base64.StdEncoding.EncodeToString(src)
+	return fmt.Sprintf("Basic %s", enc)
+}
+
