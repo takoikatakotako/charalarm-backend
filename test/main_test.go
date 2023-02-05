@@ -27,6 +27,19 @@ func TestHealthCheck(t *testing.T) {
 	assert.Equal(t, healthCheckResponse.Message, "Healthy!")
 }
 
+func TestSignUp(t *testing.T) {
+	// SingUp
+	userID := uuid.New().String()
+	userToken := uuid.New().String()
+	statusCode, signUpResponse, err := signUp(t, userID, userToken)
+    if err != nil {
+		t.Errorf("unexpected error: %v", err)
+    }
+
+	assert.Equal(t, statusCode, 200)
+	assert.Equal(t, signUpResponse.Message, "Sign Up Success!")
+}
+
 func TestSignUpAndWithdraw(t *testing.T) {
 	// SingUp
 	userID := uuid.New().String()
@@ -76,7 +89,7 @@ func healthcheck(t *testing.T) (int, entity.MessageResponse, error) {
 	return response.StatusCode, healthCheckResponse, nil
 }
 
-// Post: /user/signup/anonymous
+// Post: /user/signup
 func signUp(t *testing.T, userID string, userToken string) (int, entity.MessageResponse, error) {
     requestBody := &entity.SignUpRequest{
         UserID: userID,
@@ -88,7 +101,7 @@ func signUp(t *testing.T, userID string, userToken string) (int, entity.MessageR
 		return 0, entity.MessageResponse{}, err
     }
 
-	response, err := http.Post(Endpoint + "/user/signup/anonymous", HeaderApplicationJson, bytes.NewBuffer(jsonString))
+	response, err := http.Post(Endpoint + "/user/signup", HeaderApplicationJson, bytes.NewBuffer(jsonString))
 	if err != nil {
 		return response.StatusCode, entity.MessageResponse{}, err
 	}
@@ -107,7 +120,7 @@ func signUp(t *testing.T, userID string, userToken string) (int, entity.MessageR
 	return response.StatusCode, signUpResponse, nil
 }
 
-// POST: /user/withdraw/anonymous
+// POST: /user/withdraw
 func withdraw(t *testing.T, userID string, userToken string) (int, entity.MessageResponse, error) {
     requestBody := &entity.WithdrawRequest{
         UserID: userID,
@@ -119,7 +132,7 @@ func withdraw(t *testing.T, userID string, userToken string) (int, entity.Messag
 		return 0, entity.MessageResponse{}, err
     }
 
-	response, err := http.Post(Endpoint + "/user/withdraw/anonymous", HeaderApplicationJson, bytes.NewBuffer(jsonString))
+	response, err := http.Post(Endpoint + "/user/withdraw", HeaderApplicationJson, bytes.NewBuffer(jsonString))
 	if err != nil {
 		return response.StatusCode, entity.MessageResponse{}, err
 	}
@@ -138,8 +151,8 @@ func withdraw(t *testing.T, userID string, userToken string) (int, entity.Messag
 	return response.StatusCode, signUpResponse, nil
 }
 
-// POST: /user/info/anonymous
-func withdraw(t *testing.T, userID string, userToken string) (int, entity.MessageResponse, error) {
+// POST: /user/info
+func info(t *testing.T, userID string, userToken string) (int, entity.MessageResponse, error) {
     requestBody := &entity.WithdrawRequest{
         UserID: userID,
 		UserToken: userToken,
@@ -150,7 +163,7 @@ func withdraw(t *testing.T, userID string, userToken string) (int, entity.Messag
 		return 0, entity.MessageResponse{}, err
     }
 
-	response, err := http.Post(Endpoint + "/user/info/anonymous", HeaderApplicationJson, bytes.NewBuffer(jsonString))
+	response, err := http.Post(Endpoint + "/user/info", HeaderApplicationJson, bytes.NewBuffer(jsonString))
 	if err != nil {
 		return response.StatusCode, entity.MessageResponse{}, err
 	}

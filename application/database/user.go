@@ -1,7 +1,7 @@
 package database
 
 type User struct {
-	UserID           string    `dynamodbav:"ID"`
+	UserID           string    `dynamodbav:"userID"`
 	UserToken        string    `dynamodbav:"userToken"`
 	IOSVoIPPushToken PushToken `dynamodbav:"iosVoIPPushToken"`
 	IOSPushToken     PushToken `dynamodbav:"iosPushToken"`
@@ -14,6 +14,6 @@ type User struct {
 }
 
 const (
-	USER_TABLE_NAME = "alarm-table"
-	USER_TABLE_ID = "ID"
+	USER_TABLE_NAME = "user-table"
+	USER_TABLE_USER_ID = "userID"
 )
