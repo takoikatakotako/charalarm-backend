@@ -21,9 +21,9 @@ GOOS=linux GOARCH=amd64 go build -o build/chara_list handler/chara_list/chara_li
 GOOS=linux GOARCH=amd64 go build -o build/healthcheck handler/healthcheck/healthcheck.go
 
 # user
-GOOS=linux GOARCH=amd64 go build -o build/user_info_anonymous_user handler/user_info_anonymous_user/user_info_anonymous_user.go
-GOOS=linux GOARCH=amd64 go build -o build/user_signup_anonymous_user handler/user_signup_anonymous_user/user_signup_anonymous_user.go
-GOOS=linux GOARCH=amd64 go build -o build/user_withdraw_anonymous_user handler/user_withdraw_anonymous_user/user_withdraw_anonymous_user.go
+GOOS=linux GOARCH=amd64 go build -o build/user_info handler/user_info/user_info.go
+GOOS=linux GOARCH=amd64 go build -o build/user_signup handler/user_signup/user_signup.go
+GOOS=linux GOARCH=amd64 go build -o build/user_withdraw handler/user_withdraw/user_withdraw.go
 
 
 ################################################################
@@ -46,9 +46,9 @@ zip chara_list.zip chara_list
 zip healthcheck.zip healthcheck
 
 # user
-zip user_signup_anonymous_user.zip user_signup_anonymous_user
-zip user_info_anonymous_user.zip user_info_anonymous_user
-zip user_withdraw_anonymous_user.zip user_withdraw_anonymous_user
+zip user_signup.zip user_signup
+zip user_info.zip user_info
+zip user_withdraw.zip user_withdraw
 
 
 ################################################################

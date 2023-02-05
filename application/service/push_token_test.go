@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/database"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 )
 
@@ -19,7 +19,7 @@ func TestAddIOSVoIPPushToken(t *testing.T) {
 	pushToken := uuid.New().String()
 
 	// ユーザー作成
-	anonymousUser := entity.AnonymousUser{UserID: userID, UserToken: userToken}
+	anonymousUser := database.User{UserID: userID, UserToken: userToken}
 	err := dynamoDBRepository.InsertAnonymousUser(anonymousUser)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)

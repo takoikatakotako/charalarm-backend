@@ -46,7 +46,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	for _, alarm := range alarmList {
 		// AlarmInfoに変換
 		alarmInfo := entity.AlarmInfo{}
-		alarmInfo.AlarmID = alarm.AlarmID
+		alarmInfo.AlarmID = alarm.ID
 		alarmInfo.UserID = alarm.UserID
 
 		// randomCharaNameAndVoiceFileURL にキーがあるか確認する

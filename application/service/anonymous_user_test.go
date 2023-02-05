@@ -5,7 +5,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/entity"
+	// "github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/database"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 )
 
@@ -17,7 +18,7 @@ func TestInfoUser(t *testing.T) {
 	userToken := uuid.New().String()
 
 	// ユーザー作成
-	insertUser := entity.AnonymousUser{UserID: userID, UserToken: userToken}
+	insertUser := database.User{UserID: userID, UserToken: userToken}
 	err := repository.InsertAnonymousUser(insertUser)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
@@ -66,7 +67,7 @@ func TestWithdraw(t *testing.T) {
 	userToken := uuid.New().String()
 
 	// ユーザー作成
-	insertUser := entity.AnonymousUser{UserID: userID, UserToken: userToken}
+	insertUser := database.User{UserID: userID, UserToken: userToken}
 	err := repository.InsertAnonymousUser(insertUser)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)

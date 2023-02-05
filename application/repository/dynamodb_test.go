@@ -3,13 +3,13 @@ package repository
 import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/database"
 	"testing"
 	"time"
 )
 
 ////////////////////////////////////
-// AnonymousUser
+// User
 ////////////////////////////////////
 func TestInsertUserAndGet(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
@@ -18,7 +18,7 @@ func TestInsertUserAndGet(t *testing.T) {
 	userToken := uuid.New().String()
 
 	// Insert
-	insertUser := entity.AnonymousUser{UserID: userID, UserToken: userToken}
+	insertUser := database.User{UserID: userID, UserToken: userToken}
 	err := repository.InsertAnonymousUser(insertUser)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
@@ -53,7 +53,7 @@ func TestInsertUserAndExist(t *testing.T) {
 	assert.Equal(t, firstIsExist, false)
 
 	// Insert
-	insertUser := entity.AnonymousUser{UserID: userID, UserToken: userToken}
+	insertUser := database.User{UserID: userID, UserToken: userToken}
 	err = repository.InsertAnonymousUser(insertUser)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
@@ -78,7 +78,7 @@ func TestInsertUserAndDelete(t *testing.T) {
 	userToken := uuid.New().String()
 
 	// Insert
-	insertUser := entity.AnonymousUser{UserID: userID, UserToken: userToken}
+	insertUser := database.User{UserID: userID, UserToken: userToken}
 	err = repository.InsertAnonymousUser(insertUser)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
@@ -148,18 +148,18 @@ func TestInsertAndQueryByAlarmTime(t *testing.T) {
 
 	// Create Alarms
 	alarm0 := createAlarm()
-	alarm0.AlarmHour = hour
-	alarm0.AlarmMinute = minute
+	alarm0.Hour = hour
+	alarm0.Minute = minute
 	alarm0.SetAlarmTime()
 
 	alarm1 := createAlarm()
-	alarm1.AlarmHour = hour
-	alarm1.AlarmMinute = minute
+	alarm1.Hour = hour
+	alarm1.Minute = minute
 	alarm1.SetAlarmTime()
 
 	alarm2 := createAlarm()
-	alarm2.AlarmHour = hour
-	alarm2.AlarmMinute = minute
+	alarm2.Hour = hour
+	alarm2.Minute = minute
 	alarm2.SetAlarmTime()
 
 	// Insert Alarms
@@ -193,9 +193,9 @@ func TestInsertAndUpdate(t *testing.T) {
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
-	
+
 	// Update
-	alarm.AlarmName = newAlarmName
+	alarm.Name = newAlarmName
 	err = repository.UpdateAlarm(alarm)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
@@ -209,7 +209,7 @@ func TestInsertAndUpdate(t *testing.T) {
 	updatedAlarm := alarmList[0]
 
 	// Assert
-	assert.Equal(t, updatedAlarm.AlarmName, newAlarmName)
+	assert.Equal(t, updatedAlarm.Name, newAlarmName)
 }
 
 // 追加したアラームを削除できる
@@ -217,7 +217,7 @@ func TestInsertAndDelete(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 
 	alarm := createAlarm()
-	alarmID := alarm.AlarmID
+	alarmID := alarm.ID
 	userID := alarm.UserID
 
 	// Insert
@@ -355,7 +355,7 @@ func TestGetRandomChara(t *testing.T) {
 	assert.NotEqual(t, len(chara.CharaID), 0)
 }
 
-func createAlarm() entity.Alarm {
+func createAlarm() database.Alarm {
 	alarmID := uuid.New().String()
 	userID := uuid.New().String()
 	alarmType := "VOIP_NOTIFICATION"
@@ -372,21 +372,21 @@ func createAlarm() entity.Alarm {
 	friday := true
 	saturday := true
 
-	return entity.Alarm{
-		AlarmID:     alarmID,
-		UserID:      userID,
-		AlarmType:   alarmType,
-		AlarmEnable: alarmEnable,
-		AlarmName:   alarmName,
-		AlarmHour:   alarmHour,
-		AlarmTime:   alarmTime,
-		AlarmMinute: alarmMinute,
-		Sunday:      sunday,
-		Monday:      monday,
-		Tuesday:     tuesday,
-		Wednesday:   wednesday,
-		Thursday:    thursday,
-		Friday:      friday,
-		Saturday:    saturday,
+	return database.Alarm{
+		ID:        alarmID,
+		UserID:    userID,
+		Type:      alarmType,
+		Enable:    alarmEnable,
+		Name:      alarmName,
+		Hour:      alarmHour,
+		Time:      alarmTime,
+		Minute:    alarmMinute,
+		Sunday:    sunday,
+		Monday:    monday,
+		Tuesday:   tuesday,
+		Wednesday: wednesday,
+		Thursday:  thursday,
+		Friday:    friday,
+		Saturday:  saturday,
 	}
 }
