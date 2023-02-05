@@ -32,8 +32,8 @@ resource "aws_dynamodb_table" "alarm_table" {
   }
 
   attribute {
-    name = "alarmTime"
-    type = "N"
+    name = "time"
+    type = "S"
   }
 
   global_secondary_index {
@@ -46,7 +46,7 @@ resource "aws_dynamodb_table" "alarm_table" {
   }
 
   global_secondary_index {
-    hash_key           = "alarmTime"
+    hash_key           = "time"
     name               = "alarm-time-index"
     non_key_attributes = []
     projection_type    = "ALL"
