@@ -22,7 +22,7 @@ type AlarmService struct {
 ////////////////////////////////////////
 func (a *AlarmService) AddAlarm(userID string, userToken string, alarm entity.Alarm) error {
 	// ユーザーを取得
-	anonymousUser, err := a.Repository.GetAnonymousUser(userID)
+	anonymousUser, err := a.Repository.GetUser(userID)
 	if err != nil {
 		return err
 	}
@@ -55,7 +55,7 @@ func (a *AlarmService) AddAlarm(userID string, userToken string, alarm entity.Al
 ////////////////////////////////////////
 func (a *AlarmService) UpdateAlarm(userID string, userToken string, alarm entity.Alarm) error {
 	// ユーザーを取得
-	anonymousUser, err := a.Repository.GetAnonymousUser(userID)
+	anonymousUser, err := a.Repository.GetUser(userID)
 	if err != nil {
 		return err
 	}
@@ -79,7 +79,7 @@ func (a *AlarmService) UpdateAlarm(userID string, userToken string, alarm entity
 ////////////////////////////////////////
 func (a *AlarmService) DeleteAlarm(userID string, userToken string, alarmID string) error {
 	// ユーザーを取得
-	anonymousUser, err := a.Repository.GetAnonymousUser(userID)
+	anonymousUser, err := a.Repository.GetUser(userID)
 	if err != nil {
 		return err
 	}
@@ -95,7 +95,7 @@ func (a *AlarmService) DeleteAlarm(userID string, userToken string, alarmID stri
 
 func (a *AlarmService) GetAlarmList(userID string, userToken string) ([]entity.Alarm, error) {
 	// ユーザーを取得
-	anonymousUser, err := a.Repository.GetAnonymousUser(userID)
+	anonymousUser, err := a.Repository.GetUser(userID)
 	if err != nil {
 		return []entity.Alarm{}, err
 	}

@@ -25,7 +25,7 @@ func TestInsertUserAndGet(t *testing.T) {
 	}
 
 	// Get
-	getUser, err := repository.GetAnonymousUser(userID)
+	getUser, err := repository.GetUser(userID)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}

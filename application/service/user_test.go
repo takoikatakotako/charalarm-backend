@@ -12,7 +12,7 @@ import (
 
 func TestInfoUser(t *testing.T) {
 	repository := repository.DynamoDBRepository{IsLocal: true}
-	s := AnonymousUserService{Repository: repository}
+	s := UserService{Repository: repository}
 
 	userID := uuid.New().String()
 	userToken := uuid.New().String()
@@ -25,7 +25,7 @@ func TestInfoUser(t *testing.T) {
 	}
 
 	// ユーザー取得
-	getUser, err := s.GetAnonymousUser(userID, userToken)
+	getUser, err := s.GetUser(userID, userToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -37,7 +37,7 @@ func TestInfoUser(t *testing.T) {
 
 func TestSignup(t *testing.T) {
 	repository := repository.DynamoDBRepository{IsLocal: true}
-	s := AnonymousUserService{Repository: repository}
+	s := UserService{Repository: repository}
 
 	userID := uuid.New().String()
 	userToken := uuid.New().String()
@@ -49,7 +49,7 @@ func TestSignup(t *testing.T) {
 	}
 
 	// ユーザー取得
-	getUser, err := repository.GetAnonymousUser(userID)
+	getUser, err := repository.GetUser(userID)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -61,7 +61,7 @@ func TestSignup(t *testing.T) {
 
 func TestWithdraw(t *testing.T) {
 	repository := repository.DynamoDBRepository{IsLocal: true}
-	s := AnonymousUserService{Repository: repository}
+	s := UserService{Repository: repository}
 
 	userID := uuid.New().String()
 	userToken := uuid.New().String()

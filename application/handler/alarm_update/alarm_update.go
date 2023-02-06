@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/response"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/service"
 )
@@ -32,7 +33,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	if err := s.UpdateAlarm(userID, userToken, alarm); err != nil {
 		fmt.Println(err)
-		response := entity.MessageResponse{Message: "アラームの更新に失敗しました。"}
+		response := response.MessageResponse{Message: "アラームの更新に失敗しました。"}
 		jsonBytes, _ := json.Marshal(response)
 		return events.APIGatewayProxyResponse{
 			Body:       string(jsonBytes),
@@ -40,7 +41,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 		}, nil
 	}
 
-	response := entity.MessageResponse{Message: "アラーム更新完了!"}
+	response := response.MessageResponse{Message: "アラーム更新完了!"}
 	jsonBytes, _ := json.Marshal(response)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),

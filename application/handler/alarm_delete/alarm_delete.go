@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/response"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/service"
 )
@@ -31,7 +32,7 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 	s := service.AlarmService{Repository: repository.DynamoDBRepository{}}
 	if err := s.DeleteAlarm(userID, userToken, alarmID); err != nil {
 		fmt.Println(err)
-		response := entity.MessageResponse{Message: "アラームの削除に失敗しました。"}
+		response := response.MessageResponse{Message: "アラームの削除に失敗しました。"}
 		jsonBytes, _ := json.Marshal(response)
 		return events.APIGatewayProxyResponse{
 			Body:       string(jsonBytes),
@@ -39,7 +40,7 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 		}, nil
 	}
 
-	response := entity.MessageResponse{Message: "アラーム削除完了!"}
+	response := response.MessageResponse{Message: "アラーム削除完了!"}
 	jsonBytes, _ := json.Marshal(response)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),

@@ -16,7 +16,7 @@ type PushTokenService struct {
 
 func (a *PushTokenService) AddIOSPushToken(userID string, userToken string, pushToken string) error {
 	// ユーザーを取得
-	anonymousUser, err := a.DynamoDBRepository.GetAnonymousUser(userID)
+	anonymousUser, err := a.DynamoDBRepository.GetUser(userID)
 	if err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func (a *PushTokenService) AddIOSPushToken(userID string, userToken string, push
 
 func (a *PushTokenService) AddIOSVoipPushToken(userID string, userToken string, pushToken string) error {
 	// ユーザーを取得
-	anonymousUser, err := a.DynamoDBRepository.GetAnonymousUser(userID)
+	anonymousUser, err := a.DynamoDBRepository.GetUser(userID)
 	if err != nil {
 		return err
 	}

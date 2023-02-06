@@ -16,4 +16,5 @@ type User struct {
 const (
 	USER_TABLE_NAME    = "user-table"
 	USER_TABLE_USER_ID = "userID"
+	USER_TABLE_USER_ID_INDEX_NAME = "user-id-index"
 )

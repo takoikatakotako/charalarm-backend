@@ -32,7 +32,7 @@ func TestAddIOSVoIPPushToken(t *testing.T) {
 	}
 
 	// ユーザー取得
-	getUser, err := dynamoDBRepository.GetAnonymousUser(userID)
+	getUser, err := dynamoDBRepository.GetUser(userID)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}

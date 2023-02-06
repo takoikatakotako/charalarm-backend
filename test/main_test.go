@@ -63,28 +63,28 @@ func TestSignUpAndWithdraw(t *testing.T) {
 }
 
 // Get: /healthcheck
-func healthcheck(t *testing.T) (int, entity.MessageResponse, error) {
+func healthcheck(t *testing.T) (int, response.MessageResponse, error) {
 	response, err := http.Get(Endpoint + "/healthcheck")
 	if err != nil {
-		return response.StatusCode, entity.MessageResponse{}, err
+		return response.StatusCode, response.MessageResponse{}, err
 	}
 
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return response.StatusCode, entity.MessageResponse{}, err
+		return response.StatusCode, response.MessageResponse{}, err
 	}
 
-	var healthCheckResponse entity.MessageResponse
+	var healthCheckResponse response.MessageResponse
 	err = json.Unmarshal(body, &healthCheckResponse)
 	if err != nil {
-		return response.StatusCode, entity.MessageResponse{}, err
+		return response.StatusCode, response.MessageResponse{}, err
 	}
 
 	return response.StatusCode, healthCheckResponse, nil
 }
 
 // Post: /user/signup
-func signUp(t *testing.T, userID string, userToken string) (int, entity.MessageResponse, error) {
+func signUp(t *testing.T, userID string, userToken string) (int, response.MessageResponse, error) {
 	requestUrl := Endpoint + "/user/signup"
 
 	requestBody := &entity.WithdrawRequest{
@@ -94,35 +94,35 @@ func signUp(t *testing.T, userID string, userToken string) (int, entity.MessageR
 
 	jsonString, err := json.Marshal(requestBody)
 	if err != nil {
-		return 0, entity.MessageResponse{}, err
+		return 0, response.MessageResponse{}, err
 	}
 
 	response, err := http.Post(requestUrl, HeaderApplicationJson, bytes.NewBuffer(jsonString))
 	if err != nil {
-		return response.StatusCode, entity.MessageResponse{}, err
+		return response.StatusCode, response.MessageResponse{}, err
 	}
 
 	responseBody, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return response.StatusCode, entity.MessageResponse{}, err
+		return response.StatusCode, response.MessageResponse{}, err
 	}
 
-	var signUpResponse entity.MessageResponse
+	var signUpResponse response.MessageResponse
 	err = json.Unmarshal(responseBody, &signUpResponse)
 	if err != nil {
-		return response.StatusCode, entity.MessageResponse{}, err
+		return response.StatusCode, response.MessageResponse{}, err
 	}
 
 	return response.StatusCode, signUpResponse, nil
 }
 
 // POST: /user/withdraw
-func withdraw(t *testing.T, userID string, userToken string) (int, entity.MessageResponse, error) {
+func withdraw(t *testing.T, userID string, userToken string) (int, response.MessageResponse, error) {
 	requestUrl := Endpoint + "/user/withdraw"
 
 	request, err := http.NewRequest("POST", requestUrl, nil)
 	if err != nil {
-		return 0, entity.MessageResponse{}, err
+		return 0, response.MessageResponse{}, err
 	}
 
 	request.Header.Add("Content-Type", "application/json")
@@ -131,27 +131,27 @@ func withdraw(t *testing.T, userID string, userToken string) (int, entity.Messag
 	client := &http.Client{}
 	response, err := client.Do(request)
 	if err != nil {
-		return 0, entity.MessageResponse{}, err
+		return 0, response.MessageResponse{}, err
 	}
 
 	defer response.Body.Close()
 
 	responseBody, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return response.StatusCode, entity.MessageResponse{}, err
+		return response.StatusCode, response.MessageResponse{}, err
 	}
 
-	var signUpResponse entity.MessageResponse
+	var signUpResponse response.MessageResponse
 	err = json.Unmarshal(responseBody, &signUpResponse)
 	if err != nil {
-		return response.StatusCode, entity.MessageResponse{}, err
+		return response.StatusCode, response.MessageResponse{}, err
 	}
 
 	return response.StatusCode, signUpResponse, nil
 }
 
 // POST: /user/info
-func info(t *testing.T, userID string, userToken string) (int, entity.MessageResponse, error) {
+func info(t *testing.T, userID string, userToken string) (int, response.MessageResponse, error) {
 	requestBody := &entity.WithdrawRequest{
 		UserID:    userID,
 		UserToken: userToken,
@@ -159,23 +159,23 @@ func info(t *testing.T, userID string, userToken string) (int, entity.MessageRes
 
 	jsonString, err := json.Marshal(requestBody)
 	if err != nil {
-		return 0, entity.MessageResponse{}, err
+		return 0, response.MessageResponse{}, err
 	}
 
 	response, err := http.Post(Endpoint+"/user/info", HeaderApplicationJson, bytes.NewBuffer(jsonString))
 	if err != nil {
-		return response.StatusCode, entity.MessageResponse{}, err
+		return response.StatusCode, response.MessageResponse{}, err
 	}
 
 	responseBody, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return response.StatusCode, entity.MessageResponse{}, err
+		return response.StatusCode, response.MessageResponse{}, err
 	}
 
-	var signUpResponse entity.MessageResponse
+	var signUpResponse response.MessageResponse
 	err = json.Unmarshal(responseBody, &signUpResponse)
 	if err != nil {
-		return response.StatusCode, entity.MessageResponse{}, err
+		return response.StatusCode, response.MessageResponse{}, err
 	}
 
 	return response.StatusCode, signUpResponse, nil

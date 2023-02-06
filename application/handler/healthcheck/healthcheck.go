@@ -7,11 +7,11 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/response"
 )
 
 func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	response := entity.MessageResponse{Message: "Healthy!"}
+	response := response.MessageResponse{Message: "Healthy!"}
 	jsonBytes, _ := json.Marshal(response)
 
 	return events.APIGatewayProxyResponse{
