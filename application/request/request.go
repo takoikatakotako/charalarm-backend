@@ -1,13 +1,9 @@
 package request
 
-type AnonymousDeleteAlarmRequest struct {
-	UserID    string `json:"userID"`
-	UserToken string `json:"userToken"`
+type DeleteAlarmRequest struct {
 	AlarmID   string `json:"alarmID"`
 }
 
-type AnonymousAddAlarmRequest struct {
-	UserID    string `json:"userID"`
-	UserToken string `json:"userToken"`
+type AddAlarmRequest struct {
 	Alarm     Alarm  `json:"alarm"`
 }

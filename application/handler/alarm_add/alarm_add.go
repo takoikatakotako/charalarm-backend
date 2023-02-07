@@ -8,6 +8,8 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/takoikatakotako/charalarm-backend/handler"
+	"github.com/takoikatakotako/charalarm-backend/auth"
 	"github.com/takoikatakotako/charalarm-backend/request"
 	"github.com/takoikatakotako/charalarm-backend/response"
 	"github.com/takoikatakotako/charalarm-backend/repository"
@@ -15,75 +17,30 @@ import (
 )
 
 func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	// authorizationHeader := event.Headers["Authorization"]
+	authorizationHeader := event.Headers["Authorization"]
 
-	// fmt.Println("-------")
-	// fmt.Println(ctx)
-	// fmt.Println(event)
-	// fmt.Println(authorizationHeader)
-	// fmt.Println("-------")
+	fmt.Println("-------")
+	fmt.Println(ctx)
+	fmt.Println(event)
+	fmt.Println(authorizationHeader)
+	fmt.Println("-------")
 
-	// userID, authToken, err := auth.Basic(authorizationHeader)
-	// if err != nil {
-	// 	return failureResponse()
-	// }
-
-	// request := request.AddPushTokenRequest{}
-	// body := event.Body
-	// err = json.Unmarshal([]byte(body), &request)
-	// if err != nil {
-	// 	return failureResponse()
-	// }
-	// pushToken := request.PushToken
-
-	// // add push token
-	// s := service.PushTokenService{
-	// 	DynamoDBRepository: repository.DynamoDBRepository{},
-	// 	SNSRepository:      repository.SNSRepository{},
-	// }
-	// err = s.AddIOSVoipPushToken(userID, authToken, pushToken)
-	// if err != nil {
-	// 	return failureResponse()
-	// }
-
-	// jsonBytes, _ := json.Marshal("登録完了")
-	// return events.APIGatewayProxyResponse{
-	// 	Body:       string(jsonBytes),
-	// 	StatusCode: http.StatusOK,
-	// }, nil
-
-
-
-
-
-
-
-
-	
-	body := event.Body
-	request := request.AnonymousAddAlarmRequest{}
-
-	if err := json.Unmarshal([]byte(body), &request); err != nil {
-		return events.APIGatewayProxyResponse{
-			Body:       "デコードに失敗しました",
-			StatusCode: http.StatusInternalServerError,
-		}, nil
+	userID, authToken, err := auth.Basic(authorizationHeader)
+	if err != nil {
+		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
 	}
 
-	userID := request.UserID
-	userToken := request.UserToken
+	body := event.Body
+	request := request.AddAlarmRequest{}
+	err = json.Unmarshal([]byte(body), &request)
+	if err != nil {
+		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
+	}
 	alarm := request.Alarm
 
 	s := service.AlarmService{Repository: repository.DynamoDBRepository{}}
-
-	if err := s.AddAlarm(userID, userToken, alarm); err != nil {
-		fmt.Println(err)
-		response := response.MessageResponse{Message: "アラームの追加に失敗しました。"}
-		jsonBytes, _ := json.Marshal(response)
-		return events.APIGatewayProxyResponse{
-			Body:       string(jsonBytes),
-			StatusCode: http.StatusInternalServerError,
-		}, nil
+	if err := s.AddAlarm(userID, authToken, alarm); err != nil {
+		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
 	}
 
 	response := response.MessageResponse{Message: "アラーム追加完了!"}
