@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/takoikatakotako/charalarm-backend/handler"
 	"github.com/takoikatakotako/charalarm-backend/response"
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository"
@@ -21,10 +21,7 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 
 	// Decode Body
 	if err := json.Unmarshal([]byte(body), &request); err != nil {
-		return events.APIGatewayProxyResponse{
-			Body:       string(message.FAILED_TO_DECODE),
-			StatusCode: 500,
-		}, nil
+		return handler.FailureResponse(http.StatusBadRequest, message.INVALID_REQUEST_PARAMETER)
 	}
 
 	// Get Parameters
@@ -33,18 +30,12 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 
 	// Signup
 	s := service.UserService{Repository: repository.DynamoDBRepository{}}
-
 	if err := s.Signup(userID, userToken); err != nil {
-		fmt.Println(err)
-		response := response.MessageResponse{Message: "Sign Up Failure..."}
-		jsonBytes, _ := json.Marshal(response)
-		return events.APIGatewayProxyResponse{
-			Body:       string(jsonBytes),
-			StatusCode: http.StatusInternalServerError,
-		}, nil
+		return handler.FailureResponse(http.StatusBadRequest, message.USER_SIGNUP_FAILURE)
 	}
 
-	response := response.MessageResponse{Message: "Sign Up Success!"}
+	// Success
+	response := response.MessageResponse{Message: message.USER_SIGNUP_SUCCESS}
 	jsonBytes, _ := json.Marshal(response)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
