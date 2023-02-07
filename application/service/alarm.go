@@ -3,7 +3,7 @@ package service
 import (
 	"errors"
 	"github.com/takoikatakotako/charalarm-backend/converter"
-	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/request"
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"math"
@@ -20,9 +20,9 @@ type AlarmService struct {
 ////////////////////////////////////////
 // アラームを追加
 ////////////////////////////////////////
-func (a *AlarmService) AddAlarm(userID string, userToken string, alarm entity.Alarm) error {
+func (s *AlarmService) AddAlarm(userID string, userToken string, alarm request.Alarm) error {
 	// ユーザーを取得
-	anonymousUser, err := a.Repository.GetUser(userID)
+	anonymousUser, err := s.Repository.GetUser(userID)
 	if err != nil {
 		return err
 	}
@@ -33,7 +33,7 @@ func (a *AlarmService) AddAlarm(userID string, userToken string, alarm entity.Al
 	}
 
 	// 既に登録されたアラームの件数を取得
-	list, err := a.Repository.GetAlarmList(userID)
+	list, err := s.Repository.GetAlarmList(userID)
 	if err != nil {
 		return err
 	}
@@ -47,15 +47,15 @@ func (a *AlarmService) AddAlarm(userID string, userToken string, alarm entity.Al
 	databaseAalarm := converter.EntityAlarmToDatabaseAlarm(alarm)
 
 	// アラームを追加する
-	return a.Repository.InsertAlarm(databaseAalarm)
+	return s.Repository.InsertAlarm(databaseAalarm)
 }
 
 ////////////////////////////////////////
 // アラームを更新
 ////////////////////////////////////////
-func (a *AlarmService) UpdateAlarm(userID string, userToken string, alarm entity.Alarm) error {
+func (s *AlarmService) UpdateAlarm(userID string, userToken string, alarm request.Alarm) error {
 	// ユーザーを取得
-	anonymousUser, err := a.Repository.GetUser(userID)
+	anonymousUser, err := s.Repository.GetUser(userID)
 	if err != nil {
 		return err
 	}
@@ -71,15 +71,15 @@ func (a *AlarmService) UpdateAlarm(userID string, userToken string, alarm entity
 	databaseAalarm := converter.EntityAlarmToDatabaseAlarm(alarm)
 
 	// アラームを更新する
-	return a.Repository.UpdateAlarm(databaseAalarm)
+	return s.Repository.UpdateAlarm(databaseAalarm)
 }
 
 ////////////////////////////////////////
 // アラームを削除
 ////////////////////////////////////////
-func (a *AlarmService) DeleteAlarm(userID string, userToken string, alarmID string) error {
+func (s *AlarmService) DeleteAlarm(userID string, userToken string, alarmID string) error {
 	// ユーザーを取得
-	anonymousUser, err := a.Repository.GetUser(userID)
+	anonymousUser, err := s.Repository.GetUser(userID)
 	if err != nil {
 		return err
 	}
@@ -90,25 +90,25 @@ func (a *AlarmService) DeleteAlarm(userID string, userToken string, alarmID stri
 	}
 
 	// アラームを削除する
-	return a.Repository.DeleteAlarm(alarmID)
+	return s.Repository.DeleteAlarm(alarmID)
 }
 
-func (a *AlarmService) GetAlarmList(userID string, userToken string) ([]entity.Alarm, error) {
+func (s *AlarmService) GetAlarmList(userID string, userToken string) ([]request.Alarm, error) {
 	// ユーザーを取得
-	anonymousUser, err := a.Repository.GetUser(userID)
+	anonymousUser, err := s.Repository.GetUser(userID)
 	if err != nil {
-		return []entity.Alarm{}, err
+		return []request.Alarm{}, err
 	}
 
 	// UserID, UserTokenが一致するか確認する
 	if anonymousUser.UserID == userID && anonymousUser.UserToken == userToken {
-		databaseAlarmList, err := a.Repository.GetAlarmList(userID)
+		databaseAlarmList, err := s.Repository.GetAlarmList(userID)
 		if err != nil {
-			return []entity.Alarm{}, err
+			return []request.Alarm{}, err
 		}
 
 		// entityAlarmListに変換
-		entityAlarmList := []entity.Alarm{}
+		entityAlarmList := []request.Alarm{}
 		for i := 0; i < len(databaseAlarmList); i++ {
 			databaseAlarm := databaseAlarmList[i]
 			entityAlarm := converter.DatabaseAlarmToEntityAlarm(databaseAlarm)
@@ -116,6 +116,6 @@ func (a *AlarmService) GetAlarmList(userID string, userToken string) ([]entity.A
 		}
 		return entityAlarmList, nil
 	} else {
-		return []entity.Alarm{}, errors.New(message.AUTHENTICATION_FAILURE)
+		return []request.Alarm{}, errors.New(message.AUTHENTICATION_FAILURE)
 	}
 }

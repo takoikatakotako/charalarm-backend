@@ -8,7 +8,7 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/request"
 	"github.com/takoikatakotako/charalarm-backend/response"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/service"
@@ -61,7 +61,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	
 	body := event.Body
-	request := entity.AnonymousAddAlarmRequest{}
+	request := request.AnonymousAddAlarmRequest{}
 
 	if err := json.Unmarshal([]byte(body), &request); err != nil {
 		return events.APIGatewayProxyResponse{

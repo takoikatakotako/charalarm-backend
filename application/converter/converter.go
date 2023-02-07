@@ -2,10 +2,10 @@ package converter
 
 import (
 	"github.com/takoikatakotako/charalarm-backend/database"
-	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/request"
 )
 
-func EntityAlarmToDatabaseAlarm(alarm entity.Alarm) database.Alarm {
+func EntityAlarmToDatabaseAlarm(alarm request.Alarm) database.Alarm {
 	databaseAlarm := database.Alarm{
 		ID:            alarm.AlarmID,
 		UserID:        alarm.UserID,
@@ -29,8 +29,8 @@ func EntityAlarmToDatabaseAlarm(alarm entity.Alarm) database.Alarm {
 	return databaseAlarm
 }
 
-func DatabaseAlarmToEntityAlarm(alarm database.Alarm) entity.Alarm {
-	return entity.Alarm{
+func DatabaseAlarmToEntityAlarm(alarm database.Alarm) request.Alarm {
+	return request.Alarm{
 		AlarmID:      alarm.ID,
 		UserID:       alarm.UserID,
 		AlarmType:    alarm.Type,
