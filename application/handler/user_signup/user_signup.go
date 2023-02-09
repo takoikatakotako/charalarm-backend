@@ -15,8 +15,8 @@ import (
 	"github.com/takoikatakotako/charalarm-backend/service"
 )
 
-func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	body := name.Body
+func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	body := event.Body
 	request := request.UserSignUp{}
 
 	// Decode Body
@@ -27,7 +27,7 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 	// Get Parameters
 	userID := request.UserID
 	userToken := request.UserToken
-	ipAddress := event.SourceIp
+	ipAddress := event.RequestContext.Identity.SourceIP
 
 	// Signup
 	s := service.UserService{Repository: repository.DynamoDBRepository{}}
@@ -36,8 +36,8 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 	}
 
 	// Success
-	response := response.MessageResponse{Message: message.USER_SIGNUP_SUCCESS}
-	jsonBytes, _ := json.Marshal(response)
+	res := response.MessageResponse{Message: message.USER_SIGNUP_SUCCESS}
+	jsonBytes, _ := json.Marshal(res)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
 		StatusCode: http.StatusOK,
