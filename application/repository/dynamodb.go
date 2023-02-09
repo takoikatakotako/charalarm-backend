@@ -118,7 +118,7 @@ func (d *DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error) {
 	}
 }
 
-func (d *DynamoDBRepository) InsertAnonymousUser(anonymousUser database.User) error {
+func (d *DynamoDBRepository) InsertUser(anonymousUser database.User) error {
 	ctx := context.Background()
 
 	client, err := d.createDynamoDBClient()

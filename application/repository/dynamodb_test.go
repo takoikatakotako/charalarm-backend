@@ -15,11 +15,11 @@ func TestInsertUserAndGet(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 
 	userID := uuid.New().String()
-	userToken := uuid.New().String()
+	authToken := uuid.New().String()
 
 	// Insert
-	insertUser := database.User{UserID: userID, UserToken: userToken}
-	err := repository.InsertAnonymousUser(insertUser)
+	insertUser := database.User{UserID: userID, AuthToken: authToken}
+	err := repository.InsertUser(insertUser)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -32,7 +32,7 @@ func TestInsertUserAndGet(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, userID, getUser.UserID)
-	assert.Equal(t, userToken, getUser.UserToken)
+	assert.Equal(t, authToken, getUser.AuthToken)
 }
 
 func TestInsertUserAndExist(t *testing.T) {
@@ -41,7 +41,7 @@ func TestInsertUserAndExist(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 
 	userID := uuid.New().String()
-	userToken := uuid.New().String()
+	authToken := uuid.New().String()
 
 	// IsExist
 	firstIsExist, err := repository.IsExistAnonymousUser(userID)
@@ -53,8 +53,8 @@ func TestInsertUserAndExist(t *testing.T) {
 	assert.Equal(t, firstIsExist, false)
 
 	// Insert
-	insertUser := database.User{UserID: userID, UserToken: userToken}
-	err = repository.InsertAnonymousUser(insertUser)
+	insertUser := database.User{UserID: userID, AuthToken: authToken}
+	err = repository.InsertUser(insertUser)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -75,11 +75,11 @@ func TestInsertUserAndDelete(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 
 	userID := uuid.New().String()
-	userToken := uuid.New().String()
+	authToken := uuid.New().String()
 
 	// Insert
-	insertUser := database.User{UserID: userID, UserToken: userToken}
-	err = repository.InsertAnonymousUser(insertUser)
+	insertUser := database.User{UserID: userID, AuthToken: authToken}
+	err = repository.InsertUser(insertUser)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}

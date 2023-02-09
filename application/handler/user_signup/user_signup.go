@@ -8,10 +8,10 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/takoikatakotako/charalarm-backend/handler"
-	"github.com/takoikatakotako/charalarm-backend/response"
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/request"
+	"github.com/takoikatakotako/charalarm-backend/response"
 	"github.com/takoikatakotako/charalarm-backend/service"
 )
 
@@ -27,10 +27,11 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 	// Get Parameters
 	userID := request.UserID
 	userToken := request.UserToken
+	ipAddress := event.SourceIp
 
 	// Signup
 	s := service.UserService{Repository: repository.DynamoDBRepository{}}
-	if err := s.Signup(userID, userToken); err != nil {
+	if err := s.Signup(userID, userToken, ipAddress); err != nil {
 		return handler.FailureResponse(http.StatusBadRequest, message.USER_SIGNUP_FAILURE)
 	}
 

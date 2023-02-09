@@ -3,9 +3,9 @@ package service
 import (
 	"errors"
 	"github.com/takoikatakotako/charalarm-backend/converter"
-	"github.com/takoikatakotako/charalarm-backend/request"
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository"
+	"github.com/takoikatakotako/charalarm-backend/request"
 	"math"
 )
 
@@ -20,15 +20,15 @@ type AlarmService struct {
 ////////////////////////////////////////
 // アラームを追加
 ////////////////////////////////////////
-func (s *AlarmService) AddAlarm(userID string, userToken string, alarm request.Alarm) error {
+func (s *AlarmService) AddAlarm(userID string, authToken string, alarm request.Alarm) error {
 	// ユーザーを取得
 	anonymousUser, err := s.Repository.GetUser(userID)
 	if err != nil {
 		return err
 	}
 
-	// UserID, UserTokenが一致するか確認する
-	if anonymousUser.UserID != userID || anonymousUser.UserToken != userToken {
+	// UserID, AuthTokenが一致するか確認する
+	if anonymousUser.UserID != userID || anonymousUser.AuthToken != authToken {
 		return errors.New(message.AUTHENTICATION_FAILURE)
 	}
 
@@ -61,7 +61,7 @@ func (s *AlarmService) UpdateAlarm(userID string, userToken string, alarm reques
 	}
 
 	// UserID, UserTokenが一致するか確認する
-	if anonymousUser.UserID != userID || anonymousUser.UserToken != userToken {
+	if anonymousUser.UserID != userID || anonymousUser.AuthToken != userToken {
 		return errors.New(message.AUTHENTICATION_FAILURE)
 	}
 
@@ -85,7 +85,7 @@ func (s *AlarmService) DeleteAlarm(userID string, userToken string, alarmID stri
 	}
 
 	// UserID, UserTokenが一致するか確認する
-	if anonymousUser.UserID != userID || anonymousUser.UserToken != userToken {
+	if anonymousUser.UserID != userID || anonymousUser.AuthToken != userToken {
 		return errors.New(message.AUTHENTICATION_FAILURE)
 	}
 
@@ -101,7 +101,7 @@ func (s *AlarmService) GetAlarmList(userID string, userToken string) ([]request.
 	}
 
 	// UserID, UserTokenが一致するか確認する
-	if anonymousUser.UserID == userID && anonymousUser.UserToken == userToken {
+	if anonymousUser.UserID == userID && anonymousUser.AuthToken == userToken {
 		databaseAlarmList, err := s.Repository.GetAlarmList(userID)
 		if err != nil {
 			return []request.Alarm{}, err

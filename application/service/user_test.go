@@ -15,24 +15,23 @@ func TestInfoUser(t *testing.T) {
 	s := UserService{Repository: repository}
 
 	userID := uuid.New().String()
-	userToken := uuid.New().String()
+	authToken := uuid.New().String()
 
 	// ユーザー作成
-	insertUser := database.User{UserID: userID, UserToken: userToken}
-	err := repository.InsertAnonymousUser(insertUser)
+	insertUser := database.User{UserID: userID, AuthToken: authToken}
+	err := repository.InsertUser(insertUser)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// ユーザー取得
-	getUser, err := s.GetUser(userID, userToken)
+	getUser, err := s.GetUser(userID, authToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// Assert
 	assert.Equal(t, userID, getUser.UserID)
-	assert.Equal(t, userToken, getUser.UserToken)
 }
 
 func TestSignup(t *testing.T) {
@@ -40,10 +39,10 @@ func TestSignup(t *testing.T) {
 	s := UserService{Repository: repository}
 
 	userID := uuid.New().String()
-	userToken := uuid.New().String()
+	authToken := uuid.New().String()
 
 	// ユーザー作成
-	err := s.Signup(userID, userToken)
+	err := s.Signup(userID, authToken, "0.0.0.0")
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -56,7 +55,7 @@ func TestSignup(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, userID, getUser.UserID)
-	assert.Equal(t, userToken, getUser.UserToken)
+	assert.Equal(t, authToken, getUser.AuthToken)
 }
 
 func TestWithdraw(t *testing.T) {
@@ -64,11 +63,11 @@ func TestWithdraw(t *testing.T) {
 	s := UserService{Repository: repository}
 
 	userID := uuid.New().String()
-	userToken := uuid.New().String()
+	authToken := uuid.New().String()
 
 	// ユーザー作成
-	insertUser := database.User{UserID: userID, UserToken: userToken}
-	err := repository.InsertAnonymousUser(insertUser)
+	insertUser := database.User{UserID: userID, AuthToken: authToken}
+	err := repository.InsertUser(insertUser)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -83,7 +82,7 @@ func TestWithdraw(t *testing.T) {
 	assert.Equal(t, firstIsExist, true)
 
 	// Withdraw
-	err = s.Withdraw(userID, userToken)
+	err = s.Withdraw(userID, authToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}

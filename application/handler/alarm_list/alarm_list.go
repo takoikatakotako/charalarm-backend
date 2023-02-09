@@ -8,8 +8,8 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/takoikatakotako/charalarm-backend/handler"
 	"github.com/takoikatakotako/charalarm-backend/auth"
+	"github.com/takoikatakotako/charalarm-backend/handler"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/service"
 )
@@ -23,6 +23,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	fmt.Println(authorizationHeader)
 	fmt.Println("-------")
 
+	// parames
 	userID, authToken, err := auth.Basic(authorizationHeader)
 	if err != nil {
 		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")

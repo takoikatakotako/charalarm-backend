@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"time"
 
 	"github.com/takoikatakotako/charalarm-backend/database"
 	"github.com/takoikatakotako/charalarm-backend/entity"
@@ -22,7 +23,7 @@ func (s *UserService) GetUser(userID string, authToken string) (entity.User, err
 	}
 
 	// UserID, authTokenが一致するか確認する
-	if user.UserID == userID && user.UserToken == authToken {
+	if user.UserID == userID && user.AuthToken == authToken {
 		return s.convertDatabaseUserToEntityUser(user), nil
 	}
 
@@ -30,7 +31,7 @@ func (s *UserService) GetUser(userID string, authToken string) (entity.User, err
 	return entity.User{}, errors.New(message.AUTHENTICATION_FAILURE)
 }
 
-func (s *UserService) Signup(userID string, authToken string) error {
+func (s *UserService) Signup(userID string, authToken string, ipAddress string) error {
 	// バリデーション
 	if !validator.IsValidUUID(userID) || !validator.IsValidUUID(authToken) {
 		return errors.New(message.INVAlID_VALUE)
@@ -48,8 +49,15 @@ func (s *UserService) Signup(userID string, authToken string) error {
 	}
 
 	// ユーザー作成
-	user := database.User{UserID: userID, UserToken: authToken}
-	return s.Repository.InsertAnonymousUser(user)
+	currentTime := time.Now()
+	user := database.User{
+		UserID:              userID,
+		AuthToken:           authToken,
+		CreatedAt:           currentTime.Format(time.RFC3339),
+		UpdatedAt:           currentTime.Format(time.RFC3339),
+		RegisteredIPAddress: ipAddress,
+	}
+	return s.Repository.InsertUser(user)
 }
 
 func (s *UserService) Withdraw(userID string, authToken string) error {
@@ -59,13 +67,13 @@ func (s *UserService) Withdraw(userID string, authToken string) error {
 	}
 
 	// ユーザーを取得
-	anonymousUser, err := s.Repository.GetUser(userID)
+	user, err := s.Repository.GetUser(userID)
 	if err != nil {
 		return err
 	}
 
 	// UserID, AuthTokenの一致を確認して削除
-	if anonymousUser.UserID == userID && anonymousUser.UserToken == authToken {
+	if user.UserID == userID && user.AuthToken == authToken {
 		return s.Repository.DeleteAnonymousUser(userID)
 	}
 
@@ -77,7 +85,7 @@ func (s *UserService) Withdraw(userID string, authToken string) error {
 func (s *UserService) convertDatabaseUserToEntityUser(user database.User) entity.User {
 	return entity.User{
 		UserID:           user.UserID,
-		UserToken:        user.UserToken,
+		UserToken:        user.AuthToken,
 		IOSVoIPPushToken: entity.PushToken{},
 		IOSPushToken:     entity.PushToken{},
 	}

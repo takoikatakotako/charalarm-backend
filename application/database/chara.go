@@ -1,5 +1,10 @@
 package database
 
+const (
+	CHARA_TABLE_NAME     = "chara-table"
+	CHARA_TABLE_CHARA_ID = "charaID"
+)
+
 type Chara struct {
 	CharaID          string                     `dynamodbav:"charaID"`
 	CharaEnable      bool                       `dynamodbav:"charaEnable"`
@@ -35,8 +40,3 @@ type CharaNameAndVoiceFileURL struct {
 	CharaName    string
 	VoiceFileURL string
 }
-
-const (
-	CHARA_TABLE_NAME     = "chara-table"
-	CHARA_TABLE_CHARA_ID = "charaID"
-)

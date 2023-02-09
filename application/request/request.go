@@ -1,9 +1,9 @@
 package request
 
 type DeleteAlarmRequest struct {
-	AlarmID   string `json:"alarmID"`
+	AlarmID string `json:"alarmID"`
 }
 
 type AddAlarmRequest struct {
-	Alarm     Alarm  `json:"alarm"`
+	Alarm Alarm `json:"alarm"`
 }
