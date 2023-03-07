@@ -16,48 +16,34 @@ const (
 	HeaderApplicationJson = "application/json"
 )
 
-func TestHealthCheck(t *testing.T) {
-	// healthCheck
+func TestScenario(t *testing.T) {
+	// healthCheckにアクセスできる
 	statusCode, healthCheckResponse, err := healthcheck(t)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
-
 	assert.Equal(t, statusCode, 200)
 	assert.Equal(t, healthCheckResponse.Message, "Healthy!")
-}
 
-func TestSignUp(t *testing.T) {
-	// SingUp
+	// ユーザーの認証情報を生成
 	userID := uuid.New().String()
 	userToken := uuid.New().String()
+
+	// 新規登録することができる
 	statusCode, signUpResponse, err := signUp(t, userID, userToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
-
 	assert.Equal(t, statusCode, 200)
 	assert.Equal(t, "Sign Up Success!", signUpResponse.Message)
-}
 
-func TestSignUpAndWithdraw(t *testing.T) {
-	// SingUp
-	userID := uuid.New().String()
-	userToken := uuid.New().String()
-	statusCode, signUpResponse, err := signUp(t, userID, userToken)
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
+	// ユーザー情報を取得できる
 
-	assert.Equal(t, statusCode, 200)
-	assert.Equal(t, signUpResponse.Message, "Sign Up Success!")
-
-	// Withdraw
+	// 退会できる
 	statusCode, withdrawResponse, err := withdraw(t, userID, userToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
-
 	assert.Equal(t, statusCode, 200)
 	assert.Equal(t, "Withdraw Success!", withdrawResponse.Message)
 }
@@ -116,6 +102,39 @@ func signUp(t *testing.T, userID string, userToken string) (int, entity.MessageR
 	return response.StatusCode, signUpResponse, nil
 }
 
+// POST: /user/info
+func info(t *testing.T, userID string, userToken string) (int, entity.UserInfoResponse, error) {
+	requestUrl := Endpoint + "/user/info"
+
+	request, err := http.NewRequest("POST", requestUrl, nil)
+	if err != nil {
+		return 0, entity.UserInfoResponse{}, err
+	}
+	request.Header.Add("Content-Type", "application/json")
+	request.Header.Add("Authorization", createBasicAuthorizationHeader(userID, userToken))
+
+	client := &http.Client{}
+	response, err := client.Do(request)
+	if err != nil {
+		return 0, entity.UserInfoResponse{}, err
+	}
+
+	defer response.Body.Close()
+
+	responseBody, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return response.StatusCode, entity.UserInfoResponse{}, err
+	}
+
+	var userInfoResponse entity.UserInfoResponse
+	err = json.Unmarshal(responseBody, &userInfoResponse)
+	if err != nil {
+		return response.StatusCode, entity.UserInfoResponse{}, err
+	}
+
+	return response.StatusCode, userInfoResponse, nil
+}
+
 // POST: /user/withdraw
 func withdraw(t *testing.T, userID string, userToken string) (int, entity.MessageResponse, error) {
 	requestUrl := Endpoint + "/user/withdraw"
@@ -124,7 +143,6 @@ func withdraw(t *testing.T, userID string, userToken string) (int, entity.Messag
 	if err != nil {
 		return 0, entity.MessageResponse{}, err
 	}
-
 	request.Header.Add("Content-Type", "application/json")
 	request.Header.Add("Authorization", createBasicAuthorizationHeader(userID, userToken))
 
@@ -135,37 +153,6 @@ func withdraw(t *testing.T, userID string, userToken string) (int, entity.Messag
 	}
 
 	defer response.Body.Close()
-
-	responseBody, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return response.StatusCode, entity.MessageResponse{}, err
-	}
-
-	var signUpResponse entity.MessageResponse
-	err = json.Unmarshal(responseBody, &signUpResponse)
-	if err != nil {
-		return response.StatusCode, entity.MessageResponse{}, err
-	}
-
-	return response.StatusCode, signUpResponse, nil
-}
-
-// POST: /user/info
-func info(t *testing.T, userID string, userToken string) (int, entity.MessageResponse, error) {
-	requestBody := &entity.WithdrawRequest{
-		UserID:    userID,
-		UserToken: userToken,
-	}
-
-	jsonString, err := json.Marshal(requestBody)
-	if err != nil {
-		return 0, entity.MessageResponse{}, err
-	}
-
-	response, err := http.Post(Endpoint+"/user/info", HeaderApplicationJson, bytes.NewBuffer(jsonString))
-	if err != nil {
-		return response.StatusCode, entity.MessageResponse{}, err
-	}
 
 	responseBody, err := ioutil.ReadAll(response.Body)
 	if err != nil {
