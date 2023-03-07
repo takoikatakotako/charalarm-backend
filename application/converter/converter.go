@@ -2,35 +2,35 @@ package converter
 
 import (
 	"github.com/takoikatakotako/charalarm-backend/database"
-	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/request"
 )
 
-func EntityAlarmToDatabaseAlarm(alarm entity.Alarm) database.Alarm {
+func EntityAlarmToDatabaseAlarm(alarm request.Alarm) database.Alarm {
 	databaseAlarm := database.Alarm{
-		ID:      alarm.AlarmID,
-		UserID:       alarm.UserID,
-		Type:    alarm.AlarmType,
-		Enable:  alarm.AlarmEnable,
-		Name:    alarm.AlarmName,
-		Hour:    alarm.AlarmHour,
-		Minute:  alarm.AlarmMinute,
-		CharaID:      alarm.CharaID,
-		CharaName:    alarm.CharaName,
+		ID:            alarm.AlarmID,
+		UserID:        alarm.UserID,
+		Type:          alarm.AlarmType,
+		Enable:        alarm.AlarmEnable,
+		Name:          alarm.AlarmName,
+		Hour:          alarm.AlarmHour,
+		Minute:        alarm.AlarmMinute,
+		CharaID:       alarm.CharaID,
+		CharaName:     alarm.CharaName,
 		VoiceFilePath: alarm.VoiceFileURL,
-		Sunday:       alarm.Sunday,
-		Monday:       alarm.Monday,
-		Tuesday:      alarm.Tuesday,
-		Wednesday:    alarm.Wednesday,
-		Thursday:     alarm.Thursday,
-		Friday:       alarm.Friday,
-		Saturday:     alarm.Saturday,
+		Sunday:        alarm.Sunday,
+		Monday:        alarm.Monday,
+		Tuesday:       alarm.Tuesday,
+		Wednesday:     alarm.Wednesday,
+		Thursday:      alarm.Thursday,
+		Friday:        alarm.Friday,
+		Saturday:      alarm.Saturday,
 	}
 	databaseAlarm.SetAlarmTime()
 	return databaseAlarm
 }
 
-func DatabaseAlarmToEntityAlarm(alarm database.Alarm) entity.Alarm {
-	return entity.Alarm{
+func DatabaseAlarmToEntityAlarm(alarm database.Alarm) request.Alarm {
+	return request.Alarm{
 		AlarmID:      alarm.ID,
 		UserID:       alarm.UserID,
 		AlarmType:    alarm.Type,

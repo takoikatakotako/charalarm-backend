@@ -12,63 +12,62 @@ import (
 
 func TestInfoUser(t *testing.T) {
 	repository := repository.DynamoDBRepository{IsLocal: true}
-	s := AnonymousUserService{Repository: repository}
+	s := UserService{Repository: repository}
 
 	userID := uuid.New().String()
-	userToken := uuid.New().String()
+	authToken := uuid.New().String()
 
 	// ユーザー作成
-	insertUser := database.User{UserID: userID, UserToken: userToken}
-	err := repository.InsertAnonymousUser(insertUser)
+	insertUser := database.User{UserID: userID, AuthToken: authToken}
+	err := repository.InsertUser(insertUser)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// ユーザー取得
-	getUser, err := s.GetAnonymousUser(userID, userToken)
+	getUser, err := s.GetUser(userID, authToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// Assert
 	assert.Equal(t, userID, getUser.UserID)
-	assert.Equal(t, userToken, getUser.UserToken)
 }
 
 func TestSignup(t *testing.T) {
 	repository := repository.DynamoDBRepository{IsLocal: true}
-	s := AnonymousUserService{Repository: repository}
+	s := UserService{Repository: repository}
 
 	userID := uuid.New().String()
-	userToken := uuid.New().String()
+	authToken := uuid.New().String()
 
 	// ユーザー作成
-	err := s.Signup(userID, userToken)
+	err := s.Signup(userID, authToken, "0.0.0.0")
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// ユーザー取得
-	getUser, err := repository.GetAnonymousUser(userID)
+	getUser, err := repository.GetUser(userID)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// Assert
 	assert.Equal(t, userID, getUser.UserID)
-	assert.Equal(t, userToken, getUser.UserToken)
+	assert.Equal(t, authToken, getUser.AuthToken)
 }
 
 func TestWithdraw(t *testing.T) {
 	repository := repository.DynamoDBRepository{IsLocal: true}
-	s := AnonymousUserService{Repository: repository}
+	s := UserService{Repository: repository}
 
 	userID := uuid.New().String()
-	userToken := uuid.New().String()
+	authToken := uuid.New().String()
 
 	// ユーザー作成
-	insertUser := database.User{UserID: userID, UserToken: userToken}
-	err := repository.InsertAnonymousUser(insertUser)
+	insertUser := database.User{UserID: userID, AuthToken: authToken}
+	err := repository.InsertUser(insertUser)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -83,7 +82,7 @@ func TestWithdraw(t *testing.T) {
 	assert.Equal(t, firstIsExist, true)
 
 	// Withdraw
-	err = s.Withdraw(userID, userToken)
+	err = s.Withdraw(userID, authToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}

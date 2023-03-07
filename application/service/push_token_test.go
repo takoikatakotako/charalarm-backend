@@ -15,24 +15,24 @@ func TestAddIOSVoIPPushToken(t *testing.T) {
 	service := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
 	userID := uuid.New().String()
-	userToken := uuid.New().String()
+	authToken := uuid.New().String()
 	pushToken := uuid.New().String()
 
 	// ユーザー作成
-	anonymousUser := database.User{UserID: userID, UserToken: userToken}
-	err := dynamoDBRepository.InsertAnonymousUser(anonymousUser)
+	anonymousUser := database.User{UserID: userID, AuthToken: authToken}
+	err := dynamoDBRepository.InsertUser(anonymousUser)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// トークン作成
-	err = service.AddIOSVoipPushToken(userID, userToken, pushToken)
+	err = service.AddIOSVoipPushToken(userID, authToken, pushToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// ユーザー取得
-	getUser, err := dynamoDBRepository.GetAnonymousUser(userID)
+	getUser, err := dynamoDBRepository.GetUser(userID)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}

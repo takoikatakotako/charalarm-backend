@@ -14,46 +14,46 @@ type PushTokenService struct {
 	SNSRepository      repository.SNSRepository
 }
 
-func (a *PushTokenService) AddIOSPushToken(userID string, userToken string, pushToken string) error {
+func (s *PushTokenService) AddIOSPushToken(userID string, authToken string, pushToken string) error {
 	// ユーザーを取得
-	anonymousUser, err := a.DynamoDBRepository.GetAnonymousUser(userID)
+	user, err := s.DynamoDBRepository.GetUser(userID)
 	if err != nil {
 		return err
 	}
 
 	// UserID, UserTokenが一致するか確認する
-	if anonymousUser.UserID == userID && anonymousUser.UserToken == userToken {
+	if user.UserID == userID && user.AuthToken == authToken {
 		// Nothing
 	} else {
 		return errors.New(message.AUTHENTICATION_FAILURE)
 	}
 
 	// 既に作成されてるか確認
-	if anonymousUser.IOSPushToken.Token == pushToken {
+	if user.IOSPushToken.Token == pushToken {
 		return nil
 	}
 
 	// PlatformApplicationを作成
-	response, err := a.SNSRepository.CreateIOSPushPlatformEndpoint(pushToken)
+	response, err := s.SNSRepository.CreateIOSPushPlatformEndpoint(pushToken)
 	if err != nil {
 		return err
 	}
 
 	// DynamoDBに追加
 	snsEndpointArn := response.EndpointArn
-	anonymousUser.IOSPushToken = database.PushToken{Token: pushToken, SNSEndpointArn: snsEndpointArn}
-	return a.DynamoDBRepository.InsertAnonymousUser(anonymousUser)
+	user.IOSPushToken = database.PushToken{Token: pushToken, SNSEndpointArn: snsEndpointArn}
+	return s.DynamoDBRepository.InsertUser(user)
 }
 
-func (a *PushTokenService) AddIOSVoipPushToken(userID string, userToken string, pushToken string) error {
+func (s *PushTokenService) AddIOSVoipPushToken(userID string, userToken string, pushToken string) error {
 	// ユーザーを取得
-	anonymousUser, err := a.DynamoDBRepository.GetAnonymousUser(userID)
+	anonymousUser, err := s.DynamoDBRepository.GetUser(userID)
 	if err != nil {
 		return err
 	}
 
 	// UserID, UserTokenが一致するか確認する
-	if anonymousUser.UserID == userID && anonymousUser.UserToken == userToken {
+	if anonymousUser.UserID == userID && anonymousUser.AuthToken == userToken {
 		// Nothing
 	} else {
 		return errors.New(message.AUTHENTICATION_FAILURE)
@@ -65,7 +65,7 @@ func (a *PushTokenService) AddIOSVoipPushToken(userID string, userToken string, 
 	}
 
 	// PlatformApplicationを作成
-	response, err := a.SNSRepository.CreateIOSVoipPushPlatformEndpoint(pushToken)
+	response, err := s.SNSRepository.CreateIOSVoipPushPlatformEndpoint(pushToken)
 	if err != nil {
 		return err
 	}
@@ -73,15 +73,5 @@ func (a *PushTokenService) AddIOSVoipPushToken(userID string, userToken string, 
 	// DynamoDBに追加
 	snsEndpointArn := response.EndpointArn
 	anonymousUser.IOSVoIPPushToken = database.PushToken{Token: pushToken, SNSEndpointArn: snsEndpointArn}
-	return a.DynamoDBRepository.InsertAnonymousUser(anonymousUser)
+	return s.DynamoDBRepository.InsertUser(anonymousUser)
 }
-
-// // database.User を entity.AnonymousUser に変換
-// func (a *PushTokenService) convertEntityUserToDatabaseUser(user entity.User) (database.User) {
-// 	return entity.AnonymousUser {
-// 		UserID: user.UserID,
-// 		UserToken: user.UserToken,
-// 		IOSVoIPPushToken: entity.PushToken{},
-// 		IOSPushToken: entity.PushToken{},
-// 	}
-// }

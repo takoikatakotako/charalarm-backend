@@ -8,38 +8,44 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/auth"
+	"github.com/takoikatakotako/charalarm-backend/handler"
 	"github.com/takoikatakotako/charalarm-backend/repository"
+	"github.com/takoikatakotako/charalarm-backend/request"
+	"github.com/takoikatakotako/charalarm-backend/response"
 	"github.com/takoikatakotako/charalarm-backend/service"
 )
 
-func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	body := name.Body
-	request := entity.AnonymousDeleteAlarmRequest{}
+func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	authorizationHeader := event.Headers["Authorization"]
 
-	if err := json.Unmarshal([]byte(body), &request); err != nil {
-		return events.APIGatewayProxyResponse{
-			Body:       "デコードに失敗しました",
-			StatusCode: http.StatusInternalServerError,
-		}, nil
+	fmt.Println("-------")
+	fmt.Println(ctx)
+	fmt.Println(event)
+	fmt.Println(authorizationHeader)
+	fmt.Println("-------")
+
+	userID, authToken, err := auth.Basic(authorizationHeader)
+	if err != nil {
+		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
 	}
 
-	userID := request.UserID
-	userToken := request.UserToken
+	body := event.Body
+	request := request.DeleteAlarmRequest{}
+	err = json.Unmarshal([]byte(body), &request)
+	if err != nil {
+		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
+	}
+
 	alarmID := request.AlarmID
 
 	s := service.AlarmService{Repository: repository.DynamoDBRepository{}}
-	if err := s.DeleteAlarm(userID, userToken, alarmID); err != nil {
-		fmt.Println(err)
-		response := entity.MessageResponse{Message: "アラームの削除に失敗しました。"}
-		jsonBytes, _ := json.Marshal(response)
-		return events.APIGatewayProxyResponse{
-			Body:       string(jsonBytes),
-			StatusCode: http.StatusInternalServerError,
-		}, nil
+	err = s.DeleteAlarm(userID, authToken, alarmID)
+	if err != nil {
+		return handler.FailureResponse(http.StatusInternalServerError, "アラームの削除に失敗しました。")
 	}
 
-	response := entity.MessageResponse{Message: "アラーム削除完了!"}
+	response := response.MessageResponse{Message: "アラーム削除完了!"}
 	jsonBytes, _ := json.Marshal(response)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),

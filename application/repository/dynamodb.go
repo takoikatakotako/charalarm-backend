@@ -13,7 +13,6 @@ import (
 	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
 	"github.com/takoikatakotako/charalarm-backend/database"
 	"github.com/takoikatakotako/charalarm-backend/message"
-	"github.com/takoikatakotako/charalarm-backend/table"
 	"github.com/takoikatakotako/charalarm-backend/validator"
 	"math/rand"
 	"time"
@@ -52,7 +51,7 @@ func (d *DynamoDBRepository) createDynamoDBClient() (*dynamodb.Client, error) {
 ////////////////////////////////////
 // User
 ////////////////////////////////////
-func (d *DynamoDBRepository) GetAnonymousUser(userID string) (database.User, error) {
+func (d *DynamoDBRepository) GetUser(userID string) (database.User, error) {
 	ctx := context.Background()
 
 	client, err := d.createDynamoDBClient()
@@ -62,7 +61,7 @@ func (d *DynamoDBRepository) GetAnonymousUser(userID string) (database.User, err
 
 	// 既存レコードの取得
 	getInput := &dynamodb.GetItemInput{
-		TableName: aws.String(table.USER_TABLE),
+		TableName: aws.String(database.USER_TABLE_NAME),
 		Key: map[string]types.AttributeValue{
 			database.USER_TABLE_USER_ID: &types.AttributeValueMemberS{
 				Value: userID,
@@ -100,7 +99,7 @@ func (d *DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error) {
 
 	// 既存レコードの取得
 	getInput := &dynamodb.GetItemInput{
-		TableName: aws.String(table.USER_TABLE),
+		TableName: aws.String(database.USER_TABLE_NAME),
 		Key: map[string]types.AttributeValue{
 			database.USER_TABLE_USER_ID: &types.AttributeValueMemberS{
 				Value: userID,
@@ -119,7 +118,7 @@ func (d *DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error) {
 	}
 }
 
-func (d *DynamoDBRepository) InsertAnonymousUser(anonymousUser database.User) error {
+func (d *DynamoDBRepository) InsertUser(anonymousUser database.User) error {
 	ctx := context.Background()
 
 	client, err := d.createDynamoDBClient()
@@ -135,7 +134,7 @@ func (d *DynamoDBRepository) InsertAnonymousUser(anonymousUser database.User) er
 		return err
 	}
 	_, err = client.PutItem(ctx, &dynamodb.PutItemInput{
-		TableName: aws.String(table.USER_TABLE),
+		TableName: aws.String(database.USER_TABLE_NAME),
 		Item:      av,
 	})
 	if err != nil {
@@ -155,7 +154,7 @@ func (d *DynamoDBRepository) DeleteAnonymousUser(userID string) error {
 	}
 
 	deleteInput := &dynamodb.DeleteItemInput{
-		TableName: aws.String(table.USER_TABLE),
+		TableName: aws.String(database.USER_TABLE_NAME),
 		Key: map[string]types.AttributeValue{
 			database.USER_TABLE_USER_ID: &types.AttributeValueMemberS{
 				Value: userID,
@@ -300,7 +299,7 @@ func (d *DynamoDBRepository) InsertAlarm(alarm database.Alarm) error {
 		return err
 	}
 	_, err = client.PutItem(context.Background(), &dynamodb.PutItemInput{
-		TableName: aws.String(table.ALARM_TABLE),
+		TableName: aws.String(database.ALARM_TABLE_NAME),
 		Item:      av,
 	})
 	if err != nil {
@@ -333,7 +332,7 @@ func (d *DynamoDBRepository) UpdateAlarm(alarm database.Alarm) error {
 		return err
 	}
 	_, err = client.PutItem(context.Background(), &dynamodb.PutItemInput{
-		TableName: aws.String(table.ALARM_TABLE),
+		TableName: aws.String(database.ALARM_TABLE_NAME),
 		Item:      av,
 	})
 	if err != nil {
@@ -353,7 +352,7 @@ func (d *DynamoDBRepository) DeleteAlarm(alarmID string) error {
 	}
 
 	deleteInput := &dynamodb.DeleteItemInput{
-		TableName: aws.String(table.ALARM_TABLE),
+		TableName: aws.String(database.ALARM_TABLE_NAME),
 		Key: map[string]types.AttributeValue{
 			database.ALARM_TABLE_ALARM_ID: &types.AttributeValueMemberS{Value: alarmID},
 		},
@@ -384,8 +383,8 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 
 	// userIDからアラームを検索
 	output, err := client.Query(ctx, &dynamodb.QueryInput{
-		TableName:              aws.String(table.ALARM_TABLE),
-		IndexName:              aws.String(table.USER_ID_INDEX),
+		TableName:              aws.String(database.ALARM_TABLE_NAME),
+		IndexName:              aws.String(database.USER_TABLE_USER_ID_INDEX_NAME),
 		KeyConditionExpression: aws.String("userID = :userID"),
 		ExpressionAttributeValues: map[string]types.AttributeValue{
 			":userID": &types.AttributeValueMemberS{Value: userID},
@@ -419,7 +418,7 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 	// アラームを削除
 	_, err = client.BatchWriteItem(ctx, &dynamodb.BatchWriteItemInput{
 		RequestItems: map[string][]types.WriteRequest{
-			table.ALARM_TABLE: requestItems,
+			database.ALARM_TABLE_NAME: requestItems,
 		},
 	})
 	if err != nil {
@@ -441,7 +440,7 @@ func (d *DynamoDBRepository) GetChara(charaID string) (database.Chara, error) {
 
 	// クエリ実行
 	input := &dynamodb.GetItemInput{
-		TableName: aws.String(table.CHARA_TABLE),
+		TableName: aws.String(database.CHARA_TABLE_NAME),
 		Key: map[string]types.AttributeValue{
 			database.CHARA_TABLE_CHARA_ID: &types.AttributeValueMemberS{
 				Value: charaID,
