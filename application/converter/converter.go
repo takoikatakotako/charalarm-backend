@@ -8,8 +8,17 @@ import (
 
 func DatabaseUserToResponseUserInfo(user database.User) response.UserInfoResponse {
 	return response.UserInfoResponse{
-		UserID:    user.UserID,
-		UserToken: maskUserToken(user.AuthToken),
+		UserID:           user.UserID,
+		UserToken:        maskUserToken(user.AuthToken),
+		IOSPushToken:     DatabasePushTokenToResponsePushToken(user.IOSVoIPPushToken),
+		IOSVoIPPushToken: DatabasePushTokenToResponsePushToken(user.IOSVoIPPushToken),
+	}
+}
+
+func DatabasePushTokenToResponsePushToken(pushToken database.PushToken) response.PushToken {
+	return response.PushToken{
+		Token:          pushToken.Token,
+		SNSEndpointArn: pushToken.SNSEndpointArn,
 	}
 }
 
@@ -64,7 +73,13 @@ func maskUserToken(userToken string) string {
 	length := len(userToken)
 	var r string = ""
 	for i := 0; i < length; i++ {
-		r += "*"
+		if i == 0 {
+			r += userToken[0:1]
+		} else if i == 1 {
+			r += userToken[1:2]
+		} else {
+			r += "*"
+		}
 	}
 	return r
 }

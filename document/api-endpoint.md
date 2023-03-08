@@ -80,7 +80,7 @@ curl -X POST https://api.sandbox.swiswiswift.com/user/info \
 ```
 {
   "userID": "20f0c1cd-9c2a-411a-878c-9bd0bb15dc35",
-  "userToken": "038a5e28-15ce-46b4-8f46-4934202faa85",
+  "userToken": "20**********************************",
   "iosVoIPPushTokens": {
     "token": "",
     "snsEndpointArn": ""
