@@ -24,18 +24,18 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	userID, authToken, err := auth.Basic(authorizationHeader)
 	if err != nil {
-		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
+		return handler.FailureResponse(http.StatusInternalServerError, "Authorization Fail")
 	}
 
 	// info
 	s := service.UserService{Repository: repository.DynamoDBRepository{}}
-	anonymousUser, err := s.GetUser(userID, authToken)
+	userInfo, err := s.GetUser(userID, authToken)
 	if err != nil {
-		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
+		return handler.FailureResponse(http.StatusInternalServerError, "fail to get user")
 	}
 
 	// Success
-	jsonBytes, _ := json.Marshal(anonymousUser)
+	jsonBytes, _ := json.Marshal(userInfo)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
 		StatusCode: http.StatusOK,

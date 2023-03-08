@@ -3,7 +3,24 @@ package converter
 import (
 	"github.com/takoikatakotako/charalarm-backend/database"
 	"github.com/takoikatakotako/charalarm-backend/request"
+	"github.com/takoikatakotako/charalarm-backend/response"
 )
+
+func DatabaseUserToResponseUserInfo(user database.User) response.UserInfoResponse {
+	return response.UserInfoResponse{
+		UserID:           user.UserID,
+		UserToken:        maskUserToken(user.AuthToken),
+		IOSPushToken:     DatabasePushTokenToResponsePushToken(user.IOSVoIPPushToken),
+		IOSVoIPPushToken: DatabasePushTokenToResponsePushToken(user.IOSVoIPPushToken),
+	}
+}
+
+func DatabasePushTokenToResponsePushToken(pushToken database.PushToken) response.PushToken {
+	return response.PushToken{
+		Token:          pushToken.Token,
+		SNSEndpointArn: pushToken.SNSEndpointArn,
+	}
+}
 
 func EntityAlarmToDatabaseAlarm(alarm request.Alarm) database.Alarm {
 	databaseAlarm := database.Alarm{
@@ -49,4 +66,20 @@ func DatabaseAlarmToEntityAlarm(alarm database.Alarm) request.Alarm {
 		Friday:       alarm.Friday,
 		Saturday:     alarm.Saturday,
 	}
+}
+
+// 文字を*に変換
+func maskUserToken(userToken string) string {
+	length := len(userToken)
+	var r string = ""
+	for i := 0; i < length; i++ {
+		if i == 0 {
+			r += userToken[0:1]
+		} else if i == 1 {
+			r += userToken[1:2]
+		} else {
+			r += "*"
+		}
+	}
+	return r
 }

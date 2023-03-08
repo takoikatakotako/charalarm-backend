@@ -2,6 +2,8 @@ package service
 
 import (
 	"errors"
+	"github.com/takoikatakotako/charalarm-backend/converter"
+	"github.com/takoikatakotako/charalarm-backend/response"
 	"time"
 
 	"github.com/takoikatakotako/charalarm-backend/database"
@@ -15,20 +17,20 @@ type UserService struct {
 	Repository repository.DynamoDBRepository
 }
 
-func (s *UserService) GetUser(userID string, authToken string) (entity.User, error) {
+func (s *UserService) GetUser(userID string, authToken string) (response.UserInfoResponse, error) {
 	// ユーザーを取得
 	user, err := s.Repository.GetUser(userID)
 	if err != nil {
-		return entity.User{}, err
+		return response.UserInfoResponse{}, err
 	}
 
 	// UserID, authTokenが一致するか確認する
 	if user.UserID == userID && user.AuthToken == authToken {
-		return s.convertDatabaseUserToEntityUser(user), nil
+		return converter.DatabaseUserToResponseUserInfo(user), nil
 	}
 
 	// 一致しない場合
-	return entity.User{}, errors.New(message.AUTHENTICATION_FAILURE)
+	return response.UserInfoResponse{}, errors.New(message.AUTHENTICATION_FAILURE)
 }
 
 func (s *UserService) Signup(userID string, authToken string, ipAddress string) error {
