@@ -5,27 +5,26 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	// "github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/database"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 )
 
 func TestInfoUser(t *testing.T) {
-	repository := repository.DynamoDBRepository{IsLocal: true}
-	s := UserService{Repository: repository}
+	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
+	userService := UserService{Repository: dynamoDBRepository}
 
 	userID := uuid.New().String()
 	authToken := uuid.New().String()
+	ipAddress := "127.0.0.1"
 
 	// ユーザー作成
-	insertUser := database.User{UserID: userID, AuthToken: authToken}
-	err := repository.InsertUser(insertUser)
+	err := userService.Signup(userID, authToken, ipAddress)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// ユーザー取得
-	getUser, err := s.GetUser(userID, authToken)
+	getUser, err := userService.GetUser(userID, authToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}

@@ -43,8 +43,8 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
 	}
 
-	response := response.MessageResponse{Message: "アラーム追加完了!"}
-	jsonBytes, _ := json.Marshal(response)
+	res := response.MessageResponse{Message: "アラーム追加完了!"}
+	jsonBytes, _ := json.Marshal(res)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
 		StatusCode: http.StatusOK,

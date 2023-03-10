@@ -10,16 +10,14 @@ import (
 )
 
 const (
-	MAX_USERS_ALARM = math.MaxInt64
+	MaxUsersAlarm = math.MaxInt64
 )
 
 type AlarmService struct {
 	Repository repository.DynamoDBRepository
 }
 
-////////////////////////////////////////
-// アラームを追加
-////////////////////////////////////////
+// AddAlarm アラームを追加
 func (s *AlarmService) AddAlarm(userID string, authToken string, alarm request.Alarm) error {
 	// ユーザーを取得
 	anonymousUser, err := s.Repository.GetUser(userID)
@@ -39,15 +37,15 @@ func (s *AlarmService) AddAlarm(userID string, authToken string, alarm request.A
 	}
 
 	// 件数が多い場合はなんとかする
-	if len(list) > MAX_USERS_ALARM {
+	if len(list) > MaxUsersAlarm {
 		return errors.New("なんか登録してるアラームの件数多くね？")
 	}
 
-	// DatbaseAlarmに変換
-	databaseAalarm := converter.EntityAlarmToDatabaseAlarm(alarm)
+	// DatabaseAlarmに変換
+	databaseAlarm := converter.EntityAlarmToDatabaseAlarm(alarm)
 
 	// アラームを追加する
-	return s.Repository.InsertAlarm(databaseAalarm)
+	return s.Repository.InsertAlarm(databaseAlarm)
 }
 
 ////////////////////////////////////////

@@ -10,7 +10,6 @@ type Alarm struct {
 	AlarmName   string `json:"alarmName"`
 	AlarmHour   int    `json:"alarmHour"`
 	AlarmMinute int    `json:"alarmMinute"`
-	AlarmTime   string `json:"alarmTime"`
 
 	// Chara Info
 	CharaID      string `json:"charaID"`
