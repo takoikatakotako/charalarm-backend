@@ -68,6 +68,28 @@ func DatabaseAlarmToEntityAlarm(alarm database.Alarm) request.Alarm {
 	}
 }
 
+func DatabaseAlarmToResponseAlarm(alarm database.Alarm) response.Alarm {
+	return response.Alarm{
+		AlarmID:      alarm.ID,
+		UserID:       alarm.UserID,
+		AlarmType:    alarm.Type,
+		AlarmEnable:  alarm.Enable,
+		AlarmName:    alarm.Name,
+		AlarmHour:    alarm.Hour,
+		AlarmMinute:  alarm.Minute,
+		CharaID:      alarm.CharaID,
+		CharaName:    alarm.CharaName,
+		VoiceFileURL: alarm.VoiceFilePath,
+		Sunday:       alarm.Sunday,
+		Monday:       alarm.Monday,
+		Tuesday:      alarm.Tuesday,
+		Wednesday:    alarm.Wednesday,
+		Thursday:     alarm.Thursday,
+		Friday:       alarm.Friday,
+		Saturday:     alarm.Saturday,
+	}
+}
+
 // 文字を*に変換
 func maskUserToken(userToken string) string {
 	length := len(userToken)

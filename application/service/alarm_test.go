@@ -1,54 +1,112 @@
 package service
 
 import (
-	"testing"
-
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/request"
+	"testing"
 )
 
-func TestAddAlarm(t *testing.T) {
+func TestAlarm(t *testing.T) {
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
 	userService := UserService{Repository: dynamoDBRepository}
 	alarmService := AlarmService{Repository: dynamoDBRepository}
 
+	// ユーザー作成
 	userID := uuid.New().String()
 	authToken := uuid.New().String()
-	ipAddress := "127.0.0.1"
-
-	// ユーザー作成
+	const ipAddress = "127.0.0.1"
 	err := userService.Signup(userID, authToken, ipAddress)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// アラーム作成
+	alarmID := uuid.New().String()
+	const alarmType = "VOIP_NOTIFICATION"
+	const alarmEnable = true
+	const alarmName = "alarmName"
+	const alarmHour = 8
+	const alarmMinute = 30
+	const charaID = "charaID"
+	const charaName = "charaName"
+	const voiceFileURL = "voiceFileURL"
+	const sunday = true
+	const monday = false
+	const tuesday = true
+	const wednesday = false
+	const thursday = true
+	const friday = true
+	const saturday = false
+
 	alarm := request.Alarm{
-		AlarmID:     uuid.New().String(),
-		UserID:      uuid.New().String(),
-		AlarmType:   "VOIP_NOTIFICATION",
-		AlarmEnable: true,
-		AlarmName:   "xxxx",
-		AlarmHour:   8,
-		AlarmMinute: 30,
+		AlarmID:     alarmID,
+		UserID:      userID,
+		AlarmType:   alarmType,
+		AlarmEnable: alarmEnable,
+		AlarmName:   alarmName,
+		AlarmHour:   alarmHour,
+		AlarmMinute: alarmMinute,
 
 		// Chara Info
-		CharaID:      "CharaID",
-		CharaName:    "CharaName",
-		VoiceFileURL: "VoiceFileURL",
+		CharaID:      charaID,
+		CharaName:    charaName,
+		VoiceFileURL: voiceFileURL,
 
 		// Weekday
-		Sunday:    true,
-		Monday:    false,
-		Tuesday:   true,
-		Wednesday: false,
-		Thursday:  true,
-		Friday:    false,
-		Saturday:  true,
+		Sunday:    sunday,
+		Monday:    monday,
+		Tuesday:   tuesday,
+		Wednesday: wednesday,
+		Thursday:  thursday,
+		Friday:    friday,
+		Saturday:  saturday,
 	}
 	err = alarmService.AddAlarm(userID, authToken, alarm)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
+
+	// アラームを取得
+	getAlarmList, err := alarmService.GetAlarmList(userID, authToken)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Assert
+	assert.Equal(t, 1, len(getAlarmList))
+	getAlarm := getAlarmList[0]
+	assert.Equal(t, getAlarm.AlarmID, alarmID)
+	assert.Equal(t, getAlarm.UserID, userID)
+	assert.Equal(t, getAlarm.AlarmType, alarmType)
+	assert.Equal(t, getAlarm.AlarmEnable, alarmEnable)
+	assert.Equal(t, getAlarm.AlarmName, alarmName)
+	assert.Equal(t, getAlarm.AlarmHour, alarmHour)
+	assert.Equal(t, getAlarm.AlarmMinute, alarmMinute)
+	assert.Equal(t, getAlarm.CharaID, charaID)
+	assert.Equal(t, getAlarm.CharaName, charaName)
+	assert.Equal(t, getAlarm.VoiceFileURL, voiceFileURL)
+	assert.Equal(t, getAlarm.Sunday, sunday)
+	assert.Equal(t, getAlarm.Monday, monday)
+	assert.Equal(t, getAlarm.Tuesday, tuesday)
+	assert.Equal(t, getAlarm.Wednesday, wednesday)
+	assert.Equal(t, getAlarm.Thursday, thursday)
+	assert.Equal(t, getAlarm.Friday, friday)
+	assert.Equal(t, getAlarm.Saturday, saturday)
+
+	// アラームを削除
+	err = alarmService.DeleteAlarm(userID, authToken, getAlarm.AlarmID)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// アラームを取得
+	getAlarmList, err = alarmService.GetAlarmList(userID, authToken)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Assert
+	assert.Equal(t, 0, len(getAlarmList))
 }
