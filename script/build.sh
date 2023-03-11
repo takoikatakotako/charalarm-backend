@@ -8,6 +8,7 @@ cd $cwd/../application
 ################################################################
 # alarm
 GOOS=linux GOARCH=amd64 go build -o build/alarm_add handler/alarm_add/alarm_add.go
+GOOS=linux GOARCH=amd64 go build -o build/alarm_edit handler/alarm_edit/alarm_edit.go
 GOOS=linux GOARCH=amd64 go build -o build/alarm_delete handler/alarm_delete/alarm_delete.go
 GOOS=linux GOARCH=amd64 go build -o build/alarm_list handler/alarm_list/alarm_list.go
 
@@ -33,6 +34,7 @@ cd ./build
 
 # alarm
 zip alarm_add.zip alarm_add
+zip alarm_edit.zip alarm_edit
 zip alarm_delete.zip alarm_delete
 zip alarm_list.zip alarm_list
 

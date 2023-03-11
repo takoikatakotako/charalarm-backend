@@ -49,8 +49,8 @@ func (s *AlarmService) AddAlarm(userID string, authToken string, alarm request.A
 	return s.Repository.InsertAlarm(databaseAlarm)
 }
 
-// UpdateAlarm アラームを更新
-func (s *AlarmService) UpdateAlarm(userID string, userToken string, alarm request.Alarm) error {
+// EditAlarm アラームを更新
+func (s *AlarmService) EditAlarm(userID string, userToken string, alarm request.Alarm) error {
 	// ユーザーを取得
 	anonymousUser, err := s.Repository.GetUser(userID)
 	if err != nil {

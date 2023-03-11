@@ -98,7 +98,7 @@ func TestAlarm(t *testing.T) {
 	// アラーム編集
 	alarmName = "New Alarm Name"
 	alarm.AlarmName = alarmName
-	err = alarmService.UpdateAlarm(userID, authToken, alarm)
+	err = alarmService.EditAlarm(userID, authToken, alarm)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
