@@ -93,7 +93,7 @@ curl -X POST https://api.sandbox.swiswiswift.com/user/info \
 ```
 
 
-## POST:  /alarm/list
+## POST: /alarm/list
 
 ```
 BASIC_AUTH_HEADER=$(echo -n 20f0c1cd-9c2a-411a-878c-9bd0bb15dc35:038a5e28-15ce-46b4-8f46-4934202faa85 | base64)
@@ -104,8 +104,41 @@ curl -X POST https://api.sandbox.swiswiswift.com/alarm/list \
 
 ## POST: /alarm/add
 
+アラームを追加します。
+
+```
+BASIC_AUTH_HEADER=$(echo -n 20f0c1cd-9c2a-411a-878c-9bd0bb15dc35:038a5e28-15ce-46b4-8f46-4934202faa85 | base64)
+curl -X POST https://api.sandbox.swiswiswift.com/alarm/add \
+    -H 'Content-Type: application/json' \
+    -H "Authorization: Basic ${BASIC_AUTH_HEADER}" \
+    -d '{"alarm":{"alarmID":"45cd0ab2-941c-4015-9a0f-d49b2b3fb4a7","userID":"20f0c1cd-9c2a-411a-878c-9bd0bb15dc35","alarmType":"VOIP_NOTIFICATION","alarmEnable":true,"alarmName":"alarmName","alarmHour":8,"alarmMinute":30,"charaID":"charaID","charaName":"charaName","voiceFileURL":"voiceFileURL","sunday":true,"monday":false,"tuesday":true,"wednesday":false,"thursday":true,"friday":false,"saturday":true}}' | jq
+```
+
+
+
+
+## POST: /alarm/edit
+
+```
+BASIC_AUTH_HEADER=$(echo -n 20f0c1cd-9c2a-411a-878c-9bd0bb15dc35:038a5e28-15ce-46b4-8f46-4934202faa85 | base64)
+curl -X POST https://api.sandbox.swiswiswift.com/alarm/edit \
+    -H 'Content-Type: application/json' \
+    -H "Authorization: Basic ${BASIC_AUTH_HEADER}" \
+    -d '{"alarm":{"alarmID":"45cd0ab2-941c-4015-9a0f-d49b2b3fb4a7","userID":"20f0c1cd-9c2a-411a-878c-9bd0bb15dc35","alarmType":"VOIP_NOTIFICATION","alarmEnable":true,"alarmName":"alarmName","alarmHour":8,"alarmMinute":30,"charaID":"charaID","charaName":"charaName","voiceFileURL":"voiceFileURL","sunday":true,"monday":false,"tuesday":true,"wednesday":false,"thursday":true,"friday":false,"saturday":true}}' | jq
+```
+
 
 ## POST: /alarm/delete
+
+アラームを削除します。
+
+```
+BASIC_AUTH_HEADER=$(echo -n 20f0c1cd-9c2a-411a-878c-9bd0bb15dc35:038a5e28-15ce-46b4-8f46-4934202faa85 | base64)
+curl -X POST https://api.sandbox.swiswiswift.com/alarm/delete \
+    -H 'Content-Type: application/json' \
+    -H "Authorization: Basic ${BASIC_AUTH_HEADER}" \
+    -d '{"alarmID":"45cd0ab2-941c-4015-9a0f-d49b2b3fb4a7"}' | jq
+```
 
 
 ## POST: /push-token/ios/push/add
