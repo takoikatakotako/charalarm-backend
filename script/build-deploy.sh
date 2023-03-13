@@ -21,6 +21,10 @@ GOOS=linux GOARCH=amd64 go build -o build/chara_list handler/chara_list/chara_li
 # healthcheck
 GOOS=linux GOARCH=amd64 go build -o build/healthcheck handler/healthcheck/healthcheck.go
 
+# push-token
+GOOS=linux GOARCH=amd64 go build -o build/push_token_ios_push_add handler/push_token_ios_push_add/push_token_ios_push_add.go
+GOOS=linux GOARCH=amd64 go build -o build/push_token_ios_voip_push_add handler/push_token_ios_voip_push_add/push_token_ios_voip_push_add.go
+
 # user
 GOOS=linux GOARCH=amd64 go build -o build/user_info handler/user_info/user_info.go
 GOOS=linux GOARCH=amd64 go build -o build/user_signup handler/user_signup/user_signup.go
@@ -48,6 +52,8 @@ zip chara_list.zip chara_list
 zip healthcheck.zip healthcheck
 
 # push-notification
+zip push_token_ios_push_add.zip push_token_ios_push_add
+zip push_token_ios_voip_push_add.zip push_token_ios_voip_push_add
 
 # user
 zip user_signup.zip user_signup
@@ -88,6 +94,8 @@ aws lambda update-function-code --function-name alarm-list-post-function --s3-bu
 aws lambda update-function-code --function-name healthcheck-get-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/healthcheck.zip
 
 # push-notification
+aws lambda update-function-code --function-name push-token-ios-push-add-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/push_token_ios_push_add.zip
+aws lambda update-function-code --function-name push-token-ios-voip-push-add-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/push_token_ios_voip_push_add.zip
 
 # user
 aws lambda update-function-code --function-name user-signup-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/user_signup.zip
