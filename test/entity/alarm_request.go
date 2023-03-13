@@ -1,6 +1,6 @@
-package request
+package entity
 
-type Alarm struct {
+type AlarmRequest struct {
 	AlarmID string `json:"alarmID"`
 	UserID  string `json:"userID"`
 

@@ -48,9 +48,7 @@ func (d *DynamoDBRepository) createDynamoDBClient() (*dynamodb.Client, error) {
 	return dynamodb.NewFromConfig(c), nil
 }
 
-////////////////////////////////////
-// User
-////////////////////////////////////
+// GetUser Userを取得する
 func (d *DynamoDBRepository) GetUser(userID string) (database.User, error) {
 	ctx := context.Background()
 
@@ -74,18 +72,18 @@ func (d *DynamoDBRepository) GetUser(userID string) (database.User, error) {
 	if err != nil {
 		return database.User{}, err
 	}
-	gotUser := database.User{}
+	getUser := database.User{}
 
 	if len(output.Item) == 0 {
 		return database.User{}, errors.New(message.INVAlID_VALUE)
 	}
 
-	err = attributevalue.UnmarshalMap(output.Item, &gotUser)
+	err = attributevalue.UnmarshalMap(output.Item, &getUser)
 	if err != nil {
 		return database.User{}, err
 	}
 
-	return gotUser, nil
+	return getUser, nil
 }
 
 func (d *DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error) {

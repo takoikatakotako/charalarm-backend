@@ -18,7 +18,7 @@ const (
 
 func TestScenario(t *testing.T) {
 	// healthCheckにアクセスできる
-	statusCode, healthCheckResponse, err := healthcheck(t)
+	statusCode, healthCheckResponse, err := healthcheck()
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -29,8 +29,8 @@ func TestScenario(t *testing.T) {
 	userID := uuid.New().String()
 	userToken := uuid.New().String()
 
-	// 新規登録することができる
-	statusCode, signUpResponse, err := signUp(t, userID, userToken)
+	// 新規登録ができる
+	statusCode, signUpResponse, err := userSignUp(userID, userToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -38,9 +38,46 @@ func TestScenario(t *testing.T) {
 	assert.Equal(t, "Sign Up Success!", signUpResponse.Message)
 
 	// ユーザー情報を取得できる
+	statusCode, userInfoResponse, err := userInfo(userID, userToken)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	assert.Equal(t, statusCode, 200)
+	assert.Equal(t, userInfoResponse.UserID, userID)
+	assert.NotEqual(t, userInfoResponse.UserToken, userToken)
+
+	// アラームの情報を生成
+	alarmID := uuid.New().String()
+	alarm := entity.AlarmRequest{
+		AlarmID:      alarmID,
+		UserID:       userID,
+		AlarmType:    "VOIP_NOTIFICATION",
+		AlarmEnable:  true,
+		AlarmName:    "alarmName",
+		AlarmHour:    12,
+		AlarmMinute:  30,
+		CharaID:      "",
+		CharaName:    "charaName",
+		VoiceFileURL: "voiceFileURL",
+		Sunday:       true,
+		Monday:       false,
+		Tuesday:      true,
+		Wednesday:    false,
+		Thursday:     true,
+		Friday:       false,
+		Saturday:     true,
+	}
+
+	// アラームを追加
+	statusCode, alarmAddResponse, err := alarmAdd(userID, userToken, alarm)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	assert.Equal(t, statusCode, 200)
+	assert.Equal(t, "アラーム追加完了!", alarmAddResponse.Message)
 
 	// 退会できる
-	statusCode, withdrawResponse, err := withdraw(t, userID, userToken)
+	statusCode, withdrawResponse, err := userWithdraw(userID, userToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -49,7 +86,7 @@ func TestScenario(t *testing.T) {
 }
 
 // Get: /healthcheck
-func healthcheck(t *testing.T) (int, entity.MessageResponse, error) {
+func healthcheck() (int, entity.MessageResponse, error) {
 	response, err := http.Get(Endpoint + "/healthcheck")
 	if err != nil {
 		return response.StatusCode, entity.MessageResponse{}, err
@@ -70,7 +107,7 @@ func healthcheck(t *testing.T) (int, entity.MessageResponse, error) {
 }
 
 // Post: /user/signup
-func signUp(t *testing.T, userID string, userToken string) (int, entity.MessageResponse, error) {
+func userSignUp(userID string, userToken string) (int, entity.MessageResponse, error) {
 	requestUrl := Endpoint + "/user/signup"
 
 	requestBody := &entity.WithdrawRequest{
@@ -103,7 +140,7 @@ func signUp(t *testing.T, userID string, userToken string) (int, entity.MessageR
 }
 
 // POST: /user/info
-func info(t *testing.T, userID string, userToken string) (int, entity.UserInfoResponse, error) {
+func userInfo(userID string, userToken string) (int, entity.UserInfoResponse, error) {
 	requestUrl := Endpoint + "/user/info"
 
 	request, err := http.NewRequest("POST", requestUrl, nil)
@@ -136,7 +173,7 @@ func info(t *testing.T, userID string, userToken string) (int, entity.UserInfoRe
 }
 
 // POST: /user/withdraw
-func withdraw(t *testing.T, userID string, userToken string) (int, entity.MessageResponse, error) {
+func userWithdraw(userID string, userToken string) (int, entity.MessageResponse, error) {
 	requestUrl := Endpoint + "/user/withdraw"
 
 	request, err := http.NewRequest("POST", requestUrl, nil)
@@ -166,4 +203,43 @@ func withdraw(t *testing.T, userID string, userToken string) (int, entity.Messag
 	}
 
 	return response.StatusCode, signUpResponse, nil
+}
+
+// POST: /alarm/add
+func alarmAdd(userID string, userToken string, alarm entity.AlarmRequest) (int, entity.MessageResponse, error) {
+	requestUrl := Endpoint + "/alarm/add"
+
+	requestBody := &entity.AlarmAddRequest{
+		Alarm: alarm,
+	}
+	jsonString, err := json.Marshal(requestBody)
+	if err != nil {
+		return 0, entity.MessageResponse{}, err
+	}
+
+	request, err := http.NewRequest("POST", requestUrl, bytes.NewBuffer([]byte(jsonString)))
+	if err != nil {
+		return 0, entity.MessageResponse{}, err
+	}
+	request.Header.Add("Content-Type", "application/json")
+	request.Header.Add("Authorization", createBasicAuthorizationHeader(userID, userToken))
+
+	client := &http.Client{}
+	response, err := client.Do(request)
+	if err != nil {
+		return response.StatusCode, entity.MessageResponse{}, err
+	}
+
+	responseBody, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return response.StatusCode, entity.MessageResponse{}, err
+	}
+
+	var userInfoResponse entity.MessageResponse
+	err = json.Unmarshal(responseBody, &userInfoResponse)
+	if err != nil {
+		return response.StatusCode, entity.MessageResponse{}, err
+	}
+
+	return response.StatusCode, userInfoResponse, nil
 }
