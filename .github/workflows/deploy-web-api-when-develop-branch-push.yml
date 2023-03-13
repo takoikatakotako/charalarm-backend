@@ -1,8 +1,8 @@
 # Developブランチプッシュ時にWebAPIをデプロイ
-name: Deploy WebA PI when Develop branch push
+name: DeployWebAPIWhenDevelopBranchPush
 
 on:
-  pull_request:
+  push:
     branches: [ develop ]
 
 env:
