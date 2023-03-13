@@ -1,8 +1,9 @@
-name: Development Build
-# DevelopmentのBuildしてS3にバイナリをアップロードする
+# Developブランチプッシュ時にWebAPIをデプロイ
+name: Deploy WebA PI when Develop branch push
 
 on:
-  workflow_dispatch:
+  pull_request:
+    branches: [ develop ]
 
 env:
   APPLICATION_VERSION: 0.0.1
@@ -10,7 +11,7 @@ env:
 
 jobs:
   test:
-    name: Build
+    name: Build and Deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -22,10 +23,6 @@ jobs:
         with:
           go-version: 1.16.2
 
-      - name: Build
-        run: |
-          cd script && sh build.sh
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -33,6 +30,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-1
 
-      - name: Deploy to S3
+      - name: Build and Deploy
         run: |
-          aws s3 sync application/build s3://$S3_BUCKET_NAME/$APPLICATION_VERSION --exact-timestamps --delete
+          cd script && sh build-deploy.sh
