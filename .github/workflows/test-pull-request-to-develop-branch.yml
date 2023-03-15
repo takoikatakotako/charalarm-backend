@@ -1,5 +1,5 @@
-name: DevelopTest
-# Developブランチのプッシュ時のテスト
+# Developブランチへのプルリクエストのテスト
+name: TestPullRequestToDevelopBranch
 
 on:
   workflow_dispatch:
