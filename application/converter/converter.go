@@ -68,6 +68,70 @@ func DatabaseAlarmToEntityAlarm(alarm database.Alarm) request.Alarm {
 	}
 }
 
+func DatabaseCharaListToResponseCharaList(charaList []database.Chara) []response.Chara {
+	var responseCharaList []response.Chara
+	for i := 0; i < len(charaList); i++ {
+		responseChara := databaseCharaToResponseChara(charaList[i])
+		responseCharaList = append(responseCharaList, responseChara)
+	}
+	return responseCharaList
+}
+
+func databaseCharaToResponseChara(databaseChara database.Chara) response.Chara {
+	return response.Chara{
+		CharaID:          databaseChara.CharaID,
+		CharaEnable:      databaseChara.CharaEnable,
+		CharaName:        databaseChara.CharaName,
+		CharaDescription: databaseChara.CharaDescription,
+		CharaProfiles:    databaseCharaProfileListToResponseCharaProfileList(databaseChara.CharaProfiles),
+		CharaResource:    databaseCharaResourceToResponseCharaResource(databaseChara.CharaResource),
+		CharaExpression:  databaseCharaExpressionMapToResponseCharaExpressionMap(databaseChara.CharaExpression),
+		CharaCall:        databaseCharaCallToResponseCharaCall(databaseChara.CharaCall),
+	}
+}
+
+func databaseCharaProfileListToResponseCharaProfileList(databaseCharaProfileList []database.CharaProfile) []response.CharaProfile {
+	var responseCharaList []response.CharaProfile
+	for i := 0; i < len(databaseCharaProfileList); i++ {
+		responseCharaProfile := databaseCharaProfileToResponseCharaProfile(databaseCharaProfileList[i])
+		responseCharaList = append(responseCharaList, responseCharaProfile)
+	}
+	return responseCharaList
+}
+
+func databaseCharaProfileToResponseCharaProfile(databaseCharaProfile database.CharaProfile) response.CharaProfile {
+	return response.CharaProfile{
+		Title: databaseCharaProfile.Title,
+		Name:  databaseCharaProfile.Name,
+		URL:   databaseCharaProfile.URL,
+	}
+}
+
+func databaseCharaResourceToResponseCharaResource(databaseCharaResource database.CharaResource) response.CharaResource {
+	return response.CharaResource{
+		Images: databaseCharaResource.Images,
+		Voices: databaseCharaResource.Voices,
+	}
+}
+
+func databaseCharaExpressionMapToResponseCharaExpressionMap(databaseCharaExpressionMap map[string]database.CharaExpression) map[string]response.CharaExpression {
+	var responseCharaExpressionMap map[string]response.CharaExpression
+	for k, v := range databaseCharaExpressionMap {
+		responseCharaExpression := response.CharaExpression{
+			Images: v.Images,
+			Voices: v.Voices,
+		}
+		responseCharaExpressionMap[k] = responseCharaExpression
+	}
+	return responseCharaExpressionMap
+}
+
+func databaseCharaCallToResponseCharaCall(databaseCharaCall database.CharaCall) response.CharaCall {
+	return response.CharaCall{
+		Voices: databaseCharaCall.Voices,
+	}
+}
+
 func DatabaseAlarmToResponseAlarm(alarm database.Alarm) response.Alarm {
 	return response.Alarm{
 		AlarmID:      alarm.ID,
