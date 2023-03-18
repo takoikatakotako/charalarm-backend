@@ -1,7 +1,8 @@
-# Developブランチプッシュ時にWebAPIをデプロイ
-name: DeployWebAPIWhenDevelopBranchPush
+# Sandbox環境にWebAPIをデプロイ
+name: DeployWebAPInSandbox
 
 on:
+  workflow_dispatch:
   push:
     branches: [ develop ]
 
