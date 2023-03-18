@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -19,6 +20,12 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	body := event.Body
 	req := request.UserSignUp{}
 
+	fmt.Println("-------")
+	fmt.Println(ctx)
+	fmt.Println(event)
+	fmt.Println(body)
+	fmt.Println("-------")
+
 	// Decode Body
 	if err := json.Unmarshal([]byte(body), &req); err != nil {
 		return handler.FailureResponse(http.StatusBadRequest, message.INVALID_REQUEST_PARAMETER)
@@ -32,6 +39,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	// Signup
 	s := service.UserService{Repository: repository.DynamoDBRepository{}}
 	if err := s.Signup(userID, authToken, ipAddress); err != nil {
+		fmt.Println(err)
 		return handler.FailureResponse(http.StatusBadRequest, message.USER_SIGNUP_FAILURE)
 	}
 
