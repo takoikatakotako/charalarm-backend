@@ -75,7 +75,7 @@ ls | grep -v -E '.zip$' | xargs rm -r
 ################################################################
 # Upload
 ################################################################
-aws s3 sync application/build s3://$S3_BUCKET_NAME/$APPLICATION_VERSION --exact-timestamps --delete
+aws s3 sync . s3://$S3_BUCKET_NAME/$APPLICATION_VERSION --exact-timestamps --delete
 
 
 
