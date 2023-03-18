@@ -1,7 +1,11 @@
-#!/bin/bash -eu
+#!/bin/bash
+
+set -eu
 
 cwd=`dirname $0`
 cd $cwd/../application
+
+pwd
 
 ################################################################
 # Build
@@ -65,7 +69,6 @@ zip user_withdraw.zip user_withdraw
 # Clear
 ################################################################
 ls | grep -v -E '.zip$' | xargs rm -r
-cd $cwd
 
 
 

@@ -28,7 +28,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	// Decode Body
 	if err := json.Unmarshal([]byte(body), &req); err != nil {
-		return handler.FailureResponse(http.StatusBadRequest, message.INVALID_REQUEST_PARAMETER)
+		return handler.FailureResponse(http.StatusBadRequest, message.InvalidRequestParameter)
 	}
 
 	// Get Parameters
