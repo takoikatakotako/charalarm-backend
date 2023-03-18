@@ -37,8 +37,8 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	}
 
 	// Success
-	response := response.MessageResponse{Message: "Withdraw Success!"}
-	jsonBytes, _ := json.Marshal(response)
+	res := response.MessageResponse{Message: "Withdraw Success!"}
+	jsonBytes, _ := json.Marshal(res)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
 		StatusCode: http.StatusOK,
