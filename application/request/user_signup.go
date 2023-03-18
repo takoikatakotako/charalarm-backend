@@ -2,5 +2,5 @@ package request
 
 type UserSignUp struct {
 	UserID    string `json:"userID"`
-	UserToken string `json:"userToken"`
+	AuthToken string `json:"authToken"`
 }

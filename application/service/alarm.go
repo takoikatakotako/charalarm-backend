@@ -50,15 +50,15 @@ func (s *AlarmService) AddAlarm(userID string, authToken string, alarm request.A
 }
 
 // EditAlarm アラームを更新
-func (s *AlarmService) EditAlarm(userID string, userToken string, alarm request.Alarm) error {
+func (s *AlarmService) EditAlarm(userID string, authToken string, alarm request.Alarm) error {
 	// ユーザーを取得
 	anonymousUser, err := s.Repository.GetUser(userID)
 	if err != nil {
 		return err
 	}
 
-	// UserID, UserTokenが一致するか確認する
-	if anonymousUser.UserID != userID || anonymousUser.AuthToken != userToken {
+	// UserID, AuthTokenが一致するか確認する
+	if anonymousUser.UserID != userID || anonymousUser.AuthToken != authToken {
 		return errors.New(message.AUTHENTICATION_FAILURE)
 	}
 
@@ -72,15 +72,15 @@ func (s *AlarmService) EditAlarm(userID string, userToken string, alarm request.
 }
 
 // DeleteAlarm アラームを削除
-func (s *AlarmService) DeleteAlarm(userID string, userToken string, alarmID string) error {
+func (s *AlarmService) DeleteAlarm(userID string, authToken string, alarmID string) error {
 	// ユーザーを取得
 	anonymousUser, err := s.Repository.GetUser(userID)
 	if err != nil {
 		return err
 	}
 
-	// UserID, UserTokenが一致するか確認する
-	if anonymousUser.UserID != userID || anonymousUser.AuthToken != userToken {
+	// UserID, AuthTokenが一致するか確認する
+	if anonymousUser.UserID != userID || anonymousUser.AuthToken != authToken {
 		return errors.New(message.AUTHENTICATION_FAILURE)
 	}
 
@@ -89,15 +89,15 @@ func (s *AlarmService) DeleteAlarm(userID string, userToken string, alarmID stri
 }
 
 // GetAlarmList アラームを取得
-func (s *AlarmService) GetAlarmList(userID string, userToken string) ([]response.Alarm, error) {
+func (s *AlarmService) GetAlarmList(userID string, authToken string) ([]response.Alarm, error) {
 	// ユーザーを取得
 	anonymousUser, err := s.Repository.GetUser(userID)
 	if err != nil {
 		return []response.Alarm{}, err
 	}
 
-	// UserID, UserTokenが一致するか確認する
-	if anonymousUser.UserID == userID && anonymousUser.AuthToken == userToken {
+	// UserID, AuthTokenが一致するか確認する
+	if anonymousUser.UserID == userID && anonymousUser.AuthToken == authToken {
 		databaseAlarmList, err := s.Repository.GetAlarmList(userID)
 		if err != nil {
 			return []response.Alarm{}, err

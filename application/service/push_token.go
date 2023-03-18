@@ -21,7 +21,7 @@ func (s *PushTokenService) AddIOSPushToken(userID string, authToken string, push
 		return err
 	}
 
-	// UserID, UserTokenが一致するか確認する
+	// UserID, AuthTokenが一致するか確認する
 	if user.UserID == userID && user.AuthToken == authToken {
 		// Nothing
 	} else {
@@ -45,15 +45,15 @@ func (s *PushTokenService) AddIOSPushToken(userID string, authToken string, push
 	return s.DynamoDBRepository.InsertUser(user)
 }
 
-func (s *PushTokenService) AddIOSVoipPushToken(userID string, userToken string, pushToken string) error {
+func (s *PushTokenService) AddIOSVoipPushToken(userID string, authToken string, pushToken string) error {
 	// ユーザーを取得
 	anonymousUser, err := s.DynamoDBRepository.GetUser(userID)
 	if err != nil {
 		return err
 	}
 
-	// UserID, UserTokenが一致するか確認する
-	if anonymousUser.UserID == userID && anonymousUser.AuthToken == userToken {
+	// UserID, AuthTokenが一致するか確認する
+	if anonymousUser.UserID == userID && anonymousUser.AuthToken == authToken {
 		// Nothing
 	} else {
 		return errors.New(message.AUTHENTICATION_FAILURE)

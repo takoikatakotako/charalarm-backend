@@ -27,10 +27,10 @@ func TestScenario(t *testing.T) {
 
 	// ユーザーの認証情報を生成
 	userID := uuid.New().String()
-	userToken := uuid.New().String()
+	authToken := uuid.New().String()
 
 	// 新規登録ができる
-	statusCode, signUpResponse, err := userSignUp(userID, userToken)
+	statusCode, signUpResponse, err := userSignUp(userID, authToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -38,13 +38,13 @@ func TestScenario(t *testing.T) {
 	assert.Equal(t, "Sign Up Success!", signUpResponse.Message)
 
 	// ユーザー情報を取得できる
-	statusCode, userInfoResponse, err := userInfo(userID, userToken)
+	statusCode, userInfoResponse, err := userInfo(userID, authToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 	assert.Equal(t, statusCode, 200)
 	assert.Equal(t, userInfoResponse.UserID, userID)
-	assert.NotEqual(t, userInfoResponse.UserToken, userToken)
+	assert.NotEqual(t, userInfoResponse.AuthToken, authToken)
 
 	// アラームの情報を生成
 	alarmID := uuid.New().String()
@@ -69,7 +69,7 @@ func TestScenario(t *testing.T) {
 	}
 
 	// アラームを追加
-	statusCode, alarmAddResponse, err := alarmAdd(userID, userToken, alarm)
+	statusCode, alarmAddResponse, err := alarmAdd(userID, authToken, alarm)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -77,7 +77,7 @@ func TestScenario(t *testing.T) {
 	assert.Equal(t, "アラーム追加完了!", alarmAddResponse.Message)
 
 	// 退会できる
-	statusCode, withdrawResponse, err := userWithdraw(userID, userToken)
+	statusCode, withdrawResponse, err := userWithdraw(userID, authToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -107,12 +107,12 @@ func healthcheck() (int, entity.MessageResponse, error) {
 }
 
 // Post: /user/signup
-func userSignUp(userID string, userToken string) (int, entity.MessageResponse, error) {
+func userSignUp(userID string, authToken string) (int, entity.MessageResponse, error) {
 	requestUrl := Endpoint + "/user/signup"
 
 	requestBody := &entity.WithdrawRequest{
 		UserID:    userID,
-		UserToken: userToken,
+		AuthToken: authToken,
 	}
 
 	jsonString, err := json.Marshal(requestBody)
@@ -140,7 +140,7 @@ func userSignUp(userID string, userToken string) (int, entity.MessageResponse, e
 }
 
 // POST: /user/info
-func userInfo(userID string, userToken string) (int, entity.UserInfoResponse, error) {
+func userInfo(userID string, authToken string) (int, entity.UserInfoResponse, error) {
 	requestUrl := Endpoint + "/user/info"
 
 	request, err := http.NewRequest("POST", requestUrl, nil)
@@ -148,7 +148,7 @@ func userInfo(userID string, userToken string) (int, entity.UserInfoResponse, er
 		return 0, entity.UserInfoResponse{}, err
 	}
 	request.Header.Add("Content-Type", "application/json")
-	request.Header.Add("Authorization", createBasicAuthorizationHeader(userID, userToken))
+	request.Header.Add("Authorization", createBasicAuthorizationHeader(userID, authToken))
 
 	client := &http.Client{}
 	response, err := client.Do(request)
@@ -173,7 +173,7 @@ func userInfo(userID string, userToken string) (int, entity.UserInfoResponse, er
 }
 
 // POST: /user/withdraw
-func userWithdraw(userID string, userToken string) (int, entity.MessageResponse, error) {
+func userWithdraw(userID string, authToken string) (int, entity.MessageResponse, error) {
 	requestUrl := Endpoint + "/user/withdraw"
 
 	request, err := http.NewRequest("POST", requestUrl, nil)
@@ -181,7 +181,7 @@ func userWithdraw(userID string, userToken string) (int, entity.MessageResponse,
 		return 0, entity.MessageResponse{}, err
 	}
 	request.Header.Add("Content-Type", "application/json")
-	request.Header.Add("Authorization", createBasicAuthorizationHeader(userID, userToken))
+	request.Header.Add("Authorization", createBasicAuthorizationHeader(userID, authToken))
 
 	client := &http.Client{}
 	response, err := client.Do(request)
@@ -206,7 +206,7 @@ func userWithdraw(userID string, userToken string) (int, entity.MessageResponse,
 }
 
 // POST: /alarm/add
-func alarmAdd(userID string, userToken string, alarm entity.AlarmRequest) (int, entity.MessageResponse, error) {
+func alarmAdd(userID string, authToken string, alarm entity.AlarmRequest) (int, entity.MessageResponse, error) {
 	requestUrl := Endpoint + "/alarm/add"
 
 	requestBody := &entity.AlarmAddRequest{
@@ -222,7 +222,7 @@ func alarmAdd(userID string, userToken string, alarm entity.AlarmRequest) (int, 
 		return 0, entity.MessageResponse{}, err
 	}
 	request.Header.Add("Content-Type", "application/json")
-	request.Header.Add("Authorization", createBasicAuthorizationHeader(userID, userToken))
+	request.Header.Add("Authorization", createBasicAuthorizationHeader(userID, authToken))
 
 	client := &http.Client{}
 	response, err := client.Do(request)

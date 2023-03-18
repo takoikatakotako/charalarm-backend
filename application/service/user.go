@@ -87,7 +87,7 @@ func (s *UserService) Withdraw(userID string, authToken string) error {
 func (s *UserService) convertDatabaseUserToEntityUser(user database.User) entity.User {
 	return entity.User{
 		UserID:           user.UserID,
-		UserToken:        user.AuthToken,
+		AuthToken:        user.AuthToken,
 		IOSVoIPPushToken: entity.PushToken{},
 		IOSPushToken:     entity.PushToken{},
 	}

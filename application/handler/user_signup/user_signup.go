@@ -17,21 +17,21 @@ import (
 
 func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	body := event.Body
-	request := request.UserSignUp{}
+	req := request.UserSignUp{}
 
 	// Decode Body
-	if err := json.Unmarshal([]byte(body), &request); err != nil {
+	if err := json.Unmarshal([]byte(body), &req); err != nil {
 		return handler.FailureResponse(http.StatusBadRequest, message.INVALID_REQUEST_PARAMETER)
 	}
 
 	// Get Parameters
-	userID := request.UserID
-	userToken := request.UserToken
+	userID := req.UserID
+	authToken := req.AuthToken
 	ipAddress := event.RequestContext.Identity.SourceIP
 
 	// Signup
 	s := service.UserService{Repository: repository.DynamoDBRepository{}}
-	if err := s.Signup(userID, userToken, ipAddress); err != nil {
+	if err := s.Signup(userID, authToken, ipAddress); err != nil {
 		return handler.FailureResponse(http.StatusBadRequest, message.USER_SIGNUP_FAILURE)
 	}
 
