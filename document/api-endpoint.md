@@ -16,13 +16,13 @@ $ curl https://api.sandbox.swiswiswift.com/healthcheck | jq
 ## POST: /user/signup
 
 ユーザーの新規登録を行うエンドポイントです。
-`userID`, `userToken` はクライアント側で生成したUUIDを使用します。
+`userID`, `authToken` はクライアント側で生成したUUIDを使用します。
 生成したUUIDはクライアント側のKeyChainなどで保持します。
 
 ```
 curl -X POST https://api.sandbox.swiswiswift.com/user/signup \
     -H 'Content-Type: application/json' \
-    -d '{"userID":"20f0c1cd-9c2a-411a-878c-9bd0bb15dc35","userToken":"038a5e28-15ce-46b4-8f46-4934202faa85"}' | jq
+    -d '{"userID":"20f0c1cd-9c2a-411a-878c-9bd0bb15dc35","authToken":"038a5e28-15ce-46b4-8f46-4934202faa85"}' | jq
 ```
 
 成功時のレスポンスです。登録済みのユーザーでもこのレスポンスを返します。
@@ -33,7 +33,7 @@ curl -X POST https://api.sandbox.swiswiswift.com/user/signup \
 }
 ```
 
-失敗時のレスポンスです。`userID`, `userToken` の形式がUUIDではない場合や予期せぬエラーが起きた場合はこのレスポンスを返します。
+失敗時のレスポンスです。`userID`, `authToken` の形式がUUIDではない場合や予期せぬエラーが起きた場合はこのレスポンスを返します。
 
 ```
 {
@@ -80,7 +80,7 @@ curl -X POST https://api.sandbox.swiswiswift.com/user/info \
 ```
 {
   "userID": "20f0c1cd-9c2a-411a-878c-9bd0bb15dc35",
-  "userToken": "20**********************************",
+  "authToken": "20**********************************",
   "iosVoIPPushTokens": {
     "token": "",
     "snsEndpointArn": ""
@@ -159,7 +159,7 @@ curl -X POST https://api.sandbox.swiswiswift.com/alarm/delete \
 
 curl -X POST \
   -H "Content-Type: application/json" \
-  -d '{"userId": "okki-", "userToken":"password"}' \
+  -d '{"userId": "okki-", "authToken":"password"}' \
   https://api.sandbox.swiswiswift.com/user/signup/anonymous
 
 

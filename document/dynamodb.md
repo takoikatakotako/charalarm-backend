@@ -10,7 +10,7 @@ DynamoDBのテーブル構造についてです。
 ```
 {
   "userID":"{UUID}",
-  "userToken":"{UUID}",
+  "authToken":"{UUID}",
   "iosVoIPPushTokens":{
     "token":"{iOSのVoIPプッシュ通知のトークン}",
     "snsEndpointArn":"{iOSのVoIPプッシュ通知のPlatformApplicationのエンドポイント}"

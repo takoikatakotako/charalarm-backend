@@ -2,7 +2,7 @@ package response
 
 type UserInfoResponse struct {
 	UserID           string    `json:"userID"`
-	UserToken        string    `json:"userToken"`
+	AuthToken        string    `json:"authToken"`
 	IOSVoIPPushToken PushToken `json:"iosVoIPPushTokens"`
 	IOSPushToken     PushToken `json:"iosPushTokens"`
 }

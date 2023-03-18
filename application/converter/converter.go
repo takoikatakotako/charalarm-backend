@@ -9,7 +9,7 @@ import (
 func DatabaseUserToResponseUserInfo(user database.User) response.UserInfoResponse {
 	return response.UserInfoResponse{
 		UserID:           user.UserID,
-		UserToken:        maskUserToken(user.AuthToken),
+		AuthToken:        maskAuthToken(user.AuthToken),
 		IOSPushToken:     DatabasePushTokenToResponsePushToken(user.IOSVoIPPushToken),
 		IOSVoIPPushToken: DatabasePushTokenToResponsePushToken(user.IOSVoIPPushToken),
 	}
@@ -155,14 +155,14 @@ func DatabaseAlarmToResponseAlarm(alarm database.Alarm) response.Alarm {
 }
 
 // 文字を*に変換
-func maskUserToken(userToken string) string {
-	length := len(userToken)
+func maskAuthToken(authToken string) string {
+	length := len(authToken)
 	var r string = ""
 	for i := 0; i < length; i++ {
 		if i == 0 {
-			r += userToken[0:1]
+			r += authToken[0:1]
 		} else if i == 1 {
-			r += userToken[1:2]
+			r += authToken[1:2]
 		} else {
 			r += "*"
 		}
