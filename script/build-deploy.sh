@@ -1,7 +1,11 @@
-#!/bin/bash -eu
+#!/bin/bash
+
+set -eu
 
 cwd=`dirname $0`
 cd $cwd/../application
+
+pwd
 
 ################################################################
 # Build
@@ -65,14 +69,13 @@ zip user_withdraw.zip user_withdraw
 # Clear
 ################################################################
 ls | grep -v -E '.zip$' | xargs rm -r
-cd $cwd
 
 
 
 ################################################################
 # Upload
 ################################################################
-aws s3 sync application/build s3://$S3_BUCKET_NAME/$APPLICATION_VERSION --exact-timestamps --delete
+aws s3 sync . s3://$S3_BUCKET_NAME/$APPLICATION_VERSION --exact-timestamps --delete
 
 
 
