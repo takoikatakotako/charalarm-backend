@@ -10,6 +10,8 @@ const (
 	USER_SIGNUP_SUCCESS = "Sign Up Success!"
 	USER_SIGNUP_FAILURE = "Sign Up Failure..."
 
+	CharaListFailure = "Get Chara List Failure..."
+
 	// InvalidRequestParameter
 	// リクエストパラメーターが不正の場合
 	InvalidRequestParameter = "Invalid Request Parameter"
