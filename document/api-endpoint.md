@@ -1,3 +1,9 @@
+# Charalarm API
+
+xxxxx
+
+
+# /
 
 ## GET: /healthcheck
 
@@ -12,6 +18,8 @@ $ curl https://api.sandbox.swiswiswift.com/healthcheck | jq
   "message": "Healthy!"
 }
 ```
+
+# /user
 
 ## POST: /user/signup
 
@@ -92,6 +100,7 @@ curl -X POST https://api.sandbox.swiswiswift.com/user/info \
 }
 ```
 
+# alarm
 
 ## POST: /alarm/list
 
@@ -141,11 +150,29 @@ curl -X POST https://api.sandbox.swiswiswift.com/alarm/delete \
 ```
 
 
+# chara
+
+## GET: /chara/list
+
+キャラ一覧を取得します。
+
+```
+curl -X GET https://api.sandbox.swiswiswift.com/chara/list \
+    -H 'Content-Type: application/json' \
+    -H "Authorization: Basic ${BASIC_AUTH_HEADER}" \
+    -d '{"alarmID":"45cd0ab2-941c-4015-9a0f-d49b2b3fb4a7"}' | jq
+```
+
+
+# push-token
+
 ## POST: /push-token/ios/push/add
 
 
 ## POST: /push-token/ios/voip-push/add
 
+
+# news
 
 ## GET: /news/list
 
