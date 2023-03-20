@@ -23,7 +23,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	fmt.Println(authorizationHeader)
 	fmt.Println("-------")
 
-	// parames
+	// params
 	userID, authToken, err := auth.Basic(authorizationHeader)
 	if err != nil {
 		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
