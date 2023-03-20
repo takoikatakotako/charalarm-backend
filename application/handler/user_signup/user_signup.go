@@ -40,11 +40,11 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	s := service.UserService{Repository: repository.DynamoDBRepository{}}
 	if err := s.Signup(userID, authToken, ipAddress); err != nil {
 		fmt.Println(err)
-		return handler.FailureResponse(http.StatusBadRequest, message.USER_SIGNUP_FAILURE)
+		return handler.FailureResponse(http.StatusBadRequest, message.UserSignupFailure)
 	}
 
 	// Success
-	res := response.MessageResponse{Message: message.USER_SIGNUP_SUCCESS}
+	res := response.MessageResponse{Message: message.UserSignupSuccess}
 	jsonBytes, _ := json.Marshal(res)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
