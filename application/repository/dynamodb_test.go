@@ -217,7 +217,7 @@ func TestInsertAndDelete(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 
 	alarm := createAlarm()
-	alarmID := alarm.ID
+	alarmID := alarm.AlarmID
 	userID := alarm.UserID
 
 	// Insert
@@ -317,8 +317,8 @@ func TestGetChara(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, chara.CharaID, "com.charalarm.yui")
-	assert.Equal(t, chara.CharaEnable, true)
-	assert.Equal(t, chara.CharaName, "井上結衣")
+	assert.Equal(t, chara.Enable, true)
+	assert.Equal(t, chara.Name, "井上結衣")
 	assert.Equal(t, chara.CharaID, "com.charalarm.yui")
 	assert.Equal(t, chara.CharaProfiles[0].Title, "イラストレーター")
 	assert.Equal(t, chara.CharaProfiles[0].Name, "さいもん")
@@ -373,7 +373,7 @@ func createAlarm() database.Alarm {
 	saturday := true
 
 	return database.Alarm{
-		ID:        alarmID,
+		AlarmID:   alarmID,
 		UserID:    userID,
 		Type:      alarmType,
 		Enable:    alarmEnable,

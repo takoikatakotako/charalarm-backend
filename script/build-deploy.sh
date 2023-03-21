@@ -92,6 +92,7 @@ aws lambda update-function-code --function-name alarm-list-post-function --s3-bu
 # batch
 
 # chara
+aws lambda update-function-code --function-name chara-list-get-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/chara_list.zip
 
 # healthcheck
 aws lambda update-function-code --function-name healthcheck-get-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/healthcheck.zip

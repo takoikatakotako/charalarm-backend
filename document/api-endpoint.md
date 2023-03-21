@@ -158,11 +158,46 @@ curl -X POST https://api.sandbox.swiswiswift.com/alarm/delete \
 
 ```
 curl -X GET https://api.sandbox.swiswiswift.com/chara/list \
-    -H 'Content-Type: application/json' \
-    -H "Authorization: Basic ${BASIC_AUTH_HEADER}" \
-    -d '{"alarmID":"45cd0ab2-941c-4015-9a0f-d49b2b3fb4a7"}' | jq
+    -H 'Content-Type: application/json' | jq
 ```
 
+```
+[
+  {
+    "charaID": "com.charalarm.yui",
+    "charaEnable": false,
+    "charaName": "井上結衣",
+    "charaDescription": "井上結衣です。プログラマーとして働いていてこのアプリを作っています。このアプリをたくさん使ってくれると嬉しいです、よろしくね！",
+    "charaProfiles": [],
+    "charaResource": {
+      "images": [
+        "thumbnail.png",
+        "normal.png"
+      ],
+      "voices": [
+        "self-introduction.caf",
+        "com-charalarm-yui-0.caf"
+      ]
+    },
+    "charaExpression": {
+      "normal": {
+        "images": [
+          "normal.png"
+        ],
+        "voices": [
+          "com-charalarm-yui-1.caf"
+        ]
+      }
+    },
+    "charaCall": {
+      "voices": [
+        "com-charalarm-yui-15.caf",
+        "com-charalarm-yui-16.caf"
+      ]
+    }
+  }
+]
+```
 
 # push-token
 
