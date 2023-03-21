@@ -438,7 +438,7 @@ func (d *DynamoDBRepository) GetChara(charaID string) (database.Chara, error) {
 
 	// クエリ実行
 	input := &dynamodb.GetItemInput{
-		TableName: aws.String(database.CHARA_TABLE_NAME),
+		TableName: aws.String(database.CharaTableName),
 		Key: map[string]types.AttributeValue{
 			database.CHARA_TABLE_CHARA_ID: &types.AttributeValueMemberS{
 				Value: charaID,
