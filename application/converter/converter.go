@@ -24,7 +24,7 @@ func DatabasePushTokenToResponsePushToken(pushToken database.PushToken) response
 
 func EntityAlarmToDatabaseAlarm(alarm request.Alarm) database.Alarm {
 	databaseAlarm := database.Alarm{
-		ID:            alarm.AlarmID,
+		AlarmID:       alarm.AlarmID,
 		UserID:        alarm.UserID,
 		Type:          alarm.AlarmType,
 		Enable:        alarm.AlarmEnable,
@@ -48,7 +48,7 @@ func EntityAlarmToDatabaseAlarm(alarm request.Alarm) database.Alarm {
 
 func DatabaseAlarmToEntityAlarm(alarm database.Alarm) request.Alarm {
 	return request.Alarm{
-		AlarmID:      alarm.ID,
+		AlarmID:      alarm.AlarmID,
 		UserID:       alarm.UserID,
 		AlarmType:    alarm.Type,
 		AlarmEnable:  alarm.Enable,
@@ -80,12 +80,12 @@ func DatabaseCharaListToResponseCharaList(charaList []database.Chara) []response
 func DatabaseCharaToResponseChara(databaseChara database.Chara) response.Chara {
 	return response.Chara{
 		CharaID:          databaseChara.CharaID,
-		CharaEnable:      databaseChara.CharaEnable,
-		CharaName:        databaseChara.CharaName,
-		CharaDescription: databaseChara.CharaDescription,
+		CharaEnable:      databaseChara.Enable,
+		CharaName:        databaseChara.Name,
+		CharaDescription: databaseChara.Description,
 		CharaProfiles:    databaseCharaProfileListToResponseCharaProfileList(databaseChara.CharaProfiles),
 		CharaResource:    databaseCharaResourceToResponseCharaResource(databaseChara.CharaResource),
-		CharaExpression:  databaseCharaExpressionMapToResponseCharaExpressionMap(databaseChara.CharaExpression),
+		CharaExpression:  databaseCharaExpressionMapToResponseCharaExpressionMap(databaseChara.CharaExpressions),
 		CharaCall:        databaseCharaCallToResponseCharaCall(databaseChara.CharaCall),
 	}
 }
@@ -135,7 +135,7 @@ func databaseCharaCallToResponseCharaCall(databaseCharaCall database.CharaCall) 
 
 func DatabaseAlarmToResponseAlarm(alarm database.Alarm) response.Alarm {
 	return response.Alarm{
-		AlarmID:      alarm.ID,
+		AlarmID:      alarm.AlarmID,
 		UserID:       alarm.UserID,
 		AlarmType:    alarm.Type,
 		AlarmEnable:  alarm.Enable,

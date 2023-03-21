@@ -1,18 +1,18 @@
 package database
 
 const (
-	CharaTableName       = "chara-table"
-	CHARA_TABLE_CHARA_ID = "charaID"
+	CharaTableName    = "chara-table"
+	CharaTableCharaID = "charaID"
 )
 
 type Chara struct {
 	CharaID          string                     `dynamodbav:"charaID"`
-	CharaEnable      bool                       `dynamodbav:"enable"`
-	CharaName        string                     `dynamodbav:"name"`
-	CharaDescription string                     `dynamodbav:"description"`
+	Enable           bool                       `dynamodbav:"enable"`
+	Name             string                     `dynamodbav:"name"`
+	Description      string                     `dynamodbav:"description"`
 	CharaProfiles    []CharaProfile             `dynamodbav:"profiles"`
 	CharaResource    CharaResource              `dynamodbav:"resources"`
-	CharaExpression  map[string]CharaExpression `dynamodbav:"expressions"`
+	CharaExpressions map[string]CharaExpression `dynamodbav:"expressions"`
 	CharaCall        CharaCall                  `dynamodbav:"calls"`
 }
 

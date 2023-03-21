@@ -16,10 +16,10 @@ func TestMaskAuthToken(t *testing.T) {
 
 func TestDatabaseCharaToResponseChara(t *testing.T) {
 	databaseChara := database.Chara{
-		CharaID:          uuid.NewString(),
-		CharaEnable:      false,
-		CharaName:        "Snorlax",
-		CharaDescription: "Snorlax",
+		CharaID:     uuid.NewString(),
+		Enable:      false,
+		Name:        "Snorlax",
+		Description: "Snorlax",
 		CharaProfiles: []database.CharaProfile{
 			{
 				Title: "プログラマ",
@@ -31,7 +31,7 @@ func TestDatabaseCharaToResponseChara(t *testing.T) {
 			Images: []string{"image1.png", "image2.png"},
 			Voices: []string{"voice1.mp3", "voice2.mp3"},
 		},
-		CharaExpression: map[string]database.CharaExpression{
+		CharaExpressions: map[string]database.CharaExpression{
 			"normal": {
 				Images: []string{"normal1.png", "normal2.png"},
 				Voices: []string{"voice1.mp3", "voice2.mp3"},

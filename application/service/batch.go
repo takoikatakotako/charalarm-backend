@@ -35,7 +35,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 		return errors.New("ボイスがないぞ")
 	}
 	randomCharaVoiceIndex := rand.Intn(randomCharaCallVoicesCount)
-	randomCharaName := randomChara.CharaName
+	randomCharaName := randomChara.Name
 	randomVoiceFileURL := randomChara.CharaCall.Voices[randomCharaVoiceIndex]
 
 	// ランダム用のメモを作成
@@ -46,7 +46,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	for _, alarm := range alarmList {
 		// AlarmInfoに変換
 		alarmInfo := entity.AlarmInfo{}
-		alarmInfo.AlarmID = alarm.ID
+		alarmInfo.AlarmID = alarm.AlarmID
 		alarmInfo.UserID = alarm.UserID
 
 		// randomCharaNameAndVoiceFileURL にキーがあるか確認する
@@ -70,7 +70,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 				return errors.New("ボイスがないぞ")
 			}
 			charaCallVoiceIndex := rand.Intn(charaCallVoicesCount)
-			randomCharaNameAndVoiceFileURL[alarm.CharaID] = entity.CharaNameAndVoiceFileURL{CharaName: chara.CharaName, VoiceFileURL: chara.CharaCall.Voices[charaCallVoiceIndex]}
+			randomCharaNameAndVoiceFileURL[alarm.CharaID] = entity.CharaNameAndVoiceFileURL{CharaName: chara.Name, VoiceFileURL: chara.CharaCall.Voices[charaCallVoiceIndex]}
 
 			// XXX
 			alarmInfo.CharaName = val.CharaName

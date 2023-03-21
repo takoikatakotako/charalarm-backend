@@ -9,7 +9,7 @@ import (
 
 func ValidateAlarm(alarm database.Alarm) error {
 	// AlarmID
-	if !IsValidUUID(alarm.ID) {
+	if !IsValidUUID(alarm.AlarmID) {
 		return errors.New(message.INVAlID_VALUE + ": AlarmID")
 	}
 

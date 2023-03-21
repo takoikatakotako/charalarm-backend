@@ -2,9 +2,14 @@ package database
 
 import "fmt"
 
+const (
+	AlarmTableName    = "alarm-table"
+	AlarmTableAlarmID = "alarmID"
+)
+
 type Alarm struct {
-	ID     string `dynamodbav:"alarmID"`
-	UserID string `dynamodbav:"userID"`
+	AlarmID string `dynamodbav:"alarmID"`
+	UserID  string `dynamodbav:"userID"`
 
 	// REMOTE_NOTIFICATION VOIP_NOTIFICATION
 	Type   string `dynamodbav:"type"`
