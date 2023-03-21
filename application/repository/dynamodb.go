@@ -460,6 +460,8 @@ func (d *DynamoDBRepository) GetChara(charaID string) (database.Chara, error) {
 	return chara, nil
 }
 
+// GetCharaList
+// キャラ一覧を取得
 func (d *DynamoDBRepository) GetCharaList() ([]database.Chara, error) {
 	// クライアント作成
 	client, err := d.createDynamoDBClient()
@@ -492,8 +494,8 @@ func (d *DynamoDBRepository) GetCharaList() ([]database.Chara, error) {
 	return charaList, nil
 }
 
-// ランダムにキャラを1つ取得する
-// キャラ数が増えてきた場合は改良する
+// GetRandomChara
+// ランダムにキャラを1つ取得する, キャラ数が増えてきた場合は改良する
 func (d *DynamoDBRepository) GetRandomChara() (database.Chara, error) {
 	// クライアント作成
 	client, err := d.createDynamoDBClient()

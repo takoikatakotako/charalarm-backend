@@ -43,7 +43,7 @@ awslocal dynamodb create-table \
         ]"
 
 
-# chara-talbe
+# chara-table
 awslocal dynamodb create-table \
     --table-name chara-table \
     --attribute-definitions AttributeName=charaID,AttributeType=S \
