@@ -79,14 +79,14 @@ func DatabaseCharaListToResponseCharaList(charaList []database.Chara) []response
 
 func DatabaseCharaToResponseChara(databaseChara database.Chara) response.Chara {
 	return response.Chara{
-		CharaID:          databaseChara.CharaID,
-		CharaEnable:      databaseChara.Enable,
-		CharaName:        databaseChara.Name,
-		CharaDescription: databaseChara.Description,
-		CharaProfiles:    databaseCharaProfileListToResponseCharaProfileList(databaseChara.CharaProfiles),
-		CharaResource:    databaseCharaResourceToResponseCharaResource(databaseChara.CharaResource),
-		CharaExpression:  databaseCharaExpressionMapToResponseCharaExpressionMap(databaseChara.CharaExpressions),
-		CharaCall:        databaseCharaCallToResponseCharaCall(databaseChara.CharaCall),
+		CharaID:     databaseChara.CharaID,
+		Enable:      databaseChara.Enable,
+		Name:        databaseChara.Name,
+		Description: databaseChara.Description,
+		Profiles:    databaseCharaProfileListToResponseCharaProfileList(databaseChara.CharaProfiles),
+		Resource:    databaseCharaResourceToResponseCharaResource(databaseChara.CharaResource),
+		Expression:  databaseCharaExpressionMapToResponseCharaExpressionMap(databaseChara.CharaExpressions),
+		CharaCall:   databaseCharaCallToResponseCharaCall(databaseChara.CharaCall),
 	}
 }
 

@@ -1,14 +1,14 @@
 package response
 
 type Chara struct {
-	CharaID          string                     `json:"charaID"`
-	CharaEnable      bool                       `json:"charaEnable"`
-	CharaName        string                     `json:"charaName"`
-	CharaDescription string                     `json:"charaDescription"`
-	CharaProfiles    []CharaProfile             `json:"charaProfiles"`
-	CharaResource    CharaResource              `json:"charaResource"`
-	CharaExpression  map[string]CharaExpression `json:"charaExpression"`
-	CharaCall        CharaCall                  `json:"charaCall"`
+	CharaID     string                     `json:"charaID"`
+	Enable      bool                       `json:"enable"`
+	Name        string                     `json:"name"`
+	Description string                     `json:"description"`
+	Profiles    []CharaProfile             `json:"profiles"`
+	Resource    CharaResource              `json:"resources"`
+	Expression  map[string]CharaExpression `json:"expressions"`
+	CharaCall   CharaCall                  `json:"calls"`
 }
 
 type CharaProfile struct {
