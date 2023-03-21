@@ -1,7 +1,7 @@
 #!/bin/bash
 set -x
 
-# user-talbe
+# user-tabled
 awslocal dynamodb create-table \
     --table-name user-table \
     --attribute-definitions AttributeName=userID,AttributeType=S \
