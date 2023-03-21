@@ -8,6 +8,11 @@ module "dynamodb" {
   source = "./dynamodb"
 }
 
+module "resource" {
+  source      = "./resource"
+  bucket_name = local.resource_bucket_name
+}
+
 module "sqs" {
   source                     = "./sqs"
   worker_lambda_function_arn = module.worker.worker_lambda_function_arn

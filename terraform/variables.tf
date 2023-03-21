@@ -8,6 +8,7 @@ locals {
       api_domain              = "api.sandbox.swiswiswift.com"
       api_acm_certificate_arn = "arn:aws:acm:ap-northeast-1:397693451628:certificate/55e559af-bf12-427f-8740-5958afbc7788"
       application_bucket_name = "application.charalarm.sandbox.swiswiswift.com"
+      resource_bucket_name    = "resource.charalarm.sandbox.swiswiswift.com"
     }
 
     production = {
@@ -18,6 +19,7 @@ locals {
       api_domain              = "api.sandbox.swiswiswift.com"
       api_acm_certificate_arn = "arn:aws:acm:us-east-1:397693451628:certificate/cb4062b6-32b4-48c4-9d46-58c7a906846e"
       application_bucket_name = "application.charalarm.com"
+      resource_bucket_name    = "resource.charalarm.com"
     }
   }
 
@@ -29,4 +31,5 @@ locals {
   api_acm_certificate_arn = local.config[terraform.workspace].api_acm_certificate_arn
   application_version     = "0.0.1"
   application_bucket_name = local.config[terraform.workspace].application_bucket_name
+  resource_bucket_name    = local.config[terraform.workspace].resource_bucket_name
 }
