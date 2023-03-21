@@ -55,7 +55,19 @@ resource "aws_dynamodb_table" "alarm_table" {
   }
 }
 
+resource "aws_dynamodb_table" "chara_table" {
+  name           = "chara-table"
+  hash_key       = "charaID"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 1
+  write_capacity = 1
+  stream_enabled = false
 
+  attribute {
+    name = "charaID"
+    type = "S"
+  }
+}
 
 
 

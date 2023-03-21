@@ -1,7 +1,9 @@
 package converter
 
 import (
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"github.com/takoikatakotako/charalarm-backend/database"
 	"testing"
 )
 
@@ -10,4 +12,37 @@ func TestMaskAuthToken(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, "20**********************************", result)
+}
+
+func TestDatabaseCharaToResponseChara(t *testing.T) {
+	databaseChara := database.Chara{
+		CharaID:          uuid.NewString(),
+		CharaEnable:      false,
+		CharaName:        "Snorlax",
+		CharaDescription: "Snorlax",
+		CharaProfiles: []database.CharaProfile{
+			{
+				Title: "プログラマ",
+				Name:  "かびごん小野",
+				URL:   "https://twitter.com/takoikatakotako",
+			},
+		},
+		CharaResource: database.CharaResource{
+			Images: []string{"image1.png", "image2.png"},
+			Voices: []string{"voice1.mp3", "voice2.mp3"},
+		},
+		CharaExpression: map[string]database.CharaExpression{
+			"normal": {
+				Images: []string{"normal1.png", "normal2.png"},
+				Voices: []string{"voice1.mp3", "voice2.mp3"},
+			},
+		},
+		CharaCall: database.CharaCall{
+			Voices: []string{"voice1.mp3", "voice2.mp3"},
+		},
+	}
+
+	responseChara := DatabaseCharaToResponseChara(databaseChara)
+
+	assert.Equal(t, databaseChara.CharaID, responseChara.CharaID)
 }

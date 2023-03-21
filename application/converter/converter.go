@@ -69,15 +69,15 @@ func DatabaseAlarmToEntityAlarm(alarm database.Alarm) request.Alarm {
 }
 
 func DatabaseCharaListToResponseCharaList(charaList []database.Chara) []response.Chara {
-	var responseCharaList []response.Chara
+	responseCharaList := make([]response.Chara, 0)
 	for i := 0; i < len(charaList); i++ {
-		responseChara := databaseCharaToResponseChara(charaList[i])
+		responseChara := DatabaseCharaToResponseChara(charaList[i])
 		responseCharaList = append(responseCharaList, responseChara)
 	}
 	return responseCharaList
 }
 
-func databaseCharaToResponseChara(databaseChara database.Chara) response.Chara {
+func DatabaseCharaToResponseChara(databaseChara database.Chara) response.Chara {
 	return response.Chara{
 		CharaID:          databaseChara.CharaID,
 		CharaEnable:      databaseChara.CharaEnable,
@@ -91,12 +91,13 @@ func databaseCharaToResponseChara(databaseChara database.Chara) response.Chara {
 }
 
 func databaseCharaProfileListToResponseCharaProfileList(databaseCharaProfileList []database.CharaProfile) []response.CharaProfile {
-	var responseCharaList []response.CharaProfile
+	responseCharaProfileList := make([]response.CharaProfile, 0)
+
 	for i := 0; i < len(databaseCharaProfileList); i++ {
 		responseCharaProfile := databaseCharaProfileToResponseCharaProfile(databaseCharaProfileList[i])
-		responseCharaList = append(responseCharaList, responseCharaProfile)
+		responseCharaProfileList = append(responseCharaProfileList, responseCharaProfile)
 	}
-	return responseCharaList
+	return responseCharaProfileList
 }
 
 func databaseCharaProfileToResponseCharaProfile(databaseCharaProfile database.CharaProfile) response.CharaProfile {
@@ -115,7 +116,7 @@ func databaseCharaResourceToResponseCharaResource(databaseCharaResource database
 }
 
 func databaseCharaExpressionMapToResponseCharaExpressionMap(databaseCharaExpressionMap map[string]database.CharaExpression) map[string]response.CharaExpression {
-	var responseCharaExpressionMap map[string]response.CharaExpression
+	responseCharaExpressionMap := map[string]response.CharaExpression{}
 	for k, v := range databaseCharaExpressionMap {
 		responseCharaExpression := response.CharaExpression{
 			Images: v.Images,
@@ -157,7 +158,7 @@ func DatabaseAlarmToResponseAlarm(alarm database.Alarm) response.Alarm {
 // 文字を*に変換
 func maskAuthToken(authToken string) string {
 	length := len(authToken)
-	var r string = ""
+	var r = ""
 	for i := 0; i < length; i++ {
 		if i == 0 {
 			r += authToken[0:1]
