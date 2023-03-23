@@ -426,9 +426,7 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 	return nil
 }
 
-////////////////////////////////////
-// Chara
-////////////////////////////////////
+// GetChara キャラを取得する
 func (d *DynamoDBRepository) GetChara(charaID string) (database.Chara, error) {
 	// クライアント作成
 	client, err := d.createDynamoDBClient()
@@ -460,8 +458,7 @@ func (d *DynamoDBRepository) GetChara(charaID string) (database.Chara, error) {
 	return chara, nil
 }
 
-// GetCharaList
-// キャラ一覧を取得
+// GetCharaList キャラ一覧を取得
 func (d *DynamoDBRepository) GetCharaList() ([]database.Chara, error) {
 	// クライアント作成
 	client, err := d.createDynamoDBClient()
