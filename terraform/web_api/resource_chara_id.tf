@@ -16,11 +16,11 @@ resource "aws_api_gateway_resource" "chara_id_value_resource" {
 ##################################################
 # Lambda
 ##################################################
-module "chara_id_value_get_lambda_function" {
+module "chara_id_get_lambda_function" {
   source        = "./lambda_function"
-  function_name = "chara-id-value-get-function"
+  function_name = "chara-id-get-function"
   role          = aws_iam_role.api_gateway_lambda_role.arn
-  handler       = "chara_id_value"
+  handler       = "chara_id"
   s3_bucket     = local.application_bucket_s3_url
   s3_key        = "/${var.application_version}/chara_id.zip"
   execution_arn = aws_api_gateway_rest_api.charalarm_rest_api.execution_arn
@@ -31,15 +31,15 @@ module "chara_id_value_get_lambda_function" {
 ##################################################
 # Method
 ##################################################
-module "chara_id_value_get_method" {
+module "chara_id_get_method" {
   source      = "./method"
   rest_api_id = aws_api_gateway_rest_api.charalarm_rest_api.id
   resource_id = aws_api_gateway_resource.chara_id_value_resource.id
   http_method = "GET"
-  lambda_uri  = module.chara_id_value_get_lambda_function.invoke_arn
+  lambda_uri  = module.chara_id_get_lambda_function.invoke_arn
 }
 
-module "chara_id_value_options_method" {
+module "chara_id_options_method" {
   source      = "./options_method"
   rest_api_id = aws_api_gateway_rest_api.charalarm_rest_api.id
   resource_id = aws_api_gateway_resource.chara_id_value_resource.id

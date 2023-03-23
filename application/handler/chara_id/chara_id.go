@@ -14,9 +14,12 @@ import (
 )
 
 func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	// Chara
+	// Get Path Parameters
+	charaID := event.PathParameters["id"]
+
+	// Get Chara
 	s := service.CharaService{Repository: repository.DynamoDBRepository{}}
-	chara, err := s.GetChara("com.charalarm.yui")
+	chara, err := s.GetChara(charaID)
 	if err != nil {
 		fmt.Println(err)
 		return handler.FailureResponse(http.StatusInternalServerError, message.CharaListFailure)
