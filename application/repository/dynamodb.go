@@ -443,14 +443,18 @@ func (d *DynamoDBRepository) GetChara(charaID string) (database.Chara, error) {
 			},
 		},
 	}
-	output, err := client.GetItem(context.Background(), input)
+	resp, err := client.GetItem(context.Background(), input)
 	if err != nil {
 		return database.Chara{}, err
 	}
 
+	if len(resp.Item) == 0 {
+		return database.Chara{}, fmt.Errorf("item not found")
+	}
+
 	// 取得結果をcharaに変換
 	chara := database.Chara{}
-	err = attributevalue.UnmarshalMap(output.Item, &chara)
+	err = attributevalue.UnmarshalMap(resp.Item, &chara)
 	if err != nil {
 		return chara, err
 	}

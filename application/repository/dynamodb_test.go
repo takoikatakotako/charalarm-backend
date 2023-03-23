@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/takoikatakotako/charalarm-backend/database"
@@ -310,13 +311,14 @@ func TestInsertAndDeleteAlarmList(t *testing.T) {
 func TestGetChara(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 
+	// com.charalarm.yui を取得できることを確認
 	chara, err := repository.GetChara("com.charalarm.yui")
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// Assert
-	assert.Equal(t, chara.CharaID, "com.charalarm.yui")
+	assert.Equal(t, "com.charalarm.yui", chara.CharaID)
 	assert.Equal(t, chara.Enable, true)
 	assert.Equal(t, chara.Name, "井上結衣")
 	assert.Equal(t, chara.CharaID, "com.charalarm.yui")
@@ -329,6 +331,14 @@ func TestGetChara(t *testing.T) {
 	assert.Equal(t, chara.CharaProfiles[2].Title, "スクリプト")
 	assert.Equal(t, chara.CharaProfiles[2].Name, "小旗ふたる！")
 	assert.Equal(t, chara.CharaProfiles[2].URL, "https://twitter.com/Kass_kobataku")
+}
+
+func TestGetCharaNotFound(t *testing.T) {
+	repository := DynamoDBRepository{IsLocal: true}
+
+	// com.charalarm.not.found を取得できないことを確認
+	_, err := repository.GetChara("com.charalarm.not.found")
+	assert.Error(t, fmt.Errorf("item not found"), err)
 }
 
 func TestGetCharaList(t *testing.T) {
