@@ -319,18 +319,18 @@ func TestGetChara(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, "com.charalarm.yui", chara.CharaID)
-	assert.Equal(t, chara.Enable, true)
-	assert.Equal(t, chara.Name, "井上結衣")
-	assert.Equal(t, chara.CharaID, "com.charalarm.yui")
-	assert.Equal(t, chara.CharaProfiles[0].Title, "イラストレーター")
-	assert.Equal(t, chara.CharaProfiles[0].Name, "さいもん")
-	assert.Equal(t, chara.CharaProfiles[0].URL, "https://twitter.com/simon_ns")
-	assert.Equal(t, chara.CharaProfiles[1].Title, "声優")
-	assert.Equal(t, chara.CharaProfiles[1].Name, "Mai")
-	assert.Equal(t, chara.CharaProfiles[1].URL, "https://twitter.com/mai_mizuiro")
-	assert.Equal(t, chara.CharaProfiles[2].Title, "スクリプト")
-	assert.Equal(t, chara.CharaProfiles[2].Name, "小旗ふたる！")
-	assert.Equal(t, chara.CharaProfiles[2].URL, "https://twitter.com/Kass_kobataku")
+	assert.Equal(t, true, chara.Enable)
+	assert.Equal(t, "井上結衣", chara.Name)
+	assert.Equal(t, "com.charalarm.yui", chara.CharaID)
+	assert.Equal(t, "イラストレーター", chara.CharaProfiles[0].Title)
+	assert.Equal(t, "さいもん", chara.CharaProfiles[0].Name)
+	assert.Equal(t, "https://twitter.com/simon_ns", chara.CharaProfiles[0].URL)
+	assert.Equal(t, "声優", chara.CharaProfiles[1].Title)
+	assert.Equal(t, "Mai", chara.CharaProfiles[1].Name)
+	assert.Equal(t, "https://twitter.com/mai_mizuiro", chara.CharaProfiles[1].URL)
+	assert.Equal(t, "スクリプト", chara.CharaProfiles[2].Title)
+	assert.Equal(t, "小旗ふたる！", chara.CharaProfiles[2].Name)
+	assert.Equal(t, "https://twitter.com/Kass_kobataku", chara.CharaProfiles[2].URL)
 }
 
 func TestGetCharaNotFound(t *testing.T) {
