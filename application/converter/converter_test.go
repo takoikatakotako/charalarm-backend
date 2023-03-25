@@ -27,9 +27,11 @@ func TestDatabaseCharaToResponseChara(t *testing.T) {
 				URL:   "https://twitter.com/takoikatakotako",
 			},
 		},
-		CharaResources: database.CharaResource{
-			Images: []string{"image1.png", "image2.png"},
-			Voices: []string{"voice1.mp3", "voice2.mp3"},
+		CharaResources: []database.CharaResource{
+			{
+				DirectoryName: "images",
+				FileName:      "snorlax-voice.caf",
+			},
 		},
 		CharaExpressions: map[string]database.CharaExpression{
 			"normal": {
@@ -37,8 +39,11 @@ func TestDatabaseCharaToResponseChara(t *testing.T) {
 				Voices: []string{"voice1.mp3", "voice2.mp3"},
 			},
 		},
-		CharaCall: database.CharaCall{
-			Voices: []string{"voice1.mp3", "voice2.mp3"},
+		CharaCalls: []database.CharaCall{
+			{
+				Message: "カビゴン語でおはよう",
+				Voice:   "hello.caf",
+			},
 		},
 	}
 

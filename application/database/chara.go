@@ -34,5 +34,5 @@ type CharaExpression struct {
 
 type CharaCall struct {
 	Message string `dynamodbav:"message"`
-	Voices  string `dynamodbav:"voice"`
+	Voice   string `dynamodbav:"voice"`
 }
