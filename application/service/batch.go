@@ -28,7 +28,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	if err != nil {
 		return err
 	}
-	randomCharaCallVoicesCount := len(randomChara.CharaCall.Voices)
+	randomCharaCallVoicesCount := len(randomChara.CharaCalls)
 	if randomCharaCallVoicesCount == 0 {
 		// TODO. エラーを収集する仕組みを追加
 		// エラーだよ
@@ -36,7 +36,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	}
 	randomCharaVoiceIndex := rand.Intn(randomCharaCallVoicesCount)
 	randomCharaName := randomChara.Name
-	randomVoiceFileURL := randomChara.CharaCall.Voices[randomCharaVoiceIndex]
+	randomVoiceFileURL := randomChara.CharaCalls[randomCharaVoiceIndex].Voice
 
 	// ランダム用のメモを作成
 	randomCharaNameAndVoiceFileURL := map[string]entity.CharaNameAndVoiceFileURL{}
@@ -63,14 +63,14 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 			}
 
 			// メモ化ようのアレにも登録するよ
-			charaCallVoicesCount := len(chara.CharaCall.Voices)
+			charaCallVoicesCount := len(chara.CharaCalls)
 			if charaCallVoicesCount == 0 {
 				// TODO. エラーを収集する仕組みを追加
 				// エラーだよ
 				return errors.New("ボイスがないぞ")
 			}
 			charaCallVoiceIndex := rand.Intn(charaCallVoicesCount)
-			randomCharaNameAndVoiceFileURL[alarm.CharaID] = entity.CharaNameAndVoiceFileURL{CharaName: chara.Name, VoiceFileURL: chara.CharaCall.Voices[charaCallVoiceIndex]}
+			randomCharaNameAndVoiceFileURL[alarm.CharaID] = entity.CharaNameAndVoiceFileURL{CharaName: chara.Name, VoiceFileURL: chara.CharaCalls[charaCallVoiceIndex].Voice}
 
 			// XXX
 			alarmInfo.CharaName = val.CharaName
