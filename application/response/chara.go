@@ -18,18 +18,18 @@ type CharaProfile struct {
 }
 
 type CharaResource struct {
-	DirectoryName string `dynamodbav:"directoryName"`
-	FileName      string `dynamodbav:"fileName"`
+	DirectoryName string `json:"directoryName"`
+	FileName      string `json:"fileName"`
 }
 
 type CharaExpression struct {
-	Images []string `dynamodbav:"images"`
-	Voices []string `dynamodbav:"voices"`
+	Images []string `json:"images"`
+	Voices []string `json:"voices"`
 }
 
 type CharaCall struct {
-	Message string `dynamodbav:"message"`
-	Voice   string `dynamodbav:"voice"`
+	Message string `json:"message"`
+	Voice   string `json:"voice"`
 }
 
 //type CharaNameAndVoiceFileURL struct {
