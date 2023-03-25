@@ -27,7 +27,7 @@ func TestDatabaseCharaToResponseChara(t *testing.T) {
 				URL:   "https://twitter.com/takoikatakotako",
 			},
 		},
-		CharaResource: database.CharaResource{
+		CharaResources: database.CharaResource{
 			Images: []string{"image1.png", "image2.png"},
 			Voices: []string{"voice1.mp3", "voice2.mp3"},
 		},

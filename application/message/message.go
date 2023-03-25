@@ -1,10 +1,11 @@
 package message
 
 const (
-	INVAlID_VALUE           = "Invalid value"
-	AUTHENTICATION_FAILURE  = "Authentication failure"
+	InvalidValue            = "Invalid Value"
+	AuthenticationFailure   = "Authentication Failure"
 	UserSignupSuccess       = "Sign Up Success!"
 	UserSignupFailure       = "Sign Up Failure..."
 	CharaListFailure        = "Get Chara List Failure..."
 	InvalidRequestParameter = "Invalid Request Parameter"
+	ItemNotFound            = "item not found"
 )

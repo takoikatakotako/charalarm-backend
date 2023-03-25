@@ -11,9 +11,9 @@ type Chara struct {
 	Name             string                     `dynamodbav:"name"`
 	Description      string                     `dynamodbav:"description"`
 	CharaProfiles    []CharaProfile             `dynamodbav:"profiles"`
-	CharaResource    CharaResource              `dynamodbav:"resources"`
+	CharaResources   []CharaResource            `dynamodbav:"resources"`
 	CharaExpressions map[string]CharaExpression `dynamodbav:"expressions"`
-	CharaCall        CharaCall                  `dynamodbav:"calls"`
+	CharaCalls       []CharaCall                `dynamodbav:"calls"`
 }
 
 type CharaProfile struct {
@@ -23,8 +23,8 @@ type CharaProfile struct {
 }
 
 type CharaResource struct {
-	Images []string `dynamodbav:"images"`
-	Voices []string `dynamodbav:"voices"`
+	DirectoryName string `dynamodbav:"directoryName"`
+	FileName      string `dynamodbav:"fileName"`
 }
 
 type CharaExpression struct {
@@ -33,10 +33,6 @@ type CharaExpression struct {
 }
 
 type CharaCall struct {
-	Voices []string `dynamodbav:"voices"`
-}
-
-type CharaNameAndVoiceFileURL struct {
-	CharaName    string
-	VoiceFileURL string
+	Message string `dynamodbav:"message"`
+	Voices  string `dynamodbav:"voice"`
 }

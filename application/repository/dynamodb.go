@@ -75,7 +75,7 @@ func (d *DynamoDBRepository) GetUser(userID string) (database.User, error) {
 	getUser := database.User{}
 
 	if len(output.Item) == 0 {
-		return database.User{}, errors.New(message.INVAlID_VALUE)
+		return database.User{}, errors.New(message.InvalidValue)
 	}
 
 	err = attributevalue.UnmarshalMap(output.Item, &getUser)
@@ -449,7 +449,7 @@ func (d *DynamoDBRepository) GetChara(charaID string) (database.Chara, error) {
 	}
 
 	if len(resp.Item) == 0 {
-		return database.Chara{}, fmt.Errorf("item not found")
+		return database.Chara{}, fmt.Errorf(message.ItemNotFound)
 	}
 
 	// 取得結果をcharaに変換

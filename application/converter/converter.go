@@ -84,7 +84,7 @@ func DatabaseCharaToResponseChara(databaseChara database.Chara) response.Chara {
 		Name:        databaseChara.Name,
 		Description: databaseChara.Description,
 		Profiles:    databaseCharaProfileListToResponseCharaProfileList(databaseChara.CharaProfiles),
-		Resource:    databaseCharaResourceToResponseCharaResource(databaseChara.CharaResource),
+		Resource:    databaseCharaResourceToResponseCharaResource(databaseChara.CharaResources),
 		Expression:  databaseCharaExpressionMapToResponseCharaExpressionMap(databaseChara.CharaExpressions),
 		CharaCall:   databaseCharaCallToResponseCharaCall(databaseChara.CharaCall),
 	}
