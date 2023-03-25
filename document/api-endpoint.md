@@ -199,6 +199,15 @@ curl -X GET https://api.sandbox.swiswiswift.com/chara/list \
 ]
 ```
 
+## GET: /chara/id/{charaID}
+
+特定のキャラを取得します。
+
+```
+curl -X GET https://api.sandbox.swiswiswift.com/chara/id/com.charalarm.yui \
+    -H 'Content-Type: application/json' | jq
+```
+
 # push-token
 
 ## POST: /push-token/ios/push/add

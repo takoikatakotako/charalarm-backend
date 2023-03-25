@@ -75,7 +75,7 @@ func (d *DynamoDBRepository) GetUser(userID string) (database.User, error) {
 	getUser := database.User{}
 
 	if len(output.Item) == 0 {
-		return database.User{}, errors.New(message.INVAlID_VALUE)
+		return database.User{}, errors.New(message.InvalidValue)
 	}
 
 	err = attributevalue.UnmarshalMap(output.Item, &getUser)
@@ -426,9 +426,7 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 	return nil
 }
 
-////////////////////////////////////
-// Chara
-////////////////////////////////////
+// GetChara キャラを取得する
 func (d *DynamoDBRepository) GetChara(charaID string) (database.Chara, error) {
 	// クライアント作成
 	client, err := d.createDynamoDBClient()
@@ -445,14 +443,18 @@ func (d *DynamoDBRepository) GetChara(charaID string) (database.Chara, error) {
 			},
 		},
 	}
-	output, err := client.GetItem(context.Background(), input)
+	resp, err := client.GetItem(context.Background(), input)
 	if err != nil {
 		return database.Chara{}, err
 	}
 
+	if len(resp.Item) == 0 {
+		return database.Chara{}, fmt.Errorf(message.ItemNotFound)
+	}
+
 	// 取得結果をcharaに変換
 	chara := database.Chara{}
-	err = attributevalue.UnmarshalMap(output.Item, &chara)
+	err = attributevalue.UnmarshalMap(resp.Item, &chara)
 	if err != nil {
 		return chara, err
 	}
@@ -460,8 +462,7 @@ func (d *DynamoDBRepository) GetChara(charaID string) (database.Chara, error) {
 	return chara, nil
 }
 
-// GetCharaList
-// キャラ一覧を取得
+// GetCharaList キャラ一覧を取得
 func (d *DynamoDBRepository) GetCharaList() ([]database.Chara, error) {
 	// クライアント作成
 	client, err := d.createDynamoDBClient()

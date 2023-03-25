@@ -25,7 +25,7 @@ func (s *PushTokenService) AddIOSPushToken(userID string, authToken string, push
 	if user.UserID == userID && user.AuthToken == authToken {
 		// Nothing
 	} else {
-		return errors.New(message.AUTHENTICATION_FAILURE)
+		return errors.New(message.AuthenticationFailure)
 	}
 
 	// 既に作成されてるか確認
@@ -56,7 +56,7 @@ func (s *PushTokenService) AddIOSVoipPushToken(userID string, authToken string, 
 	if anonymousUser.UserID == userID && anonymousUser.AuthToken == authToken {
 		// Nothing
 	} else {
-		return errors.New(message.AUTHENTICATION_FAILURE)
+		return errors.New(message.AuthenticationFailure)
 	}
 
 	// 既に作成されてるか確認

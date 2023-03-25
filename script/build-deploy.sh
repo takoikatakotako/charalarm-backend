@@ -20,6 +20,7 @@ GOOS=linux GOARCH=amd64 go build -o build/alarm_list handler/alarm_list/alarm_li
 GOOS=linux GOARCH=amd64 go build -o build/batch handler/batch/batch.go
 
 # chara
+GOOS=linux GOARCH=amd64 go build -o build/chara_id handler/chara_id/chara_id.go
 GOOS=linux GOARCH=amd64 go build -o build/chara_list handler/chara_list/chara_list.go
 
 # healthcheck
@@ -50,6 +51,7 @@ zip alarm_list.zip alarm_list
 zip batch.zip batch
 
 # chara
+zip chara_id.zip chara_id
 zip chara_list.zip chara_list
 
 # healthcheck
@@ -92,6 +94,7 @@ aws lambda update-function-code --function-name alarm-list-post-function --s3-bu
 # batch
 
 # chara
+aws lambda update-function-code --function-name chara-id-get-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/chara_id.zip
 aws lambda update-function-code --function-name chara-list-get-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/chara_list.zip
 
 # healthcheck

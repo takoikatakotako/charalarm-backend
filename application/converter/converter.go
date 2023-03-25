@@ -84,15 +84,14 @@ func DatabaseCharaToResponseChara(databaseChara database.Chara) response.Chara {
 		Name:        databaseChara.Name,
 		Description: databaseChara.Description,
 		Profiles:    databaseCharaProfileListToResponseCharaProfileList(databaseChara.CharaProfiles),
-		Resource:    databaseCharaResourceToResponseCharaResource(databaseChara.CharaResource),
+		Resources:   databaseCharaResourceListToResponseCharaResourceList(databaseChara.CharaResources),
 		Expression:  databaseCharaExpressionMapToResponseCharaExpressionMap(databaseChara.CharaExpressions),
-		CharaCall:   databaseCharaCallToResponseCharaCall(databaseChara.CharaCall),
+		Calls:       databaseCharaCallListToResponseCharaCallList(databaseChara.CharaCalls),
 	}
 }
 
 func databaseCharaProfileListToResponseCharaProfileList(databaseCharaProfileList []database.CharaProfile) []response.CharaProfile {
 	responseCharaProfileList := make([]response.CharaProfile, 0)
-
 	for i := 0; i < len(databaseCharaProfileList); i++ {
 		responseCharaProfile := databaseCharaProfileToResponseCharaProfile(databaseCharaProfileList[i])
 		responseCharaProfileList = append(responseCharaProfileList, responseCharaProfile)
@@ -108,10 +107,19 @@ func databaseCharaProfileToResponseCharaProfile(databaseCharaProfile database.Ch
 	}
 }
 
+func databaseCharaResourceListToResponseCharaResourceList(databaseCharaResourceList []database.CharaResource) []response.CharaResource {
+	responseCharaResourceList := make([]response.CharaResource, 0)
+	for i := 0; i < len(databaseCharaResourceList); i++ {
+		responseCharaResource := databaseCharaResourceToResponseCharaResource(databaseCharaResourceList[i])
+		responseCharaResourceList = append(responseCharaResourceList, responseCharaResource)
+	}
+	return responseCharaResourceList
+}
+
 func databaseCharaResourceToResponseCharaResource(databaseCharaResource database.CharaResource) response.CharaResource {
 	return response.CharaResource{
-		Images: databaseCharaResource.Images,
-		Voices: databaseCharaResource.Voices,
+		DirectoryName: databaseCharaResource.DirectoryName,
+		FileName:      databaseCharaResource.FileName,
 	}
 }
 
@@ -127,9 +135,19 @@ func databaseCharaExpressionMapToResponseCharaExpressionMap(databaseCharaExpress
 	return responseCharaExpressionMap
 }
 
+func databaseCharaCallListToResponseCharaCallList(databaseCharaCallList []database.CharaCall) []response.CharaCall {
+	responseCharaCallList := make([]response.CharaCall, 0)
+	for i := 0; i < len(databaseCharaCallList); i++ {
+		responseCharaCall := databaseCharaCallToResponseCharaCall(databaseCharaCallList[i])
+		responseCharaCallList = append(responseCharaCallList, responseCharaCall)
+	}
+	return responseCharaCallList
+}
+
 func databaseCharaCallToResponseCharaCall(databaseCharaCall database.CharaCall) response.CharaCall {
 	return response.CharaCall{
-		Voices: databaseCharaCall.Voices,
+		Message: databaseCharaCall.Message,
+		Voice:   databaseCharaCall.Voice,
 	}
 }
 

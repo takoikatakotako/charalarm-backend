@@ -30,13 +30,13 @@ func (s *UserService) GetUser(userID string, authToken string) (response.UserInf
 	}
 
 	// 一致しない場合
-	return response.UserInfoResponse{}, errors.New(message.AUTHENTICATION_FAILURE)
+	return response.UserInfoResponse{}, errors.New(message.AuthenticationFailure)
 }
 
 func (s *UserService) Signup(userID string, authToken string, ipAddress string) error {
 	// バリデーション
 	if !validator.IsValidUUID(userID) || !validator.IsValidUUID(authToken) {
-		return errors.New(message.INVAlID_VALUE)
+		return errors.New(message.InvalidValue)
 	}
 
 	// Check User Is Exist
@@ -65,7 +65,7 @@ func (s *UserService) Signup(userID string, authToken string, ipAddress string) 
 func (s *UserService) Withdraw(userID string, authToken string) error {
 	// バリデーション
 	if !validator.IsValidUUID(userID) || !validator.IsValidUUID(authToken) {
-		return errors.New(message.INVAlID_VALUE)
+		return errors.New(message.InvalidValue)
 	}
 
 	// ユーザーを取得
@@ -80,7 +80,7 @@ func (s *UserService) Withdraw(userID string, authToken string) error {
 	}
 
 	// 認証失敗
-	return errors.New(message.AUTHENTICATION_FAILURE)
+	return errors.New(message.AuthenticationFailure)
 }
 
 // database.User を entity.AnonymousUser に変換

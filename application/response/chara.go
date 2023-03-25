@@ -6,9 +6,9 @@ type Chara struct {
 	Name        string                     `json:"name"`
 	Description string                     `json:"description"`
 	Profiles    []CharaProfile             `json:"profiles"`
-	Resource    CharaResource              `json:"resources"`
+	Resources   []CharaResource            `json:"resources"`
 	Expression  map[string]CharaExpression `json:"expressions"`
-	CharaCall   CharaCall                  `json:"calls"`
+	Calls       []CharaCall                `json:"calls"`
 }
 
 type CharaProfile struct {
@@ -18,20 +18,21 @@ type CharaProfile struct {
 }
 
 type CharaResource struct {
-	Images []string `json:"images"`
-	Voices []string `json:"voices"`
+	DirectoryName string `dynamodbav:"directoryName"`
+	FileName      string `dynamodbav:"fileName"`
 }
 
 type CharaExpression struct {
-	Images []string `json:"images"`
-	Voices []string `json:"voices"`
+	Images []string `dynamodbav:"images"`
+	Voices []string `dynamodbav:"voices"`
 }
 
 type CharaCall struct {
-	Voices []string `json:"voices"`
+	Message string `dynamodbav:"message"`
+	Voice   string `dynamodbav:"voice"`
 }
 
-type CharaNameAndVoiceFileURL struct {
-	CharaName    string
-	VoiceFileURL string
-}
+//type CharaNameAndVoiceFileURL struct {
+//	CharaName    string
+//	VoiceFileURL string
+//}

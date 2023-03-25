@@ -28,7 +28,7 @@ func (s *AlarmService) AddAlarm(userID string, authToken string, alarm request.A
 
 	// UserID, AuthTokenが一致するか確認する
 	if anonymousUser.UserID != userID || anonymousUser.AuthToken != authToken {
-		return errors.New(message.AUTHENTICATION_FAILURE)
+		return errors.New(message.AuthenticationFailure)
 	}
 
 	// 既に登録されたアラームの件数を取得
@@ -59,7 +59,7 @@ func (s *AlarmService) EditAlarm(userID string, authToken string, alarm request.
 
 	// UserID, AuthTokenが一致するか確認する
 	if anonymousUser.UserID != userID || anonymousUser.AuthToken != authToken {
-		return errors.New(message.AUTHENTICATION_FAILURE)
+		return errors.New(message.AuthenticationFailure)
 	}
 
 	// アラームの所持者を確認が必要?
@@ -81,7 +81,7 @@ func (s *AlarmService) DeleteAlarm(userID string, authToken string, alarmID stri
 
 	// UserID, AuthTokenが一致するか確認する
 	if anonymousUser.UserID != userID || anonymousUser.AuthToken != authToken {
-		return errors.New(message.AUTHENTICATION_FAILURE)
+		return errors.New(message.AuthenticationFailure)
 	}
 
 	// アラームを削除する
@@ -112,6 +112,6 @@ func (s *AlarmService) GetAlarmList(userID string, authToken string) ([]response
 		}
 		return responseAlarmList, nil
 	} else {
-		return []response.Alarm{}, errors.New(message.AUTHENTICATION_FAILURE)
+		return []response.Alarm{}, errors.New(message.AuthenticationFailure)
 	}
 }
