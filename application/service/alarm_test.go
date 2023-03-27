@@ -41,13 +41,13 @@ func TestAlarm(t *testing.T) {
 	const saturday = false
 
 	alarm := request.Alarm{
-		AlarmID:     alarmID,
-		UserID:      userID,
-		AlarmType:   alarmType,
-		AlarmEnable: alarmEnable,
-		AlarmName:   alarmName,
-		AlarmHour:   alarmHour,
-		AlarmMinute: alarmMinute,
+		AlarmID: alarmID,
+		UserID:  userID,
+		Type:    alarmType,
+		Enable:  alarmEnable,
+		Name:    alarmName,
+		Hour:    alarmHour,
+		Minute:  alarmMinute,
 
 		// Chara Info
 		CharaID:      charaID,
@@ -97,7 +97,7 @@ func TestAlarm(t *testing.T) {
 
 	// アラーム編集
 	alarmName = "New Alarm Name"
-	alarm.AlarmName = alarmName
+	alarm.Name = alarmName
 	err = alarmService.EditAlarm(userID, authToken, alarm)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
