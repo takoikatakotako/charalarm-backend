@@ -29,6 +29,7 @@ func TestAlarm(t *testing.T) {
 	var alarmName = "alarmName"
 	const alarmHour = 8
 	const alarmMinute = 30
+	const alarmTimeDifference = 9.0
 	const charaID = "charaID"
 	const charaName = "charaName"
 	const voiceFileURL = "voiceFileURL"
@@ -41,13 +42,14 @@ func TestAlarm(t *testing.T) {
 	const saturday = false
 
 	alarm := request.Alarm{
-		AlarmID: alarmID,
-		UserID:  userID,
-		Type:    alarmType,
-		Enable:  alarmEnable,
-		Name:    alarmName,
-		Hour:    alarmHour,
-		Minute:  alarmMinute,
+		AlarmID:        alarmID,
+		UserID:         userID,
+		Type:           alarmType,
+		Enable:         alarmEnable,
+		Name:           alarmName,
+		Hour:           alarmHour,
+		Minute:         alarmMinute,
+		TimeDifference: alarmTimeDifference,
 
 		// Chara Info
 		CharaID:      charaID,
@@ -84,6 +86,7 @@ func TestAlarm(t *testing.T) {
 	assert.Equal(t, getAlarm.Name, alarmName)
 	assert.Equal(t, getAlarm.Hour, alarmHour)
 	assert.Equal(t, getAlarm.Minute, alarmMinute)
+	assert.Equal(t, getAlarm.TimeDifference, alarmTimeDifference)
 	assert.Equal(t, getAlarm.CharaID, charaID)
 	assert.Equal(t, getAlarm.CharaName, charaName)
 	assert.Equal(t, getAlarm.VoiceFileURL, voiceFileURL)
@@ -118,6 +121,7 @@ func TestAlarm(t *testing.T) {
 	assert.Equal(t, updatedAlarm.Enable, alarmEnable)
 	assert.Equal(t, updatedAlarm.Name, alarmName)
 	assert.Equal(t, updatedAlarm.Hour, alarmHour)
+	assert.Equal(t, updatedAlarm.TimeDifference, alarmTimeDifference)
 	assert.Equal(t, updatedAlarm.Minute, alarmMinute)
 	assert.Equal(t, updatedAlarm.CharaID, charaID)
 	assert.Equal(t, updatedAlarm.CharaName, charaName)

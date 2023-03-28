@@ -51,5 +51,12 @@ func ValidateAlarm(alarm database.Alarm) error {
 		return errors.New(message.InvalidValue + ": AlarmTime")
 	}
 
+	// TimeDifference
+	if -24 < alarm.TimeDifference && alarm.TimeDifference < 24 {
+		// Nothing
+	} else {
+		return errors.New(message.InvalidValue + ": TimeDifference")
+	}
+
 	return nil
 }

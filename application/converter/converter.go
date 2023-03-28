@@ -64,33 +64,34 @@ func RequestAlarmToDatabaseAlarm(alarm request.Alarm) database.Alarm {
 		diff += 24.0
 		alarmHour = int(diff)
 		alarmMinute = int((diff - float32(alarmHour)) * 60)
-		alarmSaturday = alarm.Friday
-		alarmFriday = alarm.Thursday
-		alarmThursday = alarm.Wednesday
-		alarmWednesday = alarm.Tuesday
-		alarmTuesday = alarm.Monday
-		alarmMonday = alarm.Sunday
 		alarmSunday = alarm.Saturday
+		alarmMonday = alarm.Sunday
+		alarmTuesday = alarm.Monday
+		alarmWednesday = alarm.Tuesday
+		alarmThursday = alarm.Wednesday
+		alarmFriday = alarm.Thursday
+		alarmSaturday = alarm.Friday
 	}
 
 	databaseAlarm := database.Alarm{
-		AlarmID:       alarm.AlarmID,
-		UserID:        alarm.UserID,
-		Type:          alarm.Type,
-		Enable:        alarm.Enable,
-		Name:          alarm.Name,
-		Hour:          alarmHour,
-		Minute:        alarmMinute,
-		CharaID:       alarm.CharaID,
-		CharaName:     alarm.CharaName,
-		VoiceFilePath: alarm.VoiceFileURL,
-		Sunday:        alarmSunday,
-		Monday:        alarmMonday,
-		Tuesday:       alarmTuesday,
-		Wednesday:     alarmWednesday,
-		Thursday:      alarmThursday,
-		Friday:        alarmFriday,
-		Saturday:      alarmSaturday,
+		AlarmID:        alarm.AlarmID,
+		UserID:         alarm.UserID,
+		Type:           alarm.Type,
+		Enable:         alarm.Enable,
+		Name:           alarm.Name,
+		Hour:           alarmHour,
+		Minute:         alarmMinute,
+		TimeDifference: alarm.TimeDifference,
+		CharaID:        alarm.CharaID,
+		CharaName:      alarm.CharaName,
+		VoiceFilePath:  alarm.VoiceFileURL,
+		Sunday:         alarmSunday,
+		Monday:         alarmMonday,
+		Tuesday:        alarmTuesday,
+		Wednesday:      alarmWednesday,
+		Thursday:       alarmThursday,
+		Friday:         alarmFriday,
+		Saturday:       alarmSaturday,
 	}
 	databaseAlarm.SetAlarmTime()
 	return databaseAlarm
