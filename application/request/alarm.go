@@ -5,11 +5,12 @@ type Alarm struct {
 	UserID  string `json:"userID"`
 
 	// REMOTE_NOTIFICATION VOIP_NOTIFICATION
-	Type   string `json:"type"`
-	Enable bool   `json:"enable"`
-	Name   string `json:"name"`
-	Hour   int    `json:"hour"`
-	Minute int    `json:"Minute"`
+	Type           string  `json:"type"`
+	Enable         bool    `json:"enable"`
+	Name           string  `json:"name"`
+	Hour           int     `json:"hour"`
+	Minute         int     `json:"Minute"`
+	TimeDifference float32 `json:"timeDifference"`
 
 	// Chara Info
 	CharaID      string `json:"charaID"`

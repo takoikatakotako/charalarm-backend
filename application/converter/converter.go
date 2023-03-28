@@ -22,50 +22,78 @@ func DatabasePushTokenToResponsePushToken(pushToken database.PushToken) response
 	}
 }
 
-func EntityAlarmToDatabaseAlarm(alarm request.Alarm) database.Alarm {
+func RequestAlarmToDatabaseAlarm(alarm request.Alarm) database.Alarm {
+	// request.Alarmは時差があるため、UTCのdatabase.Alarmに変換する
+	var alarmHour int
+	var alarmMinute int
+	var alarmSunday bool
+	var alarmMonday bool
+	var alarmTuesday bool
+	var alarmWednesday bool
+	var alarmThursday bool
+	var alarmFriday bool
+	var alarmSaturday bool
+
+	// 時差を計算
+	diff := (float32(alarm.Hour) + float32(alarm.Minute)/60.0) - alarm.TimeDifference
+	if diff > 24 {
+		// tomorrow
+		diff -= 24.0
+		alarmHour = int(diff)
+		alarmMinute = int((diff - float32(alarmHour)) * 60)
+		alarmSunday = alarm.Monday
+		alarmMonday = alarm.Tuesday
+		alarmTuesday = alarm.Wednesday
+		alarmWednesday = alarm.Thursday
+		alarmThursday = alarm.Friday
+		alarmFriday = alarm.Saturday
+		alarmSaturday = alarm.Sunday
+	} else if diff >= 0 {
+		// today
+		alarmHour = int(diff)
+		alarmMinute = int((diff - float32(alarmHour)) * 60)
+		alarmSunday = alarm.Sunday
+		alarmMonday = alarm.Monday
+		alarmTuesday = alarm.Tuesday
+		alarmWednesday = alarm.Wednesday
+		alarmThursday = alarm.Thursday
+		alarmFriday = alarm.Friday
+		alarmSaturday = alarm.Saturday
+	} else {
+		// yesterday
+		diff += 24.0
+		alarmHour = int(diff)
+		alarmMinute = int((diff - float32(alarmHour)) * 60)
+		alarmSaturday = alarm.Friday
+		alarmFriday = alarm.Thursday
+		alarmThursday = alarm.Wednesday
+		alarmWednesday = alarm.Tuesday
+		alarmTuesday = alarm.Monday
+		alarmMonday = alarm.Sunday
+		alarmSunday = alarm.Saturday
+	}
+
 	databaseAlarm := database.Alarm{
 		AlarmID:       alarm.AlarmID,
 		UserID:        alarm.UserID,
 		Type:          alarm.Type,
 		Enable:        alarm.Enable,
 		Name:          alarm.Name,
-		Hour:          alarm.Hour,
-		Minute:        alarm.Minute,
+		Hour:          alarmHour,
+		Minute:        alarmMinute,
 		CharaID:       alarm.CharaID,
 		CharaName:     alarm.CharaName,
 		VoiceFilePath: alarm.VoiceFileURL,
-		Sunday:        alarm.Sunday,
-		Monday:        alarm.Monday,
-		Tuesday:       alarm.Tuesday,
-		Wednesday:     alarm.Wednesday,
-		Thursday:      alarm.Thursday,
-		Friday:        alarm.Friday,
-		Saturday:      alarm.Saturday,
+		Sunday:        alarmSunday,
+		Monday:        alarmMonday,
+		Tuesday:       alarmTuesday,
+		Wednesday:     alarmWednesday,
+		Thursday:      alarmThursday,
+		Friday:        alarmFriday,
+		Saturday:      alarmSaturday,
 	}
 	databaseAlarm.SetAlarmTime()
 	return databaseAlarm
-}
-
-func DatabaseAlarmToEntityAlarm(alarm database.Alarm) request.Alarm {
-	return request.Alarm{
-		AlarmID:      alarm.AlarmID,
-		UserID:       alarm.UserID,
-		Type:         alarm.Type,
-		Enable:       alarm.Enable,
-		Name:         alarm.Name,
-		Hour:         alarm.Hour,
-		Minute:       alarm.Minute,
-		CharaID:      alarm.CharaID,
-		CharaName:    alarm.CharaName,
-		VoiceFileURL: alarm.VoiceFilePath,
-		Sunday:       alarm.Sunday,
-		Monday:       alarm.Monday,
-		Tuesday:      alarm.Tuesday,
-		Wednesday:    alarm.Wednesday,
-		Thursday:     alarm.Thursday,
-		Friday:       alarm.Friday,
-		Saturday:     alarm.Saturday,
-	}
 }
 
 func DatabaseCharaListToResponseCharaList(charaList []database.Chara) []response.Chara {
@@ -152,24 +180,75 @@ func databaseCharaCallToResponseCharaCall(databaseCharaCall database.CharaCall) 
 }
 
 func DatabaseAlarmToResponseAlarm(alarm database.Alarm) response.Alarm {
+	// UTCのdatabase.Alarmを時差のあるresponse.Alarmに変換する
+	var alarmHour int
+	var alarmMinute int
+	var alarmSunday bool
+	var alarmMonday bool
+	var alarmTuesday bool
+	var alarmWednesday bool
+	var alarmThursday bool
+	var alarmFriday bool
+	var alarmSaturday bool
+
+	// 時差を計算
+	diff := (float32(alarm.Hour) + float32(alarm.Minute)/60.0) + alarm.TimeDifference
+	if diff > 24 {
+		// tomorrow
+		diff -= 24.0
+		alarmHour = int(diff)
+		alarmMinute = int((diff - float32(alarmHour)) * 60)
+		alarmSunday = alarm.Monday
+		alarmMonday = alarm.Tuesday
+		alarmTuesday = alarm.Wednesday
+		alarmWednesday = alarm.Thursday
+		alarmThursday = alarm.Friday
+		alarmFriday = alarm.Saturday
+		alarmSaturday = alarm.Sunday
+	} else if diff >= 0 {
+		// today
+		alarmHour = int(diff)
+		alarmMinute = int((diff - float32(alarmHour)) * 60)
+		alarmSunday = alarm.Sunday
+		alarmMonday = alarm.Monday
+		alarmTuesday = alarm.Tuesday
+		alarmWednesday = alarm.Wednesday
+		alarmThursday = alarm.Thursday
+		alarmFriday = alarm.Friday
+		alarmSaturday = alarm.Saturday
+	} else {
+		// yesterday
+		diff += 24.0
+		alarmHour = int(diff)
+		alarmMinute = int((diff - float32(alarmHour)) * 60)
+		alarmSaturday = alarm.Friday
+		alarmFriday = alarm.Thursday
+		alarmThursday = alarm.Wednesday
+		alarmWednesday = alarm.Tuesday
+		alarmTuesday = alarm.Monday
+		alarmMonday = alarm.Sunday
+		alarmSunday = alarm.Saturday
+	}
+
 	return response.Alarm{
-		AlarmID:      alarm.AlarmID,
-		UserID:       alarm.UserID,
-		AlarmType:    alarm.Type,
-		AlarmEnable:  alarm.Enable,
-		AlarmName:    alarm.Name,
-		AlarmHour:    alarm.Hour,
-		AlarmMinute:  alarm.Minute,
-		CharaID:      alarm.CharaID,
-		CharaName:    alarm.CharaName,
-		VoiceFileURL: alarm.VoiceFilePath,
-		Sunday:       alarm.Sunday,
-		Monday:       alarm.Monday,
-		Tuesday:      alarm.Tuesday,
-		Wednesday:    alarm.Wednesday,
-		Thursday:     alarm.Thursday,
-		Friday:       alarm.Friday,
-		Saturday:     alarm.Saturday,
+		AlarmID:        alarm.AlarmID,
+		UserID:         alarm.UserID,
+		Type:           alarm.Type,
+		Enable:         alarm.Enable,
+		Name:           alarm.Name,
+		Hour:           alarmHour,
+		Minute:         alarmMinute,
+		TimeDifference: alarm.TimeDifference,
+		CharaID:        alarm.CharaID,
+		CharaName:      alarm.CharaName,
+		VoiceFileURL:   alarm.VoiceFilePath,
+		Sunday:         alarmSunday,
+		Monday:         alarmMonday,
+		Tuesday:        alarmTuesday,
+		Wednesday:      alarmWednesday,
+		Thursday:       alarmThursday,
+		Friday:         alarmFriday,
+		Saturday:       alarmSaturday,
 	}
 }
 

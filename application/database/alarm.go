@@ -12,12 +12,13 @@ type Alarm struct {
 	UserID  string `dynamodbav:"userID"`
 
 	// REMOTE_NOTIFICATION VOIP_NOTIFICATION
-	Type   string `dynamodbav:"type"`
-	Enable bool   `dynamodbav:"enable"`
-	Name   string `dynamodbav:"name"`
-	Hour   int    `dynamodbav:"hour"`
-	Minute int    `dynamodbav:"minute"`
-	Time   string `dynamodbav:"time"`
+	Type           string  `dynamodbav:"type"`
+	Enable         bool    `dynamodbav:"enable"`
+	Name           string  `dynamodbav:"name"`
+	Hour           int     `dynamodbav:"hour"`
+	Minute         int     `dynamodbav:"minute"`
+	Time           string  `dynamodbav:"time"`
+	TimeDifference float32 `json:"timeDifference"`
 
 	// Chara Info
 	CharaID       string `dynamodbav:"charaID"`

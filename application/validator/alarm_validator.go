@@ -25,9 +25,9 @@ func ValidateAlarm(alarm database.Alarm) error {
 		return errors.New(message.InvalidValue + ": Type")
 	}
 
-	// AlarmName
+	// Name
 	if len(alarm.Name) == 0 {
-		return errors.New(message.InvalidValue + ": AlarmName")
+		return errors.New(message.InvalidValue + ": Name")
 	}
 
 	// Hour
