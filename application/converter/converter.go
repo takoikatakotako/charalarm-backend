@@ -113,7 +113,7 @@ func DatabaseCharaToResponseChara(databaseChara database.Chara) response.Chara {
 		Name:        databaseChara.Name,
 		Description: databaseChara.Description,
 		Profiles:    databaseCharaProfileListToResponseCharaProfileList(databaseChara.CharaProfiles),
-		Resources:   databaseCharaResourceListToResponseCharaResourceList(databaseChara.CharaResources),
+		Resources:   databaseCharaToResponseCharaResourceList(databaseChara),
 		Expression:  databaseCharaExpressionMapToResponseCharaExpressionMap(databaseChara.CharaExpressions),
 		Calls:       databaseCharaCallListToResponseCharaCallList(databaseChara.CharaCalls),
 	}
@@ -136,20 +136,37 @@ func databaseCharaProfileToResponseCharaProfile(databaseCharaProfile database.Ch
 	}
 }
 
-func databaseCharaResourceListToResponseCharaResourceList(databaseCharaResourceList []database.CharaResource) []response.CharaResource {
-	responseCharaResourceList := make([]response.CharaResource, 0)
-	for i := 0; i < len(databaseCharaResourceList); i++ {
-		responseCharaResource := databaseCharaResourceToResponseCharaResource(databaseCharaResourceList[i])
-		responseCharaResourceList = append(responseCharaResourceList, responseCharaResource)
-	}
-	return responseCharaResourceList
-}
+func databaseCharaToResponseCharaResourceList(databaseChara database.Chara) []response.CharaResource {
+	// response.CharaResourcesを作成
+	responseCharaResources := make([]response.CharaResource, 0)
 
-func databaseCharaResourceToResponseCharaResource(databaseCharaResource database.CharaResource) response.CharaResource {
-	return response.CharaResource{
-		DirectoryName: databaseCharaResource.DirectoryName,
-		FileName:      databaseCharaResource.FileName,
+	// expressionsのリソースを生成
+	for _, databaseCharaExpression := range databaseChara.CharaExpressions {
+		for _, image := range databaseCharaExpression.Images {
+			responseCharaResources = append(responseCharaResources, response.CharaResource{
+				DirectoryName: "image",
+				FileName:      image,
+			})
+		}
+
+		for _, voice := range databaseCharaExpression.Voices {
+			responseCharaResources = append(responseCharaResources, response.CharaResource{
+				DirectoryName: "voice",
+				FileName:      voice,
+			})
+		}
 	}
+
+	// callsのリソースを生成
+	for _, databaseCharaCall := range databaseChara.CharaCalls {
+		responseCharaResources = append(responseCharaResources, response.CharaResource{
+			DirectoryName: "voice",
+			FileName:      databaseCharaCall.Voice,
+		})
+	}
+
+	// TODO: responseCharaResources の中から重複要素を削除
+	return responseCharaResources
 }
 
 func databaseCharaExpressionMapToResponseCharaExpressionMap(databaseCharaExpressionMap map[string]database.CharaExpression) map[string]response.CharaExpression {
