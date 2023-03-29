@@ -13,9 +13,9 @@ type Alarm struct {
 	TimeDifference float32 `json:"timeDifference"`
 
 	// Chara Info
-	CharaID      string `json:"charaID"`
-	CharaName    string `json:"charaName"`
-	VoiceFileURL string `json:"voiceFileURL"`
+	CharaID       string `json:"charaID"`
+	CharaName     string `json:"charaName"`
+	VoiceFileName string `json:"voiceFileName"`
 
 	// Weekday
 	Sunday    bool `json:"sunday"`

@@ -34,5 +34,5 @@ type CharaCall struct {
 
 //type CharaNameAndVoiceFileURL struct {
 //	CharaName    string
-//	VoiceFileURL string
+//	VoiceFileName string
 //}

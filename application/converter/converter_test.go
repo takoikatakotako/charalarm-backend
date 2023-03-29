@@ -85,9 +85,9 @@ func TestRequestAlarmToDatabaseAlarm(t *testing.T) {
 		TimeDifference: alarmTimeDifference,
 
 		// Chara Info
-		CharaID:      charaID,
-		CharaName:    charaName,
-		VoiceFileURL: voiceFileURL,
+		CharaID:       charaID,
+		CharaName:     charaName,
+		VoiceFileName: voiceFileURL,
 
 		// Weekday
 		Sunday:    sunday,
@@ -110,7 +110,7 @@ func TestRequestAlarmToDatabaseAlarm(t *testing.T) {
 	assert.Equal(t, alarmTimeDifference, databaseAlarm.TimeDifference)
 	assert.Equal(t, charaID, databaseAlarm.CharaID)
 	assert.Equal(t, charaName, databaseAlarm.CharaName)
-	assert.Equal(t, voiceFileURL, databaseAlarm.VoiceFilePath)
+	assert.Equal(t, voiceFileURL, databaseAlarm.VoiceFileName)
 	assert.Equal(t, true, databaseAlarm.Sunday)
 	assert.Equal(t, true, databaseAlarm.Monday)
 	assert.Equal(t, false, databaseAlarm.Tuesday)

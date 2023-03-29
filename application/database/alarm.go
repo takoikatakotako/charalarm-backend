@@ -23,7 +23,7 @@ type Alarm struct {
 	// Chara Info
 	CharaID       string `dynamodbav:"charaID"`
 	CharaName     string `dynamodbav:"charaName"`
-	VoiceFilePath string `dynamodbav:"voiceFilePath"`
+	VoiceFileName string `dynamodbav:"voiceFileName"`
 
 	// Weekday
 	Sunday    bool `dynamodbav:"sunday"`
