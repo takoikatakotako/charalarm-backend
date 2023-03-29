@@ -11,7 +11,6 @@ type Chara struct {
 	Name             string                     `dynamodbav:"name"`
 	Description      string                     `dynamodbav:"description"`
 	CharaProfiles    []CharaProfile             `dynamodbav:"profiles"`
-	CharaResources   []CharaResource            `dynamodbav:"resources"`
 	CharaExpressions map[string]CharaExpression `dynamodbav:"expressions"`
 	CharaCalls       []CharaCall                `dynamodbav:"calls"`
 }

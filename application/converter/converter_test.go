@@ -28,12 +28,6 @@ func TestDatabaseCharaToResponseChara(t *testing.T) {
 				URL:   "https://twitter.com/takoikatakotako",
 			},
 		},
-		CharaResources: []database.CharaResource{
-			{
-				DirectoryName: "images",
-				FileName:      "snorlax-voice.caf",
-			},
-		},
 		CharaExpressions: map[string]database.CharaExpression{
 			"normal": {
 				Images: []string{"normal1.png", "normal2.png"},
