@@ -18,30 +18,30 @@ func ValidateAlarm(alarm database.Alarm) error {
 		return errors.New(message.InvalidValue + ": UserID")
 	}
 
-	// AlarmType
+	// Type
 	if alarm.Type == "REMOTE_NOTIFICATION" || alarm.Type == "VOIP_NOTIFICATION" {
 		// Nothing
 	} else {
-		return errors.New(message.InvalidValue + ": AlarmType")
+		return errors.New(message.InvalidValue + ": Type")
 	}
 
-	// AlarmName
+	// Name
 	if len(alarm.Name) == 0 {
-		return errors.New(message.InvalidValue + ": AlarmName")
+		return errors.New(message.InvalidValue + ": Name")
 	}
 
-	// AlarmHour
+	// Hour
 	if 0 <= alarm.Hour && alarm.Hour <= 23 {
 		// Nothing
 	} else {
-		return errors.New(message.InvalidValue + ": AlarmHour")
+		return errors.New(message.InvalidValue + ": Hour")
 	}
 
-	// AlarmMinute
+	// Minute
 	if 0 <= alarm.Minute && alarm.Minute <= 59 {
 		// Nothing
 	} else {
-		return errors.New(message.InvalidValue + ": AlarmMinute")
+		return errors.New(message.InvalidValue + ": Minute")
 	}
 
 	// AlarmTime
@@ -49,6 +49,13 @@ func ValidateAlarm(alarm database.Alarm) error {
 		// Nothing
 	} else {
 		return errors.New(message.InvalidValue + ": AlarmTime")
+	}
+
+	// TimeDifference
+	if -24 < alarm.TimeDifference && alarm.TimeDifference < 24 {
+		// Nothing
+	} else {
+		return errors.New(message.InvalidValue + ": TimeDifference")
 	}
 
 	return nil
