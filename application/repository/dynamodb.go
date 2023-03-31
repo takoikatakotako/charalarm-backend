@@ -182,7 +182,7 @@ func (d *DynamoDBRepository) GetAlarmList(userID string) ([]database.Alarm, erro
 	keyEx := expression.Key(database.ALARM_TABLE_USER_ID).Equal(expression.Value(userID))
 	expr, err := expression.NewBuilder().WithKeyCondition(keyEx).Build()
 	output, err := client.Query(context.TODO(), &dynamodb.QueryInput{
-		TableName:                 aws.String(database.ALARM_TABLE_NAME),
+		TableName:                 aws.String(database.AlarmTableName),
 		IndexName:                 aws.String(database.ALARM_TABLE_USER_ID_INDEX_NAME),
 		ExpressionAttributeNames:  expr.Names(),
 		ExpressionAttributeValues: expr.Values(),
@@ -220,7 +220,7 @@ func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time
 	expr, err := expression.NewBuilder().WithKeyCondition(keyEx).Build()
 
 	output, err := client.Query(context.TODO(), &dynamodb.QueryInput{
-		TableName:                 aws.String(database.ALARM_TABLE_NAME),
+		TableName:                 aws.String(database.AlarmTableName),
 		IndexName:                 aws.String(database.ALARM_TABLE_ALARM_TIME_INDEX_NAME),
 		ExpressionAttributeNames:  expr.Names(),
 		ExpressionAttributeValues: expr.Values(),
@@ -297,7 +297,7 @@ func (d *DynamoDBRepository) InsertAlarm(alarm database.Alarm) error {
 		return err
 	}
 	_, err = client.PutItem(context.Background(), &dynamodb.PutItemInput{
-		TableName: aws.String(database.ALARM_TABLE_NAME),
+		TableName: aws.String(database.AlarmTableName),
 		Item:      av,
 	})
 	if err != nil {
@@ -330,7 +330,7 @@ func (d *DynamoDBRepository) UpdateAlarm(alarm database.Alarm) error {
 		return err
 	}
 	_, err = client.PutItem(context.Background(), &dynamodb.PutItemInput{
-		TableName: aws.String(database.ALARM_TABLE_NAME),
+		TableName: aws.String(database.AlarmTableName),
 		Item:      av,
 	})
 	if err != nil {
@@ -350,7 +350,7 @@ func (d *DynamoDBRepository) DeleteAlarm(alarmID string) error {
 	}
 
 	deleteInput := &dynamodb.DeleteItemInput{
-		TableName: aws.String(database.ALARM_TABLE_NAME),
+		TableName: aws.String(database.AlarmTableName),
 		Key: map[string]types.AttributeValue{
 			database.ALARM_TABLE_ALARM_ID: &types.AttributeValueMemberS{Value: alarmID},
 		},
@@ -381,7 +381,7 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 
 	// userIDからアラームを検索
 	output, err := client.Query(ctx, &dynamodb.QueryInput{
-		TableName:              aws.String(database.ALARM_TABLE_NAME),
+		TableName:              aws.String(database.AlarmTableName),
 		IndexName:              aws.String(database.UserTableUserIdIndexName),
 		KeyConditionExpression: aws.String("userID = :userID"),
 		ExpressionAttributeValues: map[string]types.AttributeValue{
@@ -416,7 +416,7 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 	// アラームを削除
 	_, err = client.BatchWriteItem(ctx, &dynamodb.BatchWriteItemInput{
 		RequestItems: map[string][]types.WriteRequest{
-			database.ALARM_TABLE_NAME: requestItems,
+			database.AlarmTableName: requestItems,
 		},
 	})
 	if err != nil {
