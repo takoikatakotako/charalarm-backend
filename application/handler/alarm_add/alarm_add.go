@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/takoikatakotako/charalarm-backend/message"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -27,23 +28,23 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	userID, authToken, err := auth.Basic(authorizationHeader)
 	if err != nil {
-		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
+		return handler.FailureResponse(http.StatusInternalServerError, message.AuthenticationFailure)
 	}
 
 	body := event.Body
-	request := request.AddAlarmRequest{}
-	err = json.Unmarshal([]byte(body), &request)
+	req := request.AddAlarmRequest{}
+	err = json.Unmarshal([]byte(body), &req)
 	if err != nil {
-		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
+		return handler.FailureResponse(http.StatusBadRequest, message.InvalidValue)
 	}
-	alarm := request.Alarm
+	alarm := req.Alarm
 
 	s := service.AlarmService{Repository: repository.DynamoDBRepository{}}
 	if err := s.AddAlarm(userID, authToken, alarm); err != nil {
-		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
+		return handler.FailureResponse(http.StatusInternalServerError, message.AlarmAddFailure)
 	}
 
-	res := response.MessageResponse{Message: "アラーム追加完了!"}
+	res := response.MessageResponse{Message: message.AlarmAddSuccess}
 	jsonBytes, _ := json.Marshal(res)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/takoikatakotako/charalarm-backend/message"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -27,26 +28,26 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	userID, authToken, err := auth.Basic(authorizationHeader)
 	if err != nil {
-		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
+		return handler.FailureResponse(http.StatusForbidden, message.AuthenticationFailure)
 	}
 
 	body := event.Body
-	request := request.DeleteAlarmRequest{}
-	err = json.Unmarshal([]byte(body), &request)
+	req := request.DeleteAlarmRequest{}
+	err = json.Unmarshal([]byte(body), &req)
 	if err != nil {
-		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
+		return handler.FailureResponse(http.StatusForbidden, message.AlarmEditFailure)
 	}
 
-	alarmID := request.AlarmID
+	alarmID := req.AlarmID
 
 	s := service.AlarmService{Repository: repository.DynamoDBRepository{}}
 	err = s.DeleteAlarm(userID, authToken, alarmID)
 	if err != nil {
-		return handler.FailureResponse(http.StatusInternalServerError, "アラームの削除に失敗しました。")
+		return handler.FailureResponse(http.StatusInternalServerError, message.AlarmDeleteFailure)
 	}
 
-	response := response.MessageResponse{Message: "アラーム削除完了!"}
-	jsonBytes, _ := json.Marshal(response)
+	res := response.MessageResponse{Message: message.AlarmDeleteSuccess}
+	jsonBytes, _ := json.Marshal(res)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
 		StatusCode: http.StatusOK,
