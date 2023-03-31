@@ -8,4 +8,5 @@ const (
 	CharaListFailure        = "Get Chara List Failure..."
 	InvalidRequestParameter = "Invalid Request Parameter"
 	ItemNotFound            = "item not found"
+	AlarmListFailure        = "Get Alarm List Failure..."
 )
