@@ -7,6 +7,14 @@ const (
 	AlarmTableAlarmID = "alarmID"
 )
 
+const (
+	AlarmTableAlarmTimeIndexName   = "alarm-time-index"
+	ALARM_TABLE_USER_ID_INDEX_NAME = "user-id-index"
+	AlarmTableAlarmID              = "alarmID"
+	ALARM_TABLE_USER_ID            = "userID"
+	ALARM_TABLE_TIME               = "time"
+)
+
 type Alarm struct {
 	AlarmID string `dynamodbav:"alarmID"`
 	UserID  string `dynamodbav:"userID"`
@@ -38,11 +46,3 @@ type Alarm struct {
 func (a *Alarm) SetAlarmTime() {
 	a.Time = fmt.Sprintf("%02d-%02d", a.Hour, a.Minute)
 }
-
-const (
-	ALARM_TABLE_ALARM_TIME_INDEX_NAME = "alarm-time-index"
-	ALARM_TABLE_USER_ID_INDEX_NAME    = "user-id-index"
-	ALARM_TABLE_ALARM_ID              = "alarmID"
-	ALARM_TABLE_USER_ID               = "userID"
-	ALARM_TABLE_TIME                  = "time"
-)

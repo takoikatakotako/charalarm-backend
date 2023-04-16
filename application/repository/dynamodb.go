@@ -221,7 +221,7 @@ func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time
 
 	output, err := client.Query(context.TODO(), &dynamodb.QueryInput{
 		TableName:                 aws.String(database.AlarmTableName),
-		IndexName:                 aws.String(database.ALARM_TABLE_ALARM_TIME_INDEX_NAME),
+		IndexName:                 aws.String(database.AlarmTableAlarmTimeIndexName),
 		ExpressionAttributeNames:  expr.Names(),
 		ExpressionAttributeValues: expr.Values(),
 		KeyConditionExpression:    expr.KeyCondition(),
@@ -231,7 +231,7 @@ func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time
 	}
 
 	// 取得結果を struct の配列に変換
-	alarmList := []database.Alarm{}
+	alarmList := make([]database.Alarm, 0)
 	for _, item := range output.Items {
 		alarm := database.Alarm{}
 		err := attributevalue.UnmarshalMap(item, &alarm)
@@ -352,7 +352,7 @@ func (d *DynamoDBRepository) DeleteAlarm(alarmID string) error {
 	deleteInput := &dynamodb.DeleteItemInput{
 		TableName: aws.String(database.AlarmTableName),
 		Key: map[string]types.AttributeValue{
-			database.ALARM_TABLE_ALARM_ID: &types.AttributeValueMemberS{Value: alarmID},
+			database.AlarmTableAlarmID: &types.AttributeValueMemberS{Value: alarmID},
 		},
 	}
 
@@ -406,7 +406,7 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 		requestItem := types.WriteRequest{
 			DeleteRequest: &types.DeleteRequest{
 				Key: map[string]types.AttributeValue{
-					database.ALARM_TABLE_ALARM_ID: &types.AttributeValueMemberS{Value: alarmID},
+					database.AlarmTableAlarmID: &types.AttributeValueMemberS{Value: alarmID},
 				},
 			},
 		}
