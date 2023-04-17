@@ -45,9 +45,26 @@ func (s *SQSRepository) createSQSClient() (*sqs.Client, error) {
 	return sqs.NewFromConfig(c), nil
 }
 
-////////////////////////////////////
-// SQS
-////////////////////////////////////
+// GetQueueURL QueueのURLを取得する
+func (s *SQSRepository) GetQueueURL(queueName string) (string, error) {
+	// SQSClient作成
+	client, err := s.createSQSClient()
+	if err != nil {
+		return "", err
+	}
+
+	// QueueURLを取得
+	input := &sqs.GetQueueUrlInput{
+		QueueName: aws.String(queueName),
+	}
+	output, err := client.GetQueueUrl(context.Background(), input)
+	if err != nil {
+		return "", err
+	}
+	return *output.QueueUrl, nil
+}
+
+// SendAlarmInfoToVoIPPushQueue SQS
 func (s *SQSRepository) SendAlarmInfoToVoIPPushQueue(alarmInfo entity.AlarmInfo) error {
 	queueURL, err := s.getVoIPPushQueueURL()
 	if err != nil {

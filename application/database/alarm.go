@@ -10,7 +10,6 @@ const (
 const (
 	AlarmTableAlarmTimeIndexName   = "alarm-time-index"
 	ALARM_TABLE_USER_ID_INDEX_NAME = "user-id-index"
-	AlarmTableAlarmID              = "alarmID"
 	ALARM_TABLE_USER_ID            = "userID"
 	ALARM_TABLE_TIME               = "time"
 )
