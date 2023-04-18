@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/takoikatakotako/charalarm-backend/sqs"
+
 	// "github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	// "github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
@@ -79,7 +81,7 @@ func (s *SNSRepository) createPlatformEndpoint(platformApplicationArn string, pu
 	return response, nil
 }
 
-func (s *SNSRepository) PublishPlatformApplication(alarmInfo entity.AlarmInfo) error {
+func (s *SNSRepository) PublishPlatformApplication(alarmInfo sqs.AlarmInfo) error {
 	client, err := s.createSNSClient()
 	if err != nil {
 		return err
