@@ -48,9 +48,7 @@ func (s *SNSRepository) createSNSClient() (*sns.Client, error) {
 	return sns.NewFromConfig(c), nil
 }
 
-////////////////////////////////////
-// iOS Platform Endpoint
-////////////////////////////////////
+// CreateIOSPushPlatformEndpoint iOS Platform Endpoint
 func (s *SNSRepository) CreateIOSPushPlatformEndpoint(pushToken string) (entity.CreatePlatformEndpointResponse, error) {
 	platformApplicationArn := "arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-voip-push-platform-application"
 	return s.createPlatformEndpoint(platformApplicationArn, pushToken)
