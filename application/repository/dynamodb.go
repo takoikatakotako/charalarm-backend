@@ -179,11 +179,11 @@ func (d *DynamoDBRepository) GetAlarmList(userID string) ([]database.Alarm, erro
 	}
 
 	// クエリ実行
-	keyEx := expression.Key(database.ALARM_TABLE_USER_ID).Equal(expression.Value(userID))
+	keyEx := expression.Key(database.AlarmTableColumnUserID).Equal(expression.Value(userID))
 	expr, err := expression.NewBuilder().WithKeyCondition(keyEx).Build()
 	output, err := client.Query(context.TODO(), &dynamodb.QueryInput{
 		TableName:                 aws.String(database.AlarmTableName),
-		IndexName:                 aws.String(database.ALARM_TABLE_USER_ID_INDEX_NAME),
+		IndexName:                 aws.String(database.AlarmTableIndexUserID),
 		ExpressionAttributeNames:  expr.Names(),
 		ExpressionAttributeValues: expr.Values(),
 		KeyConditionExpression:    expr.KeyCondition(),
@@ -216,12 +216,12 @@ func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time
 		return []database.Alarm{}, err
 	}
 
-	keyEx := expression.Key(database.AlarmTableName).Equal(expression.Value(alarmTime))
+	keyEx := expression.Key(database.AlarmTableColumnTime).Equal(expression.Value(alarmTime))
 	expr, err := expression.NewBuilder().WithKeyCondition(keyEx).Build()
 
 	output, err := client.Query(context.TODO(), &dynamodb.QueryInput{
 		TableName:                 aws.String(database.AlarmTableName),
-		IndexName:                 aws.String(database.AlarmTableAlarmTimeIndexName),
+		IndexName:                 aws.String(database.AlarmTableIndexAlarmTime),
 		ExpressionAttributeNames:  expr.Names(),
 		ExpressionAttributeValues: expr.Values(),
 		KeyConditionExpression:    expr.KeyCondition(),
@@ -352,7 +352,7 @@ func (d *DynamoDBRepository) DeleteAlarm(alarmID string) error {
 	deleteInput := &dynamodb.DeleteItemInput{
 		TableName: aws.String(database.AlarmTableName),
 		Key: map[string]types.AttributeValue{
-			database.AlarmTableAlarmID: &types.AttributeValueMemberS{Value: alarmID},
+			database.AlarmTableColumnAlarmID: &types.AttributeValueMemberS{Value: alarmID},
 		},
 	}
 
@@ -406,7 +406,7 @@ func (d *DynamoDBRepository) DeleteUserAlarm(userID string) error {
 		requestItem := types.WriteRequest{
 			DeleteRequest: &types.DeleteRequest{
 				Key: map[string]types.AttributeValue{
-					database.AlarmTableAlarmID: &types.AttributeValueMemberS{Value: alarmID},
+					database.AlarmTableColumnAlarmID: &types.AttributeValueMemberS{Value: alarmID},
 				},
 			},
 		}

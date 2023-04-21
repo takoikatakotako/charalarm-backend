@@ -3,14 +3,12 @@ package database
 import "fmt"
 
 const (
-	AlarmTableName    = "alarm-table"
-	AlarmTableAlarmID = "alarmID"
-)
-
-const (
-	AlarmTableAlarmTimeIndexName   = "alarm-time-index"
-	ALARM_TABLE_USER_ID_INDEX_NAME = "user-id-index"
-	ALARM_TABLE_USER_ID            = "userID"
+	AlarmTableName           = "alarm-table"
+	AlarmTableColumnAlarmID  = "alarmID"
+	AlarmTableColumnUserID   = "userID"
+	AlarmTableColumnTime     = "time"
+	AlarmTableIndexAlarmTime = "alarm-time-index"
+	AlarmTableIndexUserID    = "user-id-index"
 )
 
 type Alarm struct {
