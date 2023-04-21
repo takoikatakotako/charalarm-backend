@@ -15,7 +15,7 @@ import (
 
 func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	// 現在時刻取得
-	t := time.Now()
+	t := time.Now().UTC()
 	hour := t.Hour()
 	minute := t.Minute()
 	weekday := t.Weekday()
@@ -28,16 +28,16 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	}
 	err := s.QueryDynamoDBAndSendMessage(hour, minute, weekday)
 	if err != nil {
-		response := response.MessageResponse{Message: "ユーザー情報の取得に失敗しました"}
-		jsonBytes, _ := json.Marshal(response)
+		res := response.MessageResponse{Message: "ユーザー情報の取得に失敗しました"}
+		jsonBytes, _ := json.Marshal(res)
 		return events.APIGatewayProxyResponse{
 			Body:       string(jsonBytes),
 			StatusCode: http.StatusInternalServerError,
 		}, nil
 	}
 
-	response := response.MessageResponse{Message: "healthy!"}
-	jsonBytes, _ := json.Marshal(response)
+	res := response.MessageResponse{Message: "healthy!"}
+	jsonBytes, _ := json.Marshal(res)
 
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),

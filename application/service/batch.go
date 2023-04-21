@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/repository"
+	"github.com/takoikatakotako/charalarm-backend/sqs"
 	"math/rand"
 	"time"
 	// "github.com/takoikatakotako/charalarm-backend/validator"
@@ -45,7 +46,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	// AlarmInfoに変換してSQSに送信
 	for _, alarm := range alarmList {
 		// AlarmInfoに変換
-		alarmInfo := entity.AlarmInfo{}
+		alarmInfo := sqs.AlarmInfo{}
 		alarmInfo.AlarmID = alarm.AlarmID
 		alarmInfo.UserID = alarm.UserID
 

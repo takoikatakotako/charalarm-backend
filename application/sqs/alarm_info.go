@@ -1,4 +1,4 @@
-package entity
+package sqs
 
 type AlarmInfo struct {
 	AlarmID        string `json:"alarmID"`

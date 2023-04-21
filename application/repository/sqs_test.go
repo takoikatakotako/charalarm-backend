@@ -1,10 +1,10 @@
 package repository
 
 import (
-	"encoding/json"
+	json "encoding/json"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/sqs"
 	"testing"
 )
 
@@ -30,7 +30,14 @@ func TestSendMessage(t *testing.T) {
 	}
 
 	alarmID := uuid.New().String()
-	alarmInfo := entity.AlarmInfo{AlarmID: alarmID}
+	userID := uuid.New().String()
+	alarmInfo := sqs.AlarmInfo{
+		AlarmID:        alarmID,
+		UserID:         userID,
+		SNSEndpointArn: "dummy",
+		CharaName:      "xxxx",
+		FileURL:        "xxxxx",
+	}
 
 	err = repository.SendAlarmInfoToVoIPPushQueue(alarmInfo)
 	if err != nil {
@@ -43,8 +50,8 @@ func TestSendMessage(t *testing.T) {
 	}
 
 	assert.Equal(t, len(messages), 1)
-	getAlarmInfo := entity.AlarmInfo{}
+	getAlarmInfo := sqs.AlarmInfo{}
 	body := *messages[0].Body
-	json.Unmarshal([]byte(body), &getAlarmInfo)
+	_ = json.Unmarshal([]byte(body), &getAlarmInfo)
 	assert.Equal(t, getAlarmInfo.AlarmID, alarmID)
 }

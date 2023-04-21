@@ -92,6 +92,7 @@ aws lambda update-function-code --function-name alarm-edit-post-function --s3-bu
 aws lambda update-function-code --function-name alarm-list-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/alarm_list.zip
 
 # batch
+aws lambda update-function-code --function-name batch-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/batch.zip
 
 # chara
 aws lambda update-function-code --function-name chara-id-get-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/chara_id.zip

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/sqs"
 	"strings"
 	"testing"
 )
@@ -49,7 +49,7 @@ func TestPublishPlatformApplication(t *testing.T) {
 	endpointArn := response.EndpointArn
 
 	//
-	alarmInfo := entity.AlarmInfo{}
+	alarmInfo := sqs.AlarmInfo{}
 	alarmInfo.SNSEndpointArn = endpointArn
 	alarmInfo.CharaName = "キャラ名"
 	alarmInfo.FileURL = "ファイルURL"

@@ -3,8 +3,12 @@ package database
 import "fmt"
 
 const (
-	AlarmTableName    = "alarm-table"
-	AlarmTableAlarmID = "alarmID"
+	AlarmTableName           = "alarm-table"
+	AlarmTableColumnAlarmID  = "alarmID"
+	AlarmTableColumnUserID   = "userID"
+	AlarmTableColumnTime     = "time"
+	AlarmTableIndexAlarmTime = "alarm-time-index"
+	AlarmTableIndexUserID    = "user-id-index"
 )
 
 type Alarm struct {
@@ -38,11 +42,3 @@ type Alarm struct {
 func (a *Alarm) SetAlarmTime() {
 	a.Time = fmt.Sprintf("%02d-%02d", a.Hour, a.Minute)
 }
-
-const (
-	ALARM_TABLE_ALARM_TIME_INDEX_NAME = "alarm-time-index"
-	ALARM_TABLE_USER_ID_INDEX_NAME    = "user-id-index"
-	ALARM_TABLE_ALARM_ID              = "alarmID"
-	ALARM_TABLE_USER_ID               = "userID"
-	ALARM_TABLE_TIME                  = "time"
-)
