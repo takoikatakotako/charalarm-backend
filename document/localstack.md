@@ -112,8 +112,8 @@ $ aws dynamodb query \
 $ aws dynamodb query \
     --table-name alarm-table \
     --index-name alarm-time-index \
-    --key-condition-expression "alarmTime = :alarmTime" \
-    --expression-attribute-values '{ ":alarmTime": { "S": "XXXXX" } }' \
+    --key-condition-expression "time = :time2" \
+    --expression-attribute-values '{ ":time2": { "S": "XXXXX" } }' \
     --endpoint-url=http://localhost:4566
 ```
 

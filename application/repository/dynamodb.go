@@ -216,7 +216,7 @@ func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time
 		return []database.Alarm{}, err
 	}
 
-	keyEx := expression.Key(database.ALARM_TABLE_TIME).Equal(expression.Value(alarmTime))
+	keyEx := expression.Key(database.AlarmTableName).Equal(expression.Value(alarmTime))
 	expr, err := expression.NewBuilder().WithKeyCondition(keyEx).Build()
 
 	output, err := client.Query(context.TODO(), &dynamodb.QueryInput{
