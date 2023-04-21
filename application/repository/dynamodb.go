@@ -216,6 +216,8 @@ func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time
 		return []database.Alarm{}, err
 	}
 
+	alarmTime = "03-03"
+
 	keyEx := expression.Key(database.AlarmTableColumnTime).Equal(expression.Value(alarmTime))
 	expr, err := expression.NewBuilder().WithKeyCondition(keyEx).Build()
 
@@ -229,6 +231,10 @@ func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time
 	if err != nil {
 		return []database.Alarm{}, err
 	}
+
+	fmt.Printf("----------------")
+	fmt.Printf("Map: %v", output.Items)
+	fmt.Printf("----------------")
 
 	// 取得結果を struct の配列に変換
 	alarmList := make([]database.Alarm, 0)
