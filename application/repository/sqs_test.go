@@ -36,7 +36,7 @@ func TestSendMessage(t *testing.T) {
 		UserID:         userID,
 		SNSEndpointArn: "dummy",
 		CharaName:      "xxxx",
-		FileURL:        "xxxxx",
+		VoiceFilePath:  "xxxxx",
 	}
 
 	err = repository.SendAlarmInfoToVoIPPushQueue(alarmInfo)

@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/sqs"
@@ -50,40 +51,48 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 		alarmInfo.AlarmID = alarm.AlarmID
 		alarmInfo.UserID = alarm.UserID
 
-		// randomCharaNameAndVoiceFileURL にキーがあるか確認する
-		if val, ok := randomCharaNameAndVoiceFileURL[alarm.CharaID]; ok {
-			// キーある場合
-			alarmInfo.CharaName = val.CharaName
-			alarmInfo.FileURL = val.VoiceFileURL
-		} else {
-			// キーがないのでDynamoDBから取得する
-			chara, err := b.DynamoDBRepository.GetChara(alarm.CharaID)
-			if err != nil {
-				// TODO. エラーを収集する仕組みを追加
-				continue
-			}
-
-			// メモ化ようのアレにも登録するよ
-			charaCallVoicesCount := len(chara.CharaCalls)
-			if charaCallVoicesCount == 0 {
-				// TODO. エラーを収集する仕組みを追加
-				// エラーだよ
-				return errors.New("ボイスがないぞ")
-			}
-			charaCallVoiceIndex := rand.Intn(charaCallVoicesCount)
-			randomCharaNameAndVoiceFileURL[alarm.CharaID] = entity.CharaNameAndVoiceFileURL{CharaName: chara.Name, VoiceFileURL: chara.CharaCalls[charaCallVoiceIndex].Voice}
-
-			// XXX
-			alarmInfo.CharaName = val.CharaName
-			alarmInfo.FileURL = val.VoiceFileURL
-		}
-
 		alarmInfo.SNSEndpointArn = "xxx"
+		alarmInfo.CharaName = "XYZ"
+		alarmInfo.VoiceFilePath = "xx"
+
+		// randomCharaNameAndVoiceFileURL にキーがあるか確認する
+		//if val, ok := randomCharaNameAndVoiceFileURL[alarm.CharaID]; ok {
+		//	// キーある場合
+		//	alarmInfo.CharaName = val.CharaName
+		//	alarmInfo.VoiceFilePath = val.VoiceFileURL
+		//} else {
+		//	// キーがないのでDynamoDBから取得する
+		//	chara, err := b.DynamoDBRepository.GetChara(alarm.CharaID)
+		//	if err != nil {
+		//		// TODO. エラーを収集する仕組みを追加
+		//		fmt.Printf("----------------")
+		//		fmt.Printf("error: %v", err)
+		//		fmt.Printf("----------------")
+		//		continue
+		//	}
+		//
+		//	// メモ化ようのアレにも登録するよ
+		//	charaCallVoicesCount := len(chara.CharaCalls)
+		//	if charaCallVoicesCount == 0 {
+		//		// TODO. エラーを収集する仕組みを追加
+		//		// エラーだよ
+		//		return errors.New("ボイスがないぞ")
+		//	}
+		//	charaCallVoiceIndex := rand.Intn(charaCallVoicesCount)
+		//	randomCharaNameAndVoiceFileURL[alarm.CharaID] = entity.CharaNameAndVoiceFileURL{CharaName: chara.Name, VoiceFileURL: chara.CharaCalls[charaCallVoiceIndex].Voice}
+		//
+		//	// XXX
+		//	alarmInfo.CharaName = val.CharaName
+		//	alarmInfo.VoiceFilePath = val.VoiceFileURL
+		//}
 
 		// SQSに送信
 		err := b.SQSRepository.SendAlarmInfoToVoIPPushQueue(alarmInfo)
 		if err != nil {
 			// エラーをログに送ってなんとか
+			fmt.Printf("----------------")
+			fmt.Printf("error: %v", err)
+			fmt.Printf("----------------")
 		}
 	}
 

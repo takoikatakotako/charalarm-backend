@@ -243,6 +243,9 @@ func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time
 		err := attributevalue.UnmarshalMap(item, &alarm)
 		if err != nil {
 			// TODO ログを出す
+			fmt.Printf("----------------")
+			fmt.Printf("err, %v", err)
+			fmt.Printf("----------------")
 			continue
 		}
 

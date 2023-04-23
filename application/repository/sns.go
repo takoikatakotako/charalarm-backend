@@ -102,7 +102,7 @@ func (s *SNSRepository) PublishPlatformApplication(alarmInfo sqs.AlarmInfo) erro
 	// メッセージを作成
 	voipPushInfo := entity.VoIPPushInfo{}
 	voipPushInfo.CharaName = alarmInfo.CharaName
-	voipPushInfo.FilePath = alarmInfo.FileURL
+	voipPushInfo.FilePath = alarmInfo.VoiceFilePath
 	jsonBytes, err := json.Marshal(voipPushInfo)
 	if err != nil {
 		return err

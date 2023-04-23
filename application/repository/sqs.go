@@ -66,7 +66,7 @@ func (s *SQSRepository) GetQueueURL(queueName string) (string, error) {
 
 // SendAlarmInfoToVoIPPushQueue SQS
 func (s *SQSRepository) SendAlarmInfoToVoIPPushQueue(alarmInfo sqs2.AlarmInfo) error {
-	queueURL, err := s.getVoIPPushQueueURL()
+	queueURL, err := s.GetQueueURL("voip-push-queue.fifo")
 	if err != nil {
 		return err
 	}
