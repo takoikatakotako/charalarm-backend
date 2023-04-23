@@ -44,6 +44,10 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	randomCharaNameAndVoiceFileURL := map[string]entity.CharaNameAndVoiceFileURL{}
 	randomCharaNameAndVoiceFileURL["RANDOM"] = entity.CharaNameAndVoiceFileURL{CharaName: randomCharaName, VoiceFileURL: randomVoiceFileURL}
 
+	fmt.Printf("----------------")
+	fmt.Printf("AlarmList: %v", alarmList)
+	fmt.Printf("----------------")
+
 	// AlarmInfoに変換してSQSに送信
 	for _, alarm := range alarmList {
 		// AlarmInfoに変換
@@ -54,6 +58,8 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 		alarmInfo.SNSEndpointArn = "xxx"
 		alarmInfo.CharaName = "XYZ"
 		alarmInfo.VoiceFilePath = "xx"
+
+		// CharaIDが無い場合 ->
 
 		// randomCharaNameAndVoiceFileURL にキーがあるか確認する
 		//if val, ok := randomCharaNameAndVoiceFileURL[alarm.CharaID]; ok {
