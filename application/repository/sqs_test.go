@@ -20,6 +20,15 @@ import (
 // 	assert.NotEqual(t, len(response.EndpointArn), 0)
 // }
 
+func TestSQSRepository_GetQueueURL(t *testing.T) {
+	repository := SQSRepository{IsLocal: true}
+	queueURL, err := repository.GetQueueURL("voip-push-queue.fifo")
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	assert.Equal(t, "http://localhost:4566/000000000000/voip-push-queue.fifo", queueURL)
+}
+
 func TestSendMessage(t *testing.T) {
 	repository := SQSRepository{IsLocal: true}
 

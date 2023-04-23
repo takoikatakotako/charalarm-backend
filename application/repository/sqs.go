@@ -15,6 +15,10 @@ import (
 	"os"
 )
 
+const (
+	VoIPPushQueueName = "voip-push-queue.fifo"
+)
+
 type SQSRepository struct {
 	IsLocal bool
 }
@@ -53,6 +57,10 @@ func (s *SQSRepository) GetQueueURL(queueName string) (string, error) {
 		return "", err
 	}
 
+	fmt.Printf("-----------")
+	fmt.Printf("GetQueueUrl: %v", queueName)
+	fmt.Printf("-----------")
+
 	// QueueURLを取得
 	input := &sqs.GetQueueUrlInput{
 		QueueName: aws.String(queueName),
@@ -66,7 +74,7 @@ func (s *SQSRepository) GetQueueURL(queueName string) (string, error) {
 
 // SendAlarmInfoToVoIPPushQueue SQS
 func (s *SQSRepository) SendAlarmInfoToVoIPPushQueue(alarmInfo sqs2.AlarmInfo) error {
-	queueURL, err := s.GetQueueURL("voip-push-queue.fifo")
+	queueURL, err := s.GetQueueURL(VoIPPushQueueName)
 	if err != nil {
 		return err
 	}
