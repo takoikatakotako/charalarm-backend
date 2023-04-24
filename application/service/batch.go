@@ -3,7 +3,6 @@ package service
 import (
 	"errors"
 	"fmt"
-	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/sqs"
 	"math/rand"
@@ -14,6 +13,11 @@ import (
 type BatchService struct {
 	DynamoDBRepository repository.DynamoDBRepository
 	SQSRepository      repository.SQSRepository
+}
+
+type CharaNameAndVoiceFilePath struct {
+	CharaName     string
+	VoiceFilePath string
 }
 
 func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday time.Weekday) error {
@@ -38,11 +42,12 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	}
 	randomCharaVoiceIndex := rand.Intn(randomCharaCallVoicesCount)
 	randomCharaName := randomChara.Name
-	randomVoiceFileURL := randomChara.CharaCalls[randomCharaVoiceIndex].Voice
+	randomVoiceFileName := randomChara.CharaCalls[randomCharaVoiceIndex].Voice
 
 	// ランダム用のメモを作成
-	randomCharaNameAndVoiceFileURL := map[string]entity.CharaNameAndVoiceFileURL{}
-	randomCharaNameAndVoiceFileURL["RANDOM"] = entity.CharaNameAndVoiceFileURL{CharaName: randomCharaName, VoiceFileURL: randomVoiceFileURL}
+	randomCharaNameAndVoiceFileURL := map[string]CharaNameAndVoiceFilePath{}
+	voiceFilePath := b.getVoiceFilePath(randomChara.CharaID, randomVoiceFileName)
+	randomCharaNameAndVoiceFileURL["RANDOM"] = CharaNameAndVoiceFilePath{CharaName: randomCharaName, VoiceFilePath: voiceFilePath}
 
 	fmt.Printf("----------------")
 	fmt.Printf("AlarmList: %v", alarmList)
@@ -66,14 +71,15 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 		}
 		alarmInfo.SNSEndpointArn = user.IOSVoIPPushToken.SNSEndpointArn
 
+		//
 		if alarm.CharaID == "" || alarm.CharaID == "RANDOM" {
 			// CharaIDが無い場合 -> Charaとボイスをランダムにする
 			alarmInfo.CharaName = randomCharaNameAndVoiceFileURL["RANDOM"].CharaName
-			alarmInfo.VoiceFilePath = randomCharaNameAndVoiceFileURL["RANDOM"].VoiceFileURL
+			alarmInfo.VoiceFilePath = randomCharaNameAndVoiceFileURL["RANDOM"].VoiceFilePath
 		} else if alarm.VoiceFileName == "" || alarm.VoiceFileName == "RANDOM" {
 			// CharaIDがあり、VoiceFileNameがある場合 -> 指定のキャラを使い、指定のボイスを使用する
 			alarmInfo.CharaName = alarm.CharaName
-			alarmInfo.VoiceFilePath = alarm.VoiceFileName
+			alarmInfo.VoiceFilePath = b.getVoiceFilePath(alarm.CharaID, alarm.VoiceFileName)
 		} else {
 			// CharaIDがあり、VoiceFileNameがない場合 -> 指定のキャラを使い、ボイスをランダム
 
@@ -82,7 +88,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 			if ok {
 				// キーがある場合
 				alarmInfo.CharaName = val.CharaName
-				alarmInfo.VoiceFilePath = val.VoiceFileURL
+				alarmInfo.VoiceFilePath = val.VoiceFilePath
 			} else {
 				// キーがないのでDynamoDBから取得する
 				chara, err := b.DynamoDBRepository.GetChara(alarm.CharaID)
@@ -96,28 +102,34 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 				charaCallVoicesCount := len(chara.CharaCalls)
 				if charaCallVoicesCount == 0 {
 					// TODO. エラーを収集する仕組みを追加
-					// エラーだよ
-					return errors.New("ボイスがないぞ")
+					fmt.Printf("----------------")
+					fmt.Printf("error: %v", err)
+					fmt.Printf("----------------")
+					continue
 				}
 				charaCallVoiceIndex := rand.Intn(charaCallVoicesCount)
-				charaCallVoice := chara.CharaCalls[charaCallVoiceIndex].Voice
-				randomCharaNameAndVoiceFileURL[alarm.CharaID] = entity.CharaNameAndVoiceFileURL{CharaName: chara.Name, VoiceFileURL: charaCallVoice}
+				charaCallVoiceFileName := chara.CharaCalls[charaCallVoiceIndex].Voice
+				randomCharaNameAndVoiceFileURL[alarm.CharaID] = CharaNameAndVoiceFilePath{CharaName: chara.Name, VoiceFilePath: charaCallVoiceFileName}
 
 				// 設定
 				alarmInfo.CharaName = chara.Name
-				alarmInfo.VoiceFilePath = alarm.VoiceFileName
+				alarmInfo.VoiceFilePath = b.getVoiceFilePath(chara.CharaID, charaCallVoiceFileName)
 			}
 		}
 
 		// SQSに送信
 		err = b.SQSRepository.SendAlarmInfoToVoIPPushQueue(alarmInfo)
 		if err != nil {
-			// エラーをログに送ってなんとか
+			// TODO. エラーを収集する仕組みを追加
 			fmt.Printf("----------------")
 			fmt.Printf("error: %v", err)
 			fmt.Printf("----------------")
+			continue
 		}
 	}
-
 	return nil
+}
+
+func (b *BatchService) getVoiceFilePath(charaDomain string, voiceFileName string) string {
+	return fmt.Sprintf("%s/voice/%s", charaDomain, voiceFileName)
 }

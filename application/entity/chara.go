@@ -30,8 +30,3 @@ type CharaExpression struct {
 type CharaCall struct {
 	Voices []string `json:"voices" dynamodbav:"voices"`
 }
-
-type CharaNameAndVoiceFileURL struct {
-	CharaName    string
-	VoiceFileURL string
-}
