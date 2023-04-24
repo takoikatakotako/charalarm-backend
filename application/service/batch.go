@@ -55,45 +55,62 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 		alarmInfo.AlarmID = alarm.AlarmID
 		alarmInfo.UserID = alarm.UserID
 
-		alarmInfo.SNSEndpointArn = "xxx"
-		alarmInfo.CharaName = "XYZ"
-		alarmInfo.VoiceFilePath = "xx"
+		// userIDからSNS EndpointARNを取得
+		user, err := b.DynamoDBRepository.GetUser(alarm.UserID)
+		if err != nil {
+			// TODO. エラーを収集する仕組みを追加
+			fmt.Printf("----------------")
+			fmt.Printf("error: %v", err)
+			fmt.Printf("----------------")
+			continue
+		}
+		alarmInfo.SNSEndpointArn = user.IOSVoIPPushToken.SNSEndpointArn
 
-		// CharaIDが無い場合 ->
+		if alarm.CharaID == "" || alarm.CharaID == "RANDOM" {
+			// CharaIDが無い場合 -> Charaとボイスをランダムにする
+			alarmInfo.CharaName = randomCharaNameAndVoiceFileURL["RANDOM"].CharaName
+			alarmInfo.VoiceFilePath = randomCharaNameAndVoiceFileURL["RANDOM"].VoiceFileURL
+		} else if alarm.VoiceFileName == "" || alarm.VoiceFileName == "RANDOM" {
+			// CharaIDがあり、VoiceFileNameがある場合 -> 指定のキャラを使い、指定のボイスを使用する
+			alarmInfo.CharaName = alarm.CharaName
+			alarmInfo.VoiceFilePath = alarm.VoiceFileName
+		} else {
+			// CharaIDがあり、VoiceFileNameがない場合 -> 指定のキャラを使い、ボイスをランダム
 
-		// randomCharaNameAndVoiceFileURL にキーがあるか確認する
-		//if val, ok := randomCharaNameAndVoiceFileURL[alarm.CharaID]; ok {
-		//	// キーある場合
-		//	alarmInfo.CharaName = val.CharaName
-		//	alarmInfo.VoiceFilePath = val.VoiceFileURL
-		//} else {
-		//	// キーがないのでDynamoDBから取得する
-		//	chara, err := b.DynamoDBRepository.GetChara(alarm.CharaID)
-		//	if err != nil {
-		//		// TODO. エラーを収集する仕組みを追加
-		//		fmt.Printf("----------------")
-		//		fmt.Printf("error: %v", err)
-		//		fmt.Printf("----------------")
-		//		continue
-		//	}
-		//
-		//	// メモ化ようのアレにも登録するよ
-		//	charaCallVoicesCount := len(chara.CharaCalls)
-		//	if charaCallVoicesCount == 0 {
-		//		// TODO. エラーを収集する仕組みを追加
-		//		// エラーだよ
-		//		return errors.New("ボイスがないぞ")
-		//	}
-		//	charaCallVoiceIndex := rand.Intn(charaCallVoicesCount)
-		//	randomCharaNameAndVoiceFileURL[alarm.CharaID] = entity.CharaNameAndVoiceFileURL{CharaName: chara.Name, VoiceFileURL: chara.CharaCalls[charaCallVoiceIndex].Voice}
-		//
-		//	// XXX
-		//	alarmInfo.CharaName = val.CharaName
-		//	alarmInfo.VoiceFilePath = val.VoiceFileURL
-		//}
+			// メモ化が使われているかのチェック
+			val, ok := randomCharaNameAndVoiceFileURL[alarm.CharaID]
+			if ok {
+				// キーがある場合
+				alarmInfo.CharaName = val.CharaName
+				alarmInfo.VoiceFilePath = val.VoiceFileURL
+			} else {
+				// キーがないのでDynamoDBから取得する
+				chara, err := b.DynamoDBRepository.GetChara(alarm.CharaID)
+				if err != nil {
+					// TODO. エラーを収集する仕組みを追加
+					fmt.Printf("----------------")
+					fmt.Printf("error: %v", err)
+					fmt.Printf("----------------")
+					continue
+				}
+				charaCallVoicesCount := len(chara.CharaCalls)
+				if charaCallVoicesCount == 0 {
+					// TODO. エラーを収集する仕組みを追加
+					// エラーだよ
+					return errors.New("ボイスがないぞ")
+				}
+				charaCallVoiceIndex := rand.Intn(charaCallVoicesCount)
+				charaCallVoice := chara.CharaCalls[charaCallVoiceIndex].Voice
+				randomCharaNameAndVoiceFileURL[alarm.CharaID] = entity.CharaNameAndVoiceFileURL{CharaName: chara.Name, VoiceFileURL: charaCallVoice}
+
+				// 設定
+				alarmInfo.CharaName = chara.Name
+				alarmInfo.VoiceFilePath = alarm.VoiceFileName
+			}
+		}
 
 		// SQSに送信
-		err := b.SQSRepository.SendAlarmInfoToVoIPPushQueue(alarmInfo)
+		err = b.SQSRepository.SendAlarmInfoToVoIPPushQueue(alarmInfo)
 		if err != nil {
 			// エラーをログに送ってなんとか
 			fmt.Printf("----------------")
