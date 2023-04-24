@@ -230,6 +230,10 @@ func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time
 		return []database.Alarm{}, err
 	}
 
+	fmt.Printf("----------------")
+	fmt.Printf("Map: %v", output.Items)
+	fmt.Printf("----------------")
+
 	// 取得結果を struct の配列に変換
 	alarmList := make([]database.Alarm, 0)
 	for _, item := range output.Items {
@@ -237,6 +241,9 @@ func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time
 		err := attributevalue.UnmarshalMap(item, &alarm)
 		if err != nil {
 			// TODO ログを出す
+			fmt.Printf("----------------")
+			fmt.Printf("err, %v", err)
+			fmt.Printf("----------------")
 			continue
 		}
 

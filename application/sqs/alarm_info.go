@@ -5,5 +5,5 @@ type AlarmInfo struct {
 	UserID         string `json:"userID"`
 	SNSEndpointArn string `json:"snsEndpointArn"`
 	CharaName      string `json:"charaName"`
-	FileURL        string `json:"fileURL"`
+	VoiceFilePath  string `json:"voiceFilePath"`
 }

@@ -52,7 +52,7 @@ func TestPublishPlatformApplication(t *testing.T) {
 	alarmInfo := sqs.AlarmInfo{}
 	alarmInfo.SNSEndpointArn = endpointArn
 	alarmInfo.CharaName = "キャラ名"
-	alarmInfo.FileURL = "ファイルURL"
+	alarmInfo.VoiceFilePath = "ファイルURL"
 
 	err = repository.PublishPlatformApplication(alarmInfo)
 	if err != nil {

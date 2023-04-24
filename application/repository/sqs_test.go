@@ -1,7 +1,7 @@
 package repository
 
 import (
-	json "encoding/json"
+	"encoding/json"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/takoikatakotako/charalarm-backend/sqs"
@@ -20,6 +20,15 @@ import (
 // 	assert.NotEqual(t, len(response.EndpointArn), 0)
 // }
 
+func TestSQSRepository_GetQueueURL(t *testing.T) {
+	repository := SQSRepository{IsLocal: true}
+	queueURL, err := repository.GetQueueURL(VoIPPushQueueName)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	assert.Equal(t, "http://localhost:4566/000000000000/voip-push-queue.fifo", queueURL)
+}
+
 func TestSendMessage(t *testing.T) {
 	repository := SQSRepository{IsLocal: true}
 
@@ -36,7 +45,7 @@ func TestSendMessage(t *testing.T) {
 		UserID:         userID,
 		SNSEndpointArn: "dummy",
 		CharaName:      "xxxx",
-		FileURL:        "xxxxx",
+		VoiceFilePath:  "xxxxx",
 	}
 
 	err = repository.SendAlarmInfoToVoIPPushQueue(alarmInfo)

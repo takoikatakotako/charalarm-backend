@@ -26,8 +26,12 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 		DynamoDBRepository: repository.DynamoDBRepository{},
 		SQSRepository:      repository.SQSRepository{},
 	}
-	err := s.QueryDynamoDBAndSendMessage(hour, minute, weekday)
+	err := s.QueryDynamoDBAndSendMessage(3, 3, weekday)
 	if err != nil {
+		fmt.Printf("----------------")
+		fmt.Printf("Hander: %v", err)
+		fmt.Printf("----------------")
+
 		res := response.MessageResponse{Message: "ユーザー情報の取得に失敗しました"}
 		jsonBytes, _ := json.Marshal(res)
 		return events.APIGatewayProxyResponse{

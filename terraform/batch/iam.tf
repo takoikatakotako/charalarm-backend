@@ -27,6 +27,7 @@ data "aws_iam_policy_document" "batch_lambda_role_iam_policy_document" {
     effect = "Allow"
     actions = [
       "dynamodb:*",
+      "sqs:*",
     ]
     resources = ["*"]
   }
