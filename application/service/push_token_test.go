@@ -5,28 +5,125 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/database"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 )
 
-func TestAddIOSVoIPPushToken(t *testing.T) {
+// iOSPushTokenを登録できる
+func TestPushTokenService_AddIOSPushToken(t *testing.T) {
+	// Repository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
 	snsRepository := repository.SNSRepository{IsLocal: true}
-	service := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
-	userID := uuid.New().String()
-	authToken := uuid.New().String()
-	pushToken := uuid.New().String()
+	// Service
+	userService := UserService{Repository: dynamoDBRepository}
+	pushService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
 	// ユーザー作成
-	anonymousUser := database.User{UserID: userID, AuthToken: authToken}
-	err := dynamoDBRepository.InsertUser(anonymousUser)
+	userID := uuid.New().String()
+	authToken := uuid.New().String()
+	ipAddress := "127.0.0.1"
+	pushToken := uuid.New().String()
+
+	err := userService.Signup(userID, authToken, ipAddress)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// トークン作成
-	err = service.AddIOSVoipPushToken(userID, authToken, pushToken)
+	err = pushService.AddIOSVoipPushToken(userID, authToken, pushToken)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// ユーザー取得
+	getUser, err := userService.GetUser(userID, authToken)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Assert
+	assert.Equal(t, getUser.IOSVoIPPushToken.Token, pushToken)
+	assert.NotEqual(t, getUser.IOSVoIPPushToken.SNSEndpointArn, "")
+}
+
+// iOSPushTokenを変更できる
+func TestPushTokenService_AddIOSPushTokenCanChange(t *testing.T) {
+	// Repository
+	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
+	snsRepository := repository.SNSRepository{IsLocal: true}
+
+	// Service
+	userService := UserService{Repository: dynamoDBRepository}
+	pushService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
+
+	// ユーザー作成
+	userID := uuid.New().String()
+	authToken := uuid.New().String()
+	ipAddress := "127.0.0.1"
+	oldPushToken := uuid.New().String()
+	newPushToken := uuid.New().String()
+
+	err := userService.Signup(userID, authToken, ipAddress)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// トークン作成
+	err = pushService.AddIOSVoipPushToken(userID, authToken, oldPushToken)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// ユーザー取得
+	getUser, err := userService.GetUser(userID, authToken)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Assert
+	assert.Equal(t, getUser.IOSVoIPPushToken.Token, oldPushToken)
+	assert.NotEqual(t, getUser.IOSVoIPPushToken.SNSEndpointArn, "")
+
+	// トークン更新
+	err = pushService.AddIOSVoipPushToken(userID, authToken, newPushToken)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// ユーザー取得
+	getUser, err = userService.GetUser(userID, authToken)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Assert
+	assert.Equal(t, getUser.IOSVoIPPushToken.Token, newPushToken)
+	assert.NotEqual(t, getUser.IOSVoIPPushToken.SNSEndpointArn, "")
+}
+
+// iOSVoIPPushTokenを登録できる
+func TestPushTokenService_AddIOSVoipPushToken(t *testing.T) {
+	// Repository
+	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
+	snsRepository := repository.SNSRepository{IsLocal: true}
+
+	// Service
+	userService := UserService{Repository: dynamoDBRepository}
+	pushService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
+
+	// ユーザー作成
+	userID := uuid.New().String()
+	authToken := uuid.New().String()
+	ipAddress := "127.0.0.1"
+	pushToken := uuid.New().String()
+
+	err := userService.Signup(userID, authToken, ipAddress)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// トークン作成
+	err = pushService.AddIOSVoipPushToken(userID, authToken, pushToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
