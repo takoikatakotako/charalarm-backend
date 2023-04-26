@@ -6,10 +6,13 @@ import (
 	"testing"
 )
 
-func TestBatch(t *testing.T) {
+func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
+	// Repository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
-	userService := UserService{Repository: dynamoDBRepository}
 
+	// Service
+	userService := UserService{Repository: dynamoDBRepository}
+	
 	// ユーザー作成
 	userID := uuid.New().String()
 	authToken := uuid.New().String()
