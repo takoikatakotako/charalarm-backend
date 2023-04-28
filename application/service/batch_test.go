@@ -63,4 +63,6 @@ func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 
+	// SQSに入ったことを確認
+	sqsRepository.ReceiveAlarmInfoMessage()
 }

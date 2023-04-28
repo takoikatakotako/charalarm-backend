@@ -53,7 +53,7 @@ func TestSendMessage(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 
-	messages, err := repository.RecieveAlarmInfoMessage()
+	messages, err := repository.ReceiveAlarmInfoMessage()
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
