@@ -1,9 +1,12 @@
 package service
 
 import (
+	"encoding/json"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/request"
+	"github.com/takoikatakotako/charalarm-backend/sqs"
 	"testing"
 	"time"
 )
@@ -30,7 +33,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 	// アラーム追加
 	alarmID := uuid.New().String()
 	hour := 8
-	minute := 12
+	minute := 13
 	requestAlarm := request.Alarm{
 		AlarmID:        alarmID,
 		UserID:         userID,
@@ -58,11 +61,20 @@ func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 	}
 
 	// SQSに設定
-	err = batchService.QueryDynamoDBAndSendMessage(8, 12, time.Sunday)
+	err = batchService.QueryDynamoDBAndSendMessage(8, 13, time.Sunday)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// SQSに入ったことを確認
-	sqsRepository.ReceiveAlarmInfoMessage()
+	messages, err := sqsRepository.ReceiveAlarmInfoMessage()
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	assert.Equal(t, len(messages), 1)
+	getAlarmInfo := sqs.AlarmInfo{}
+	body := *messages[0].Body
+	_ = json.Unmarshal([]byte(body), &getAlarmInfo)
+	assert.Equal(t, getAlarmInfo.AlarmID, alarmID)
 }
