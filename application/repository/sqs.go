@@ -91,8 +91,11 @@ func (s *SQSRepository) SendMessageToVoIPPushDeadLetterQueue(messageBody string)
 	return s.sendMessage(queueURL, messageGroupId, messageBody)
 }
 
-func (s *SQSRepository) RecieveAlarmInfoMessage() ([]types.Message, error) {
-	queueURL := "http://localhost:4566/000000000000/voip-push-queue.fifo"
+func (s *SQSRepository) ReceiveAlarmInfoMessage() ([]types.Message, error) {
+	queueURL, err := s.GetQueueURL(VoIPPushQueueName)
+	if err != nil {
+		return []types.Message{}, err
+	}
 	return s.recieveMessage(queueURL)
 }
 

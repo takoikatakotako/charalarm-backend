@@ -1,14 +1,25 @@
 package service
 
 import (
+	"encoding/json"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
 	"github.com/takoikatakotako/charalarm-backend/repository"
+	"github.com/takoikatakotako/charalarm-backend/request"
+	"github.com/takoikatakotako/charalarm-backend/sqs"
 	"testing"
+	"time"
 )
 
-func TestBatch(t *testing.T) {
+func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
+	// Repository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
+	sqsRepository := repository.SQSRepository{IsLocal: true}
+
+	// Service
 	userService := UserService{Repository: dynamoDBRepository}
+	alarmService := AlarmService{Repository: dynamoDBRepository}
+	batchService := BatchService{DynamoDBRepository: dynamoDBRepository, SQSRepository: sqsRepository}
 
 	// ユーザー作成
 	userID := uuid.New().String()
@@ -18,4 +29,52 @@ func TestBatch(t *testing.T) {
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
+
+	// アラーム追加
+	alarmID := uuid.New().String()
+	hour := 8
+	minute := 13
+	requestAlarm := request.Alarm{
+		AlarmID:        alarmID,
+		UserID:         userID,
+		Type:           "VOIP_NOTIFICATION",
+		Enable:         true,
+		Name:           "Alarm Name",
+		Hour:           hour,
+		Minute:         minute,
+		TimeDifference: 0,
+		CharaID:        "",
+		CharaName:      "",
+		VoiceFileName:  "",
+		Sunday:         true,
+		Monday:         true,
+		Tuesday:        true,
+		Wednesday:      true,
+		Thursday:       true,
+		Friday:         true,
+		Saturday:       true,
+	}
+
+	err = alarmService.AddAlarm(userID, authToken, requestAlarm)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// SQSに設定
+	err = batchService.QueryDynamoDBAndSendMessage(8, 13, time.Sunday)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// SQSに入ったことを確認
+	messages, err := sqsRepository.ReceiveAlarmInfoMessage()
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	assert.Equal(t, len(messages), 1)
+	getAlarmInfo := sqs.AlarmInfo{}
+	body := *messages[0].Body
+	_ = json.Unmarshal([]byte(body), &getAlarmInfo)
+	assert.Equal(t, getAlarmInfo.AlarmID, alarmID)
 }
