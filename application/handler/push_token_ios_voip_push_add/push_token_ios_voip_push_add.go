@@ -29,13 +29,13 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
 	}
 
-	request := request.AddPushTokenRequest{}
+	req := request.AddPushTokenRequest{}
 	body := event.Body
-	err = json.Unmarshal([]byte(body), &request)
+	err = json.Unmarshal([]byte(body), &req)
 	if err != nil {
 		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
 	}
-	pushToken := request.PushToken
+	pushToken := req.PushToken
 
 	// add push token
 	s := service.PushTokenService{
