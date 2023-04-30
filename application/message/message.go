@@ -5,6 +5,8 @@ const (
 	AuthenticationFailure   = "Authentication Failure"
 	UserSignupSuccess       = "Sign Up Success!"
 	UserSignupFailure       = "Sign Up Failure..."
+	UserUpdateSuccess       = "User Update Success !"
+	UserUpdateFailure       = "User Update Failure..."
 	CharaListFailure        = "Get Chara List Failure..."
 	InvalidRequestParameter = "Invalid Request Parameter"
 	ItemNotFound            = "item not found"
