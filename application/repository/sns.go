@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/takoikatakotako/charalarm-backend/sqs"
+	"strings"
 
 	// "github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
@@ -16,6 +17,11 @@ import (
 	// "github.com/takoikatakotako/charalarm-backend/validator"
 	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
 	"github.com/takoikatakotako/charalarm-backend/entity"
+)
+
+const (
+	iOSPushPlatformApplication     = "ios-push-platform-application"
+	iOSVoIPPushPlatformApplication = "ios-voip-push-platform-application"
 )
 
 type SNSRepository struct {
@@ -50,12 +56,18 @@ func (s *SNSRepository) createSNSClient() (*sns.Client, error) {
 
 // CreateIOSPushPlatformEndpoint iOS Platform Endpoint
 func (s *SNSRepository) CreateIOSPushPlatformEndpoint(pushToken string) (entity.CreatePlatformEndpointResponse, error) {
-	platformApplicationArn := "arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-voip-push-platform-application"
+	platformApplicationArn, err := s.getPlatformApplicationARN(iOSPushPlatformApplication)
+	if err != nil {
+		return entity.CreatePlatformEndpointResponse{}, err
+	}
 	return s.createPlatformEndpoint(platformApplicationArn, pushToken)
 }
 
 func (s *SNSRepository) CreateIOSVoipPushPlatformEndpoint(pushToken string) (entity.CreatePlatformEndpointResponse, error) {
-	platformApplicationArn := "arn:aws:sns:ap-northeast-1:000000000000:app/APNS/ios-voip-push-platform-application"
+	platformApplicationArn, err := s.getPlatformApplicationARN(iOSVoIPPushPlatformApplication)
+	if err != nil {
+		return entity.CreatePlatformEndpointResponse{}, err
+	}
 	return s.createPlatformEndpoint(platformApplicationArn, pushToken)
 }
 
@@ -119,4 +131,29 @@ func (s *SNSRepository) PublishPlatformApplication(alarmInfo sqs.AlarmInfo) erro
 	}
 
 	return nil
+}
+
+// getQueueURL QueueのURLを取得する
+func (s *SNSRepository) getPlatformApplicationARN(queueName string) (string, error) {
+	// SQSClient作成
+	client, err := s.createSNSClient()
+	if err != nil {
+		return "", err
+	}
+
+	// PlatformApplication を取得
+	input := &sns.ListPlatformApplicationsInput{}
+	output, err := client.ListPlatformApplications(context.Background(), input)
+	if err != nil {
+		return "", err
+	}
+
+	for _, platformApplication := range output.PlatformApplications {
+		platformApplicationArn := *platformApplication.PlatformApplicationArn
+		if strings.Contains(platformApplicationArn, queueName) {
+			return platformApplicationArn, nil
+		}
+	}
+
+	return "", errors.New("platform Application Not Found")
 }
