@@ -45,6 +45,9 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	}
 	err = s.AddIOSVoipPushToken(userID, authToken, pushToken)
 	if err != nil {
+		fmt.Println("----err--")
+		fmt.Println(err)
+		fmt.Println("-------")
 		return handler.FailureResponse(http.StatusInternalServerError, message.UserUpdateFailure)
 	}
 
