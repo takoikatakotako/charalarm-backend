@@ -36,7 +36,7 @@ GOOS=linux GOARCH=amd64 go build -o build/user_signup handler/user_signup/user_s
 GOOS=linux GOARCH=amd64 go build -o build/user_withdraw handler/user_withdraw/user_withdraw.go
 
 # worker
-GOOS=linux GOARCH=amd64 go build -o build/user_withdraw handler/worker/worker.go
+GOOS=linux GOARCH=amd64 go build -o build/worker handler/worker/worker.go
 
 
 ################################################################
