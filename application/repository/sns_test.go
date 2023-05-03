@@ -22,7 +22,7 @@ func TestCreateVoipPlatformEndpoint(t *testing.T) {
 }
 
 // エンドポイントを重複して作るとエラーになる
-func TestDuplcateVoipPlatformEndpoint(t *testing.T) {
+func TestDuplicateVoipPlatformEndpoint(t *testing.T) {
 	repository := SNSRepository{IsLocal: true}
 
 	token := uuid.New().String()

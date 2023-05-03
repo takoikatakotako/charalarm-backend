@@ -18,17 +18,15 @@ module "sqs" {
   worker_lambda_function_arn = module.worker.worker_lambda_function_arn
 }
 
-# module "application" {
-#   source = "./application"
-#   bucket_name = local.application_bucket_name
-# }
-
-# module "web_front" {
-#   source              = "./web_front"
-#   domain              = local.front_domain
-#   route53_zone_id     = local.route53_zone_id
-#   acm_certificate_arn = local.front_acm_certificate_arn
-# }
+module "platform_application" {
+  source                            = "./platform_application"
+  apple_platform_team_id   = "5RH346BQ66"
+  apple_platform_bundle_id = "com.charalarm.staging"
+  ios_push_credential_file          = "AuthKey_NL6K5FR5S8.p8"
+  ios_push_platform_principal       = "NL6K5FR5S8"
+  ios_voip_push_private_file        = "staging-voip-20240210-privatekey.pem"
+  ios_voip_push_certificate_file    = "staging-voip-20240210-certificate.pem"
+}
 
 module "web_api" {
   source                  = "./web_api"
