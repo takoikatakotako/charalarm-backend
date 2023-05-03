@@ -49,9 +49,9 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	voiceFilePath := b.getVoiceFilePath(randomChara.CharaID, randomVoiceFileName)
 	randomCharaNameAndVoiceFileURL["RANDOM"] = CharaNameAndVoiceFilePath{CharaName: randomCharaName, VoiceFilePath: voiceFilePath}
 
-	fmt.Printf("----------------")
-	fmt.Printf("AlarmList: %v", alarmList)
-	fmt.Printf("----------------")
+	fmt.Println("----------------")
+	fmt.Println("AlarmList: %v", alarmList)
+	fmt.Println("----------------")
 
 	// AlarmInfoに変換してSQSに送信
 	for _, alarm := range alarmList {
