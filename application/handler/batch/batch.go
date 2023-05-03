@@ -26,7 +26,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 		DynamoDBRepository: repository.DynamoDBRepository{},
 		SQSRepository:      repository.SQSRepository{},
 	}
-	err := s.QueryDynamoDBAndSendMessage(3, 3, weekday)
+	err := s.QueryDynamoDBAndSendMessage(hour, minute, weekday)
 	if err != nil {
 		fmt.Printf("----------------")
 		fmt.Printf("Hander: %v", err)
