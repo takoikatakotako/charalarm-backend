@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -12,11 +11,11 @@ import (
 	"github.com/google/uuid"
 	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
 	sqs_entity "github.com/takoikatakotako/charalarm-backend/sqs"
-	"os"
 )
 
 const (
-	VoIPPushQueueName = "voip-push-queue.fifo"
+	VoIPPushQueueName           = "voip-push-queue.fifo"
+	VoIPPushDeadLetterQueueName = "voip-push-dead-letter-queue.fifo"
 )
 
 type SQSRepository struct {
@@ -81,7 +80,7 @@ func (s *SQSRepository) SendAlarmInfoToVoIPPushQueue(alarmInfo sqs_entity.AlarmI
 }
 
 func (s *SQSRepository) SendMessageToVoIPPushDeadLetterQueue(messageBody string) error {
-	queueURL, err := s.getVoIPPushDeadLetterQueueURL()
+	queueURL, err := s.GetQueueURL(VoIPPushDeadLetterQueueName)
 	if err != nil {
 		return err
 	}
@@ -96,7 +95,7 @@ func (s *SQSRepository) ReceiveAlarmInfoMessage() ([]types.Message, error) {
 	if err != nil {
 		return []types.Message{}, err
 	}
-	return s.recieveMessage(queueURL)
+	return s.receiveMessage(queueURL)
 }
 
 func (s *SQSRepository) PurgeQueue() error {
@@ -116,9 +115,9 @@ func (s *SQSRepository) PurgeQueue() error {
 	return err
 }
 
-////////////////////////////////////
+// //////////////////////////////////
 // Private Methods
-////////////////////////////////////
+// //////////////////////////////////
 func (s *SQSRepository) sendAlarmInfoMessage(queueURL string, messageGroupId string, alarmInfo sqs_entity.AlarmInfo) error {
 	// decode
 	jsonBytes, err := json.Marshal(alarmInfo)
@@ -148,7 +147,7 @@ func (s *SQSRepository) sendMessage(queueURL string, messageGroupId string, mess
 	return err
 }
 
-func (s *SQSRepository) recieveMessage(queueURL string) ([]types.Message, error) {
+func (s *SQSRepository) receiveMessage(queueURL string) ([]types.Message, error) {
 	// SQSClient作成
 	client, err := s.createSQSClient()
 	if err != nil {
@@ -169,31 +168,4 @@ func (s *SQSRepository) recieveMessage(queueURL string) ([]types.Message, error)
 	}
 
 	return resp.Messages, nil
-}
-
-// Get Queue URL
-func (s *SQSRepository) getVoIPPushQueueURL() (string, error) {
-	if s.IsLocal {
-		return charalarm_config.LocalVoIPPushQueueURL, nil
-	} else {
-		voIPPushQueueURL, ok := os.LookupEnv(charalarm_config.VoIPPushQueueURLKey)
-		if ok {
-			return voIPPushQueueURL, nil
-		} else {
-			return "", errors.New("VoIPPushQueueUrl is not found")
-		}
-	}
-}
-
-func (s *SQSRepository) getVoIPPushDeadLetterQueueURL() (string, error) {
-	if s.IsLocal {
-		return charalarm_config.LocalVoIPPushDeadLetterQueueURL, nil
-	} else {
-		voIPPushDeadLetterQueueURL, ok := os.LookupEnv(charalarm_config.VoIPPushDeadLetterQueueURLKey)
-		if ok {
-			return voIPPushDeadLetterQueueURL, nil
-		} else {
-			return "", errors.New("VoIPPushDeadLetterQueueUrl is not found")
-		}
-	}
 }

@@ -46,3 +46,8 @@ resource "aws_iam_role_policy_attachment" "worker_lambda_role_sqs_execution_poli
   role       = aws_iam_role.worker_lambda_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole"
 }
+
+resource "aws_iam_role_policy_attachment" "worker_lambda_role_sns_full_access_policy_attachment" {
+  role       = aws_iam_role.worker_lambda_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
+}

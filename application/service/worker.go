@@ -16,7 +16,7 @@ type WorkerService struct {
 	SQSRepository repository.SQSRepository
 }
 
-// VoIPのプッシュ通知をする
+// PublishPlatformApplication VoIPのプッシュ通知をする
 func (w *WorkerService) PublishPlatformApplication(messageBody string) error {
 	// デコード
 	alarmInfo := sqs.AlarmInfo{}
@@ -29,7 +29,7 @@ func (w *WorkerService) PublishPlatformApplication(messageBody string) error {
 	return w.SNSRepository.PublishPlatformApplication(alarmInfo)
 }
 
-// エラーのあるメッセージをデッドレターに送信
+// SendMessageToDeadLetter エラーのあるメッセージをデッドレターに送信
 func (w *WorkerService) SendMessageToDeadLetter(messageBody string) error {
 	// キューに送信
 	return w.SQSRepository.SendMessageToVoIPPushDeadLetterQueue(messageBody)

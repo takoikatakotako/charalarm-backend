@@ -20,12 +20,19 @@ func Handler(ctx context.Context, event events.SQSEvent) (events.APIGatewayProxy
 	for _, message := range event.Records {
 		// メッセージを取得して処理する
 		err := s.PublishPlatformApplication(message.Body)
+		if err == nil {
+			continue
+		}
+
+		fmt.Println(err)
 
 		// エラーの場合はデッドレターキューに格納する
-		if err != nil {
-			err := s.SendMessageToDeadLetter(message.Body)
-			fmt.Println(err)
-		}
+		err = s.SendMessageToDeadLetter(message.Body)
+		fmt.Println(err)
+		return events.APIGatewayProxyResponse{
+			Body:       string("Fail"),
+			StatusCode: http.StatusInternalServerError,
+		}, nil
 	}
 	fmt.Println("--------")
 
