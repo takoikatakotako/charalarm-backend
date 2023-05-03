@@ -35,6 +35,9 @@ GOOS=linux GOARCH=amd64 go build -o build/user_info handler/user_info/user_info.
 GOOS=linux GOARCH=amd64 go build -o build/user_signup handler/user_signup/user_signup.go
 GOOS=linux GOARCH=amd64 go build -o build/user_withdraw handler/user_withdraw/user_withdraw.go
 
+# worker
+GOOS=linux GOARCH=amd64 go build -o build/user_withdraw handler/worker/worker.go
+
 
 ################################################################
 # Archive
@@ -66,6 +69,8 @@ zip user_signup.zip user_signup
 zip user_info.zip user_info
 zip user_withdraw.zip user_withdraw
 
+# worker
+zip worker.zip worker
 
 ################################################################
 # Clear
@@ -110,4 +115,5 @@ aws lambda update-function-code --function-name user-signup-post-function --s3-b
 aws lambda update-function-code --function-name user-withdraw-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/user_withdraw.zip
 aws lambda update-function-code --function-name user-info-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/user_info.zip
 
-
+# worker
+aws lambda update-function-code --function-name worker-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/worker.zip
