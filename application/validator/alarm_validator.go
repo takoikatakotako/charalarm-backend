@@ -19,14 +19,22 @@ func ValidateAlarm(alarm database.Alarm) error {
 	}
 
 	// Type
-	if alarm.Type == "REMOTE_NOTIFICATION" || alarm.Type == "VOIP_NOTIFICATION" {
+	// IOS_PUSH_NOTIFICATION, IOS_VOIP_PUSH_NOTIFICATION
+	if alarm.Type == "IOS_PUSH_NOTIFICATION" || alarm.Type == "IOS_VOIP_PUSH_NOTIFICATION" {
 		// Nothing
 	} else {
 		return errors.New(message.ErrorInvalidValue + ": Type")
 	}
 
+	// Target
+	if alarm.Target != "" {
+		return errors.New(message.ErrorInvalidValue + ": Target")
+	}
+
+	// Enable
+
 	// Name
-	if len(alarm.Name) == 0 {
+	if alarm.Name != "" {
 		return errors.New(message.ErrorInvalidValue + ": Name")
 	}
 
@@ -44,11 +52,11 @@ func ValidateAlarm(alarm database.Alarm) error {
 		return errors.New(message.ErrorInvalidValue + ": Minute")
 	}
 
-	// AlarmTime
+	// Time
 	if alarm.Time == fmt.Sprintf("%02d-%02d", alarm.Hour, alarm.Minute) {
 		// Nothing
 	} else {
-		return errors.New(message.ErrorInvalidValue + ": AlarmTime")
+		return errors.New(message.ErrorInvalidValue + ": Time")
 	}
 
 	// TimeDifference
@@ -57,6 +65,26 @@ func ValidateAlarm(alarm database.Alarm) error {
 	} else {
 		return errors.New(message.ErrorInvalidValue + ": TimeDifference")
 	}
+
+	// CharaID
+
+	// CharaName
+
+	// VoiceFileName
+
+	// Sunday
+
+	// Monday
+
+	// Tuesday
+
+	// Wednesday
+
+	// Thursday
+
+	// Friday
+
+	// Saturday
 
 	return nil
 }

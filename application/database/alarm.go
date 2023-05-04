@@ -25,7 +25,7 @@ type Alarm struct {
 	Hour           int     `dynamodbav:"hour"`
 	Minute         int     `dynamodbav:"minute"`
 	Time           string  `dynamodbav:"time"`
-	TimeDifference float32 `json:"timeDifference"`
+	TimeDifference float32 `dynamodbav:"timeDifference"`
 
 	// Chara Info
 	CharaID       string `dynamodbav:"charaID"`

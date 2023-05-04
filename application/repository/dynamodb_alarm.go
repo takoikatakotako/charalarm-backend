@@ -14,7 +14,6 @@ import (
 )
 
 func (d *DynamoDBRepository) GetAlarmList(userID string) ([]database.Alarm, error) {
-
 	client, err := d.createDynamoDBClient()
 	if err != nil {
 		return []database.Alarm{}, err
@@ -129,7 +128,6 @@ func (d *DynamoDBRepository) InsertAlarm(alarm database.Alarm) error {
 	// Alarm のバリデーション
 	err := validator.ValidateAlarm(alarm)
 	if err != nil {
-		fmt.Printf("err, %v", err)
 		return err
 	}
 
@@ -209,12 +207,6 @@ func (d *DynamoDBRepository) DeleteAlarm(alarmID string) error {
 	if err != nil {
 		return err
 	}
-
-	// fmt.Println("------")
-	// fmt.Println(alarmID)
-	// bs, _ := json.Marshal(xx)
-	// fmt.Println(string(bs))
-	// fmt.Println("------")
 
 	return nil
 }
