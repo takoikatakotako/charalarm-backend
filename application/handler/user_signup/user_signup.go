@@ -18,7 +18,6 @@ import (
 
 func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	body := event.Body
-	req := request.UserSignUp{}
 
 	fmt.Println("-------")
 	fmt.Println(ctx)
@@ -27,6 +26,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	fmt.Println("-------")
 
 	// Decode Body
+	req := request.UserSignUp{}
 	if err := json.Unmarshal([]byte(body), &req); err != nil {
 		return handler.FailureResponse(http.StatusBadRequest, message.InvalidRequestParameter)
 	}
@@ -34,11 +34,12 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	// Get Parameters
 	userID := req.UserID
 	authToken := req.AuthToken
+	platform := req.Platform
 	ipAddress := event.RequestContext.Identity.SourceIP
 
 	// Signup
 	s := service.UserService{Repository: repository.DynamoDBRepository{}}
-	if err := s.Signup(userID, authToken, ipAddress); err != nil {
+	if err := s.Signup(userID, authToken, platform, ipAddress); err != nil {
 		fmt.Println(err)
 		return handler.FailureResponse(http.StatusBadRequest, message.UserSignupFailure)
 	}
