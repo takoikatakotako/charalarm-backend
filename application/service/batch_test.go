@@ -11,6 +11,12 @@ import (
 	"time"
 )
 
+func init() {
+	// Repository
+	sqsRepository := repository.SQSRepository{IsLocal: true}
+	_ = sqsRepository.PurgeQueue()
+}
+
 func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 	// Repository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
@@ -33,7 +39,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 	// アラーム追加
 	alarmID := uuid.New().String()
 	hour := 8
-	minute := 13
+	minute := 28
 	requestAlarm := request.Alarm{
 		AlarmID:        alarmID,
 		UserID:         userID,
@@ -61,7 +67,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 	}
 
 	// SQSに設定
-	err = batchService.QueryDynamoDBAndSendMessage(8, 13, time.Sunday)
+	err = batchService.QueryDynamoDBAndSendMessage(hour, minute, time.Sunday)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -72,9 +78,12 @@ func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 
-	assert.Equal(t, len(messages), 1)
+	assert.Equal(t, 1, len(messages))
 	getAlarmInfo := sqs.AlarmInfo{}
 	body := *messages[0].Body
-	_ = json.Unmarshal([]byte(body), &getAlarmInfo)
+	err = json.Unmarshal([]byte(body), &getAlarmInfo)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
 	assert.Equal(t, getAlarmInfo.AlarmID, alarmID)
 }

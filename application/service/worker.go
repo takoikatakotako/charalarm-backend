@@ -1,7 +1,6 @@
 package service
 
 import (
-	"encoding/json"
 	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/sqs"
 
@@ -23,16 +22,12 @@ func (service *WorkerService) PublishPlatformApplication(alarmInfo sqs.AlarmInfo
 	}
 
 	// 送信用の Message に変換
-	voipPushInfo := entity.VoIPPushInfo{}
-	voipPushInfo.CharaName = alarmInfo.CharaName
-	voipPushInfo.FilePath = alarmInfo.VoiceFilePath
-	jsonBytes, err := json.Marshal(voipPushInfo)
-	if err != nil {
-		return err
-	}
+	iOSVoIPPushSNSMessage := entity.IOSVoIPPushSNSMessage{}
+	iOSVoIPPushSNSMessage.CharaName = alarmInfo.CharaName
+	iOSVoIPPushSNSMessage.FilePath = alarmInfo.VoiceFilePath
 
 	// メッセージを送信
-	return service.SNSRepository.PublishPlatformApplication(alarmInfo.SNSEndpointArn, string(jsonBytes))
+	return service.SNSRepository.PublishPlatformApplication(alarmInfo.SNSEndpointArn, iOSVoIPPushSNSMessage)
 }
 
 // SendMessageToDeadLetter エラーのあるメッセージをデッドレターに送信

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -92,15 +93,21 @@ func (s *SNSRepository) CheckPlatformEndpointEnabled(endpoint string) error {
 	return nil
 }
 
-func (s *SNSRepository) PublishPlatformApplication(targetArn string, message string) error {
+func (s *SNSRepository) PublishPlatformApplication(targetArn string, iosVoipPushSNSMessage entity.IOSVoIPPushSNSMessage) error {
 	client, err := s.createSNSClient()
+	if err != nil {
+		return err
+	}
+
+	// Encode
+	jsonBytes, err := json.Marshal(iosVoipPushSNSMessage)
 	if err != nil {
 		return err
 	}
 
 	// プッシュ通知を発火
 	publishInput := &sns.PublishInput{
-		Message:   aws.String(message),
+		Message:   aws.String(string(jsonBytes)),
 		TargetArn: aws.String(targetArn),
 	}
 	_, err = client.Publish(context.Background(), publishInput)

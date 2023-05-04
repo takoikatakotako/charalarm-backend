@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/sqs"
+	"github.com/takoikatakotako/charalarm-backend/entity"
 	"strings"
 	"testing"
 )
@@ -48,13 +48,12 @@ func TestPublishPlatformApplication(t *testing.T) {
 	}
 	endpointArn := response.EndpointArn
 
-	//
-	alarmInfo := sqs.AlarmInfo{}
-	alarmInfo.SNSEndpointArn = endpointArn
-	alarmInfo.CharaName = "キャラ名"
-	alarmInfo.VoiceFilePath = "ファイルURL"
+	// 詰め替える
+	iOSVoIPPushSNSMessage := entity.IOSVoIPPushSNSMessage{}
+	iOSVoIPPushSNSMessage.CharaName = "キャラ名"
+	iOSVoIPPushSNSMessage.FilePath = "ファイルPath"
 
-	err = repository.PublishPlatformApplication(alarmInfo)
+	err = repository.PublishPlatformApplication(endpointArn, iOSVoIPPushSNSMessage)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
