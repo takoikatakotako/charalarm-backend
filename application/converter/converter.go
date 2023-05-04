@@ -8,17 +8,19 @@ import (
 
 func DatabaseUserToResponseUserInfo(user database.User) response.UserInfoResponse {
 	return response.UserInfoResponse{
-		UserID:           user.UserID,
-		AuthToken:        maskAuthToken(user.AuthToken),
-		IOSPushToken:     DatabasePushTokenToResponsePushToken(user.IOSVoIPPushToken),
-		IOSVoIPPushToken: DatabasePushTokenToResponsePushToken(user.IOSVoIPPushToken),
+		UserID:          user.UserID,
+		AuthToken:       maskAuthToken(user.AuthToken),
+		Platform:        user.Platform,
+		IOSPlatformInfo: DatabaseIOSPlatformInfoToResponseIOSPlatformInfoResponse(user.IOSPlatformInfo),
 	}
 }
 
-func DatabasePushTokenToResponsePushToken(pushToken database.PushToken) response.PushToken {
-	return response.PushToken{
-		Token:          pushToken.Token,
-		SNSEndpointArn: pushToken.SNSEndpointArn,
+func DatabaseIOSPlatformInfoToResponseIOSPlatformInfoResponse(iOSPlatformInfo database.IOSPlatformInfo) response.IOSPlatformInfoResponse {
+	return response.IOSPlatformInfoResponse{
+		PushToken:                iOSPlatformInfo.PushToken,
+		PushTokenSNSEndpoint:     iOSPlatformInfo.PushTokenSNSEndpoint,
+		VoIPPushToken:            iOSPlatformInfo.VoIPPushToken,
+		VoIPPushTokenSNSEndpoint: iOSPlatformInfo.VoIPPushTokenSNSEndpoint,
 	}
 }
 

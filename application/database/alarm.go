@@ -15,8 +15,11 @@ type Alarm struct {
 	AlarmID string `dynamodbav:"alarmID"`
 	UserID  string `dynamodbav:"userID"`
 
-	// REMOTE_NOTIFICATION VOIP_NOTIFICATION
-	Type           string  `dynamodbav:"type"`
+	// Target Info
+	Type   string `dynamodbav:"type"` // REMOTE_NOTIFICATION, VOIP_NOTIFICATION
+	Target string `dynamodbav:"target"`
+
+	// AlarmInfo
 	Enable         bool    `dynamodbav:"enable"`
 	Name           string  `dynamodbav:"name"`
 	Hour           int     `dynamodbav:"hour"`

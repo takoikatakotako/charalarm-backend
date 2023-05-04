@@ -69,7 +69,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 			fmt.Printf("----------------")
 			continue
 		}
-		alarmInfo.SNSEndpointArn = user.IOSVoIPPushToken.SNSEndpointArn
+		alarmInfo.SNSEndpointArn = user.IOSPlatformInfo.VoIPPushTokenSNSEndpoint
 
 		//
 		if alarm.CharaID == "" || alarm.CharaID == "RANDOM" {
