@@ -13,12 +13,12 @@ func TestCreateVoipPlatformEndpoint(t *testing.T) {
 	repository := SNSRepository{IsLocal: true}
 
 	token := uuid.New().String()
-	response, err := repository.CreateIOSVoipPushPlatformEndpoint(token)
+	endpointArn, err := repository.CreateIOSVoipPushPlatformEndpoint(token)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
-	assert.NotEqual(t, len(response.EndpointArn), 0)
+	assert.NotEqual(t, len(endpointArn), 0)
 }
 
 // エンドポイントを重複して作るとエラーになる
@@ -42,11 +42,10 @@ func TestPublishPlatformApplication(t *testing.T) {
 
 	// endpointを作成
 	token := uuid.New().String()
-	response, err := repository.CreateIOSVoipPushPlatformEndpoint(token)
+	endpointArn, err := repository.CreateIOSVoipPushPlatformEndpoint(token)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
-	endpointArn := response.EndpointArn
 
 	// 詰め替える
 	iOSVoIPPushSNSMessage := entity.IOSVoIPPushSNSMessage{}

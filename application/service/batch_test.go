@@ -7,6 +7,7 @@ import (
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/request"
 	"github.com/takoikatakotako/charalarm-backend/sqs"
+	"math/rand"
 	"testing"
 	"time"
 )
@@ -38,8 +39,8 @@ func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 
 	// アラーム追加
 	alarmID := uuid.New().String()
-	hour := 8
-	minute := 28
+	hour := rand.Intn(12)
+	minute := rand.Intn(60)
 	requestAlarm := request.Alarm{
 		AlarmID:        alarmID,
 		UserID:         userID,

@@ -11,9 +11,6 @@ import (
 
 	// "github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
-	// "github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	// "github.com/takoikatakotako/charalarm-backend/table"
-	// "github.com/takoikatakotako/charalarm-backend/validator"
 	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
 	"github.com/takoikatakotako/charalarm-backend/entity"
 )
@@ -54,18 +51,18 @@ func (s *SNSRepository) createSNSClient() (*sns.Client, error) {
 }
 
 // CreateIOSPushPlatformEndpoint iOS Platform Endpoint
-func (s *SNSRepository) CreateIOSPushPlatformEndpoint(pushToken string) (entity.CreatePlatformEndpointResponse, error) {
+func (s *SNSRepository) CreateIOSPushPlatformEndpoint(pushToken string) (string, error) {
 	platformApplicationArn, err := s.getPlatformApplicationARN(iOSPushPlatformApplication)
 	if err != nil {
-		return entity.CreatePlatformEndpointResponse{}, err
+		return "", err
 	}
 	return s.createPlatformEndpoint(platformApplicationArn, pushToken)
 }
 
-func (s *SNSRepository) CreateIOSVoipPushPlatformEndpoint(pushToken string) (entity.CreatePlatformEndpointResponse, error) {
+func (s *SNSRepository) CreateIOSVoipPushPlatformEndpoint(pushToken string) (string, error) {
 	platformApplicationArn, err := s.getPlatformApplicationARN(iOSVoIPPushPlatformApplication)
 	if err != nil {
-		return entity.CreatePlatformEndpointResponse{}, err
+		return "", err
 	}
 	return s.createPlatformEndpoint(platformApplicationArn, pushToken)
 }
@@ -147,10 +144,10 @@ func (s *SNSRepository) getPlatformApplicationARN(queueName string) (string, err
 	return "", errors.New("platform Application Not Found")
 }
 
-func (s *SNSRepository) createPlatformEndpoint(platformApplicationArn string, pushToken string) (entity.CreatePlatformEndpointResponse, error) {
+func (s *SNSRepository) createPlatformEndpoint(platformApplicationArn string, pushToken string) (string, error) {
 	client, err := s.createSNSClient()
 	if err != nil {
-		return entity.CreatePlatformEndpointResponse{}, err
+		return "", err
 	}
 
 	// エンドポイント作成
@@ -160,9 +157,8 @@ func (s *SNSRepository) createPlatformEndpoint(platformApplicationArn string, pu
 	}
 	result, err := client.CreatePlatformEndpoint(context.Background(), getInput)
 	if err != nil {
-		return entity.CreatePlatformEndpointResponse{}, err
+		return "", err
 	}
 
-	response := entity.CreatePlatformEndpointResponse{EndpointArn: *result.EndpointArn}
-	return response, nil
+	return *result.EndpointArn, nil
 }

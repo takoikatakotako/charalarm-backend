@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/takoikatakotako/charalarm-backend/database"
-	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/validator"
@@ -81,14 +80,4 @@ func (s *UserService) Withdraw(userID string, authToken string) error {
 
 	// 認証失敗
 	return errors.New(message.AuthenticationFailure)
-}
-
-// database.User を entity.AnonymousUser に変換
-func (s *UserService) convertDatabaseUserToEntityUser(user database.User) entity.User {
-	return entity.User{
-		UserID:           user.UserID,
-		AuthToken:        user.AuthToken,
-		IOSVoIPPushToken: entity.PushToken{},
-		IOSPushToken:     entity.PushToken{},
-	}
 }

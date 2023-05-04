@@ -32,13 +32,12 @@ func (s *PushTokenService) AddIOSPushToken(userID string, authToken string, push
 	}
 
 	// PlatformApplicationを作成
-	response, err := s.SNSRepository.CreateIOSPushPlatformEndpoint(pushToken)
+	snsEndpointArn, err := s.SNSRepository.CreateIOSPushPlatformEndpoint(pushToken)
 	if err != nil {
 		return err
 	}
 
 	// DynamoDBに追加
-	snsEndpointArn := response.EndpointArn
 	user.IOSPlatformInfo.PushToken = pushToken
 	user.IOSPlatformInfo.PushTokenSNSEndpoint = snsEndpointArn
 	return s.DynamoDBRepository.InsertUser(user)
@@ -64,13 +63,12 @@ func (s *PushTokenService) AddIOSVoipPushToken(userID string, authToken string, 
 	}
 
 	// PlatformApplicationを作成
-	response, err := s.SNSRepository.CreateIOSVoipPushPlatformEndpoint(voIPPushToken)
+	snsEndpointArn, err := s.SNSRepository.CreateIOSVoipPushPlatformEndpoint(voIPPushToken)
 	if err != nil {
 		return err
 	}
 
 	// DynamoDBに追加
-	snsEndpointArn := response.EndpointArn
 	user.IOSPlatformInfo.VoIPPushToken = voIPPushToken
 	user.IOSPlatformInfo.VoIPPushTokenSNSEndpoint = snsEndpointArn
 	return s.DynamoDBRepository.InsertUser(user)
