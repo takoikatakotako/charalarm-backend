@@ -70,7 +70,7 @@ func TestPushTokenService_AddIOSPushTokenCanChange(t *testing.T) {
 	}
 
 	// トークン作成
-	err = pushService.AddIOSVoipPushToken(userID, authToken, oldPushToken)
+	err = pushService.AddIOSPushToken(userID, authToken, oldPushToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -82,11 +82,13 @@ func TestPushTokenService_AddIOSPushTokenCanChange(t *testing.T) {
 	}
 
 	// Assert
-	assert.Equal(t, getUser.IOSPlatformInfo.VoIPPushToken, oldPushToken)
-	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint, "arn:aws:sns:ap-northeast-1"))
+	assert.Equal(t, getUser.IOSPlatformInfo.PushToken, oldPushToken)
+	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.PushTokenSNSEndpoint, "arn:aws:sns:ap-northeast-1"))
+
+	oldEndpoint := getUser.IOSPlatformInfo.PushTokenSNSEndpoint
 
 	// トークン更新
-	err = pushService.AddIOSVoipPushToken(userID, authToken, newPushToken)
+	err = pushService.AddIOSPushToken(userID, authToken, newPushToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -98,8 +100,11 @@ func TestPushTokenService_AddIOSPushTokenCanChange(t *testing.T) {
 	}
 
 	// Assert
-	assert.Equal(t, getUser.IOSPlatformInfo.VoIPPushToken, newPushToken)
-	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint, "arn:aws:sns:ap-northeast-1"))
+	assert.Equal(t, getUser.IOSPlatformInfo.PushToken, newPushToken)
+	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.PushTokenSNSEndpoint, "arn:aws:sns:ap-northeast-1"))
+	assert.NotEqual(t, getUser.IOSPlatformInfo.PushTokenSNSEndpoint, oldEndpoint)
+	assert.Equal(t, getUser.IOSPlatformInfo.VoIPPushToken, "")
+	assert.Equal(t, getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint, "")
 }
 
 // iOSPushTokenを複数回更新できる
@@ -124,12 +129,12 @@ func TestPushTokenService_AddIOSPushTokenMultiTimes(t *testing.T) {
 	}
 
 	// トークン作成
-	err = pushService.AddIOSVoipPushToken(userID, authToken, pushToken)
+	err = pushService.AddIOSPushToken(userID, authToken, pushToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
-	err = pushService.AddIOSVoipPushToken(userID, authToken, pushToken)
+	err = pushService.AddIOSPushToken(userID, authToken, pushToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -141,8 +146,10 @@ func TestPushTokenService_AddIOSPushTokenMultiTimes(t *testing.T) {
 	}
 
 	// Assert
-	assert.Equal(t, getUser.IOSPlatformInfo.PushToken, pushToken)
-	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint, "arn:aws:sns:ap-northeast-1"))
+	assert.Equal(t, pushToken, getUser.IOSPlatformInfo.PushToken)
+	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.PushTokenSNSEndpoint, "arn:aws:sns:ap-northeast-1"))
+	assert.Equal(t, "", getUser.IOSPlatformInfo.VoIPPushToken)
+	assert.Equal(t, "", getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint)
 }
 
 // iOSVoIPPushTokenを登録できる
@@ -179,8 +186,10 @@ func TestPushTokenService_AddIOSVoipPushToken(t *testing.T) {
 	}
 
 	// Assert
-	assert.Equal(t, getUser.IOSPlatformInfo.PushToken, pushToken)
-	assert.NotEqual(t, getUser.IOSPlatformInfo.PushTokenSNSEndpoint, "")
+	assert.Equal(t, "", getUser.IOSPlatformInfo.PushToken)
+	assert.Equal(t, "", getUser.IOSPlatformInfo.PushTokenSNSEndpoint)
+	assert.Equal(t, pushToken, getUser.IOSPlatformInfo.VoIPPushToken)
+	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint, "arn:aws:sns:ap-northeast-1"))
 }
 
 // iOSVoIPPushTokenを変更できる
@@ -221,6 +230,8 @@ func TestPushTokenService_AddIOSVoipPushTokenCanChange(t *testing.T) {
 	assert.Equal(t, getUser.IOSPlatformInfo.VoIPPushToken, oldPushToken)
 	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint, "arn:aws:sns:ap-northeast-1"))
 
+	oldSNSEndpoint := getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint
+
 	// トークン更新
 	err = pushService.AddIOSVoipPushToken(userID, authToken, newPushToken)
 	if err != nil {
@@ -235,7 +246,8 @@ func TestPushTokenService_AddIOSVoipPushTokenCanChange(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, getUser.IOSPlatformInfo.VoIPPushToken, newPushToken)
-	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.VoIPPushToken, "arn:aws:sns:ap-northeast-1"))
+	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint, "arn:aws:sns:ap-northeast-1"))
+	assert.NotEqual(t, oldSNSEndpoint, getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint)
 }
 
 // iOSVoIPPushTokenを複数回変更できる
