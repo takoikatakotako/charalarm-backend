@@ -9,9 +9,9 @@ import (
 	"time"
 )
 
-////////////////////////////////////
+// //////////////////////////////////
 // User
-////////////////////////////////////
+// //////////////////////////////////
 func TestInsertUserAndGet(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 
@@ -45,7 +45,7 @@ func TestInsertUserAndExist(t *testing.T) {
 	authToken := uuid.New().String()
 
 	// IsExist
-	firstIsExist, err := repository.IsExistAnonymousUser(userID)
+	firstIsExist, err := repository.IsExistUser(userID)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -61,7 +61,7 @@ func TestInsertUserAndExist(t *testing.T) {
 	}
 
 	// IsExist
-	secondIsExist, err := repository.IsExistAnonymousUser(userID)
+	secondIsExist, err := repository.IsExistUser(userID)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -86,7 +86,7 @@ func TestInsertUserAndDelete(t *testing.T) {
 	}
 
 	// IsExist
-	firstIsExist, err := repository.IsExistAnonymousUser(userID)
+	firstIsExist, err := repository.IsExistUser(userID)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -95,13 +95,13 @@ func TestInsertUserAndDelete(t *testing.T) {
 	assert.Equal(t, firstIsExist, true)
 
 	// Delete
-	err = repository.DeleteAnonymousUser(userID)
+	err = repository.DeleteUser(userID)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// IsExist
-	secondIsExist, err := repository.IsExistAnonymousUser(userID)
+	secondIsExist, err := repository.IsExistUser(userID)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -110,9 +110,9 @@ func TestInsertUserAndDelete(t *testing.T) {
 	assert.Equal(t, secondIsExist, false)
 }
 
-////////////////////////////////////
+// //////////////////////////////////
 // Alarm
-////////////////////////////////////
+// //////////////////////////////////
 func TestInsertAlarmAndGet(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 

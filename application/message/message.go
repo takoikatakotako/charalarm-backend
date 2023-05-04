@@ -18,4 +18,5 @@ const (
 	AlarmEditFailure            = "Edit Alarm Failure..."
 	AlarmEditSuccess            = "Edit Alarm Success!"
 	PlatformApplicationNotFound = "Platform Application Not Found"
+	ErrorInvalidValue           = "error invalid value"
 )

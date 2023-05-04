@@ -15,7 +15,7 @@ func DatabaseUserToResponseUserInfo(user database.User) response.UserInfoRespons
 	}
 }
 
-func DatabaseIOSPlatformInfoToResponseIOSPlatformInfoResponse(iOSPlatformInfo database.IOSPlatformInfo) response.IOSPlatformInfoResponse {
+func DatabaseIOSPlatformInfoToResponseIOSPlatformInfoResponse(iOSPlatformInfo database.UserIOSPlatformInfo) response.IOSPlatformInfoResponse {
 	return response.IOSPlatformInfoResponse{
 		PushToken:                iOSPlatformInfo.PushToken,
 		PushTokenSNSEndpoint:     iOSPlatformInfo.PushTokenSNSEndpoint,

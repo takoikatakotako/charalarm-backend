@@ -72,7 +72,7 @@ func TestWithdraw(t *testing.T) {
 	}
 
 	// IsExist
-	firstIsExist, err := repository.IsExistAnonymousUser(userID)
+	firstIsExist, err := repository.IsExistUser(userID)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -87,7 +87,7 @@ func TestWithdraw(t *testing.T) {
 	}
 
 	// IsExist
-	secondIsExist, err := repository.IsExistAnonymousUser(userID)
+	secondIsExist, err := repository.IsExistUser(userID)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}

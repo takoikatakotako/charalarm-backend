@@ -35,11 +35,11 @@ func (s *UserService) GetUser(userID string, authToken string) (response.UserInf
 func (s *UserService) Signup(userID string, authToken string, ipAddress string) error {
 	// バリデーション
 	if !validator.IsValidUUID(userID) || !validator.IsValidUUID(authToken) {
-		return errors.New(message.InvalidValue)
+		return errors.New(message.ErrorInvalidValue)
 	}
 
 	// Check User Is Exist
-	isExist, err := s.Repository.IsExistAnonymousUser(userID)
+	isExist, err := s.Repository.IsExistUser(userID)
 	if err != nil {
 		return err
 	}
@@ -75,7 +75,7 @@ func (s *UserService) Withdraw(userID string, authToken string) error {
 
 	// UserID, AuthTokenの一致を確認して削除
 	if user.UserID == userID && user.AuthToken == authToken {
-		return s.Repository.DeleteAnonymousUser(userID)
+		return s.Repository.DeleteUser(userID)
 	}
 
 	// 認証失敗

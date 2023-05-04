@@ -1,6 +1,6 @@
 package database
 
-type IOSPlatformInfo struct {
+type UserIOSPlatformInfo struct {
 	PushToken                string `dynamodbav:"pushToken"`
 	PushTokenSNSEndpoint     string `dynamodbav:"pushTokenSNSEndpoint"`
 	VoIPPushToken            string `dynamodbav:"voIPPushToken"`

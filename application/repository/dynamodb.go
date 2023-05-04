@@ -22,32 +22,6 @@ type DynamoDBRepository struct {
 	IsLocal bool
 }
 
-func (d *DynamoDBRepository) createDynamoDBClient() (*dynamodb.Client, error) {
-	ctx := context.Background()
-
-	// DynamoDB クライアントの生成
-	c, err := config.LoadDefaultConfig(ctx, config.WithRegion(charalarm_config.AWSRegion))
-	if err != nil {
-		fmt.Printf("load aws config: %s\n", err.Error())
-		return nil, err
-	}
-
-	// LocalStackを使う場合
-	if d.IsLocal {
-		c.EndpointResolverWithOptions = aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...interface{}) (aws.Endpoint, error) {
-			return aws.Endpoint{
-				URL:           charalarm_config.LocalstackEndpoint,
-				SigningRegion: charalarm_config.AWSRegion,
-			}, nil
-		})
-		if err != nil {
-			fmt.Printf("unable to load SDK config, %v", err)
-			return nil, err
-		}
-	}
-	return dynamodb.NewFromConfig(c), nil
-}
-
 // GetUser Userを取得する
 func (d *DynamoDBRepository) GetUser(userID string) (database.User, error) {
 	ctx := context.Background()
@@ -86,9 +60,7 @@ func (d *DynamoDBRepository) GetUser(userID string) (database.User, error) {
 	return getUser, nil
 }
 
-func (d *DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error) {
-	ctx := context.Background()
-
+func (d *DynamoDBRepository) IsExistUser(userID string) (bool, error) {
 	// DBClient作成
 	client, err := d.createDynamoDBClient()
 	if err != nil {
@@ -104,6 +76,7 @@ func (d *DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error) {
 			},
 		},
 	}
+	ctx := context.Background()
 	response, err := client.GetItem(ctx, getInput)
 	if err != nil {
 		return false, err
@@ -116,17 +89,21 @@ func (d *DynamoDBRepository) IsExistAnonymousUser(userID string) (bool, error) {
 	}
 }
 
-func (d *DynamoDBRepository) InsertUser(anonymousUser database.User) error {
-	ctx := context.Background()
-
-	client, err := d.createDynamoDBClient()
+func (d *DynamoDBRepository) InsertUser(user database.User) error {
+	// Validate User
+	err := validator.ValidateUser(user)
 	if err != nil {
-		fmt.Printf("err, %v", err)
 		return err
 	}
 
 	// 新規レコードの追加
-	av, err := attributevalue.MarshalMap(anonymousUser)
+	ctx := context.Background()
+	client, err := d.createDynamoDBClient()
+	if err != nil {
+		return err
+	}
+
+	av, err := attributevalue.MarshalMap(user)
 	if err != nil {
 		fmt.Printf("dynamodb marshal: %s\n", err.Error())
 		return err
@@ -143,7 +120,7 @@ func (d *DynamoDBRepository) InsertUser(anonymousUser database.User) error {
 	return nil
 }
 
-func (d *DynamoDBRepository) DeleteAnonymousUser(userID string) error {
+func (d *DynamoDBRepository) DeleteUser(userID string) error {
 	ctx := context.Background()
 
 	client, err := d.createDynamoDBClient()
@@ -168,9 +145,9 @@ func (d *DynamoDBRepository) DeleteAnonymousUser(userID string) error {
 	return nil
 }
 
-////////////////////////////////////
+// //////////////////////////////////
 // Alarm
-////////////////////////////////////
+// //////////////////////////////////
 func (d *DynamoDBRepository) GetAlarmList(userID string) ([]database.Alarm, error) {
 
 	client, err := d.createDynamoDBClient()
@@ -193,7 +170,7 @@ func (d *DynamoDBRepository) GetAlarmList(userID string) ([]database.Alarm, erro
 	}
 
 	// 取得結果を struct の配列に変換
-	alarmList := []database.Alarm{}
+	alarmList := make([]database.Alarm, 0)
 	for _, item := range output.Items {
 		alarm := database.Alarm{}
 		err := attributevalue.UnmarshalMap(item, &alarm)
@@ -284,14 +261,14 @@ func (d *DynamoDBRepository) QueryByAlarmTime(hour int, minute int, weekday time
 }
 
 func (d *DynamoDBRepository) InsertAlarm(alarm database.Alarm) error {
-	client, err := d.createDynamoDBClient()
+	// Alarm のバリデーション
+	err := validator.ValidateAlarm(alarm)
 	if err != nil {
 		fmt.Printf("err, %v", err)
 		return err
 	}
 
-	// Alarm のバリデーション
-	err = validator.ValidateAlarm(alarm)
+	client, err := d.createDynamoDBClient()
 	if err != nil {
 		fmt.Printf("err, %v", err)
 		return err
@@ -317,20 +294,20 @@ func (d *DynamoDBRepository) InsertAlarm(alarm database.Alarm) error {
 
 // TODO: 少し危険な方法で更新しているので、更新対象の数だけメソッドを作成する
 func (d *DynamoDBRepository) UpdateAlarm(alarm database.Alarm) error {
-	client, err := d.createDynamoDBClient()
-	if err != nil {
-		fmt.Printf("err, %v", err)
-		return err
-	}
-
 	// Alarm のバリデーション
-	err = validator.ValidateAlarm(alarm)
+	err := validator.ValidateAlarm(alarm)
 	if err != nil {
 		fmt.Printf("err, %v", err)
 		return err
 	}
 
 	// レコードを更新する
+	client, err := d.createDynamoDBClient()
+	if err != nil {
+		fmt.Printf("err, %v", err)
+		return err
+	}
+
 	av, err := attributevalue.MarshalMap(alarm)
 	if err != nil {
 		fmt.Printf("dynamodb marshal: %s\n", err.Error())
@@ -534,4 +511,31 @@ func (d *DynamoDBRepository) GetRandomChara() (database.Chara, error) {
 	}
 
 	return chara, nil
+}
+
+// Private Methods
+func (d *DynamoDBRepository) createDynamoDBClient() (*dynamodb.Client, error) {
+	ctx := context.Background()
+
+	// DynamoDB クライアントの生成
+	c, err := config.LoadDefaultConfig(ctx, config.WithRegion(charalarm_config.AWSRegion))
+	if err != nil {
+		fmt.Printf("load aws config: %s\n", err.Error())
+		return nil, err
+	}
+
+	// LocalStackを使う場合
+	if d.IsLocal {
+		c.EndpointResolverWithOptions = aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...interface{}) (aws.Endpoint, error) {
+			return aws.Endpoint{
+				URL:           charalarm_config.LocalstackEndpoint,
+				SigningRegion: charalarm_config.AWSRegion,
+			}, nil
+		})
+		if err != nil {
+			fmt.Printf("unable to load SDK config, %v", err)
+			return nil, err
+		}
+	}
+	return dynamodb.NewFromConfig(c), nil
 }

@@ -15,5 +15,5 @@ type User struct {
 	UpdatedAt           string `dynamodbav:"updatedAt"`
 	RegisteredIPAddress string `dynamodbav:"registeredIPAddress"`
 
-	IOSPlatformInfo IOSPlatformInfo `dynamodbav:"iosPlatformInfo"`
+	IOSPlatformInfo UserIOSPlatformInfo `dynamodbav:"iosPlatformInfo"`
 }
