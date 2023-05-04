@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/request"
-	"github.com/takoikatakotako/charalarm-backend/sqs"
 	"math/rand"
 	"testing"
 	"time"
@@ -80,7 +80,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 	}
 
 	assert.Equal(t, 1, len(messages))
-	getAlarmInfo := sqs.AlarmInfo{}
+	getAlarmInfo := entity.IOSVoIPPushAlarmInfoSQSMessage{}
 	body := *messages[0].Body
 	err = json.Unmarshal([]byte(body), &getAlarmInfo)
 	if err != nil {
