@@ -40,7 +40,7 @@ func (s *PushTokenService) AddIOSPushToken(userID string, authToken string, push
 	// DynamoDBに追加
 	snsEndpointArn := response.EndpointArn
 	user.IOSPlatformInfo.PushToken = pushToken
-	user.IOSPlatformInfo.VoIPPushTokenSNSEndpoint = snsEndpointArn
+	user.IOSPlatformInfo.PushTokenSNSEndpoint = snsEndpointArn
 	return s.DynamoDBRepository.InsertUser(user)
 }
 

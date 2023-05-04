@@ -31,7 +31,7 @@ func TestPushTokenService_AddIOSPushToken(t *testing.T) {
 	}
 
 	// トークン作成
-	err = pushService.AddIOSVoipPushToken(userID, authToken, pushToken)
+	err = pushService.AddIOSPushToken(userID, authToken, pushToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
