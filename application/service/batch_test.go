@@ -32,7 +32,8 @@ func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 	userID := uuid.New().String()
 	authToken := uuid.New().String()
 	const ipAddress = "127.0.0.1"
-	err := userService.Signup(userID, authToken, ipAddress)
+	const platform = "iOS"
+	err := userService.Signup(userID, authToken, platform, ipAddress)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
