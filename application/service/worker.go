@@ -1,10 +1,8 @@
 package service
 
 import (
-	// "errors"
-	// "math/rand"
-	// "time"
 	"encoding/json"
+	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/sqs"
 
 	"github.com/takoikatakotako/charalarm-backend/repository"
@@ -17,20 +15,28 @@ type WorkerService struct {
 }
 
 // PublishPlatformApplication VoIPのプッシュ通知をする
-func (w *WorkerService) PublishPlatformApplication(messageBody string) error {
-	// デコード
-	alarmInfo := sqs.AlarmInfo{}
-	err := json.Unmarshal([]byte(messageBody), &alarmInfo)
+func (service *WorkerService) PublishPlatformApplication(alarmInfo sqs.AlarmInfo) error {
+	// エンドポイントが有効か確認
+	err := service.SNSRepository.CheckPlatformEndpointEnabled(alarmInfo.SNSEndpointArn)
+	if err != nil {
+		return err
+	}
+
+	// 送信用の Message に変換
+	voipPushInfo := entity.VoIPPushInfo{}
+	voipPushInfo.CharaName = alarmInfo.CharaName
+	voipPushInfo.FilePath = alarmInfo.VoiceFilePath
+	jsonBytes, err := json.Marshal(voipPushInfo)
 	if err != nil {
 		return err
 	}
 
 	// メッセージを送信
-	return w.SNSRepository.PublishPlatformApplication(alarmInfo)
+	return service.SNSRepository.PublishPlatformApplication(alarmInfo.SNSEndpointArn, string(jsonBytes))
 }
 
 // SendMessageToDeadLetter エラーのあるメッセージをデッドレターに送信
-func (w *WorkerService) SendMessageToDeadLetter(messageBody string) error {
+func (service *WorkerService) SendMessageToDeadLetter(messageBody string) error {
 	// キューに送信
-	return w.SQSRepository.SendMessageToVoIPPushDeadLetterQueue(messageBody)
+	return service.SQSRepository.SendMessageToVoIPPushDeadLetterQueue(messageBody)
 }

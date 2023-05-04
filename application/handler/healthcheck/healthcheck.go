@@ -11,8 +11,8 @@ import (
 )
 
 func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	response := response.MessageResponse{Message: "Healthy!"}
-	jsonBytes, _ := json.Marshal(response)
+	res := response.MessageResponse{Message: "Healthy!"}
+	jsonBytes, _ := json.Marshal(res)
 
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
