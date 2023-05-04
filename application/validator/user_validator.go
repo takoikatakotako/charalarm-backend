@@ -51,14 +51,25 @@ func ValidateUser(user database.User) error {
 }
 
 func ValidateUserIOSPlatformInfo(userIOSPlatformInfo database.UserIOSPlatformInfo) error {
-	// PushToken or VoIPPushTokenSNSEndpoint
-	if (userIOSPlatformInfo.PushToken == "" && userIOSPlatformInfo.PushTokenSNSEndpoint == "") || (userIOSPlatformInfo.PushToken != "" && userIOSPlatformInfo.PushTokenSNSEndpoint != "") {
+	// PushTokenが空文字の場合はPushTokenSNSEndpointも空文字
+	if userIOSPlatformInfo.PushToken == "" && userIOSPlatformInfo.PushTokenSNSEndpoint != "" {
 		return errors.New(message.ErrorInvalidValue + ": PushToken or PushTokenSNSEndpoint")
 	}
 
-	// VoIPPushToken or VoIPPushTokenSNSEndpoint
-	if (userIOSPlatformInfo.VoIPPushToken == "" && userIOSPlatformInfo.VoIPPushTokenSNSEndpoint == "") || (userIOSPlatformInfo.VoIPPushToken != "" && userIOSPlatformInfo.VoIPPushTokenSNSEndpoint != "") {
+	// PushTokenSNSEndpointが空文字の場合はPushTokenも空文字
+	if userIOSPlatformInfo.PushTokenSNSEndpoint == "" && userIOSPlatformInfo.PushToken != "" {
+		return errors.New(message.ErrorInvalidValue + ": PushToken or PushTokenSNSEndpoint")
+	}
+
+	// VoIPPushTokenが空文字の場合はVoIPPushTokenSNSEndpointも空文字
+	if userIOSPlatformInfo.VoIPPushToken == "" && userIOSPlatformInfo.VoIPPushTokenSNSEndpoint != "" {
 		return errors.New(message.ErrorInvalidValue + ": VoIPPushToken or VoIPPushTokenSNSEndpoint")
 	}
+
+	// VoIPPushTokenSNSEndpointが空文字の場合はVoIPPushTokenも空文字
+	if userIOSPlatformInfo.VoIPPushTokenSNSEndpoint == "" && userIOSPlatformInfo.VoIPPushToken != "" {
+		return errors.New(message.ErrorInvalidValue + ": VoIPPushToken or VoIPPushTokenSNSEndpoint")
+	}
+
 	return nil
 }

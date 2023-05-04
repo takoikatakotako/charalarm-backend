@@ -32,7 +32,7 @@ func (s *UserService) GetUser(userID string, authToken string) (response.UserInf
 	return response.UserInfoResponse{}, errors.New(message.AuthenticationFailure)
 }
 
-func (s *UserService) Signup(userID string, authToken string, ipAddress string) error {
+func (s *UserService) Signup(userID string, authToken string, platform string, ipAddress string) error {
 	// バリデーション
 	if !validator.IsValidUUID(userID) || !validator.IsValidUUID(authToken) {
 		return errors.New(message.ErrorInvalidValue)
@@ -54,6 +54,7 @@ func (s *UserService) Signup(userID string, authToken string, ipAddress string) 
 	user := database.User{
 		UserID:              userID,
 		AuthToken:           authToken,
+		Platform:            platform,
 		CreatedAt:           currentTime.Format(time.RFC3339),
 		UpdatedAt:           currentTime.Format(time.RFC3339),
 		RegisteredIPAddress: ipAddress,
