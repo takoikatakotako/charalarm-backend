@@ -16,7 +16,7 @@ type Alarm struct {
 	UserID  string `dynamodbav:"userID"`
 
 	// Target Info
-	Type   string `dynamodbav:"type"` // REMOTE_NOTIFICATION, VOIP_NOTIFICATION
+	Type   string `dynamodbav:"type"` // IOS_PUSH_NOTIFICATION, IOS_VOIP_PUSH_NOTIFICATION
 	Target string `dynamodbav:"target"`
 
 	// AlarmInfo

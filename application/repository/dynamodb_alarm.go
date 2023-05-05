@@ -13,6 +13,37 @@ import (
 	"time"
 )
 
+// IsExistAlarm Alarmが存在するか
+func (d *DynamoDBRepository) IsExistAlarm(alarmID string) (bool, error) {
+	client, err := d.createDynamoDBClient()
+	if err != nil {
+		return false, err
+	}
+
+	// 既存レコードの取得
+	getInput := &dynamodb.GetItemInput{
+		TableName: aws.String(database.AlarmTableName),
+		Key: map[string]types.AttributeValue{
+			database.UserTableUserId: &types.AttributeValueMemberS{
+				Value: alarmID,
+			},
+		},
+	}
+
+	// 取得
+	ctx := context.Background()
+	response, err := client.GetItem(ctx, getInput)
+	if err != nil {
+		return false, err
+	}
+
+	if len(response.Item) == 0 {
+		return false, nil
+	} else {
+		return true, nil
+	}
+}
+
 func (d *DynamoDBRepository) GetAlarmList(userID string) ([]database.Alarm, error) {
 	client, err := d.createDynamoDBClient()
 	if err != nil {

@@ -24,7 +24,7 @@ func DatabaseIOSPlatformInfoToResponseIOSPlatformInfoResponse(iOSPlatformInfo da
 	}
 }
 
-func RequestAlarmToDatabaseAlarm(alarm request.Alarm) database.Alarm {
+func RequestAlarmToDatabaseAlarm(alarm request.Alarm, target string) database.Alarm {
 	// request.Alarmは時差があるため、UTCのdatabase.Alarmに変換する
 	var alarmHour int
 	var alarmMinute int
@@ -79,6 +79,7 @@ func RequestAlarmToDatabaseAlarm(alarm request.Alarm) database.Alarm {
 		AlarmID:        alarm.AlarmID,
 		UserID:         alarm.UserID,
 		Type:           alarm.Type,
+		Target:         target,
 		Enable:         alarm.Enable,
 		Name:           alarm.Name,
 		Hour:           alarmHour,

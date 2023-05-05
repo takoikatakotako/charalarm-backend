@@ -18,16 +18,17 @@ type AlarmService struct {
 }
 
 // AddAlarm アラームを追加
-func (s *AlarmService) AddAlarm(userID string, authToken string, alarm request.Alarm) error {
+func (s *AlarmService) AddAlarm(userID string, authToken string, requestAlarm request.Alarm) error {
 	// ユーザーを取得
-	anonymousUser, err := s.Repository.GetUser(userID)
+	user, err := s.Repository.GetUser(userID)
 	if err != nil {
 		return err
 	}
 
-	// UserID, AuthTokenが一致するか確認する
-	if anonymousUser.UserID != userID || anonymousUser.AuthToken != authToken {
-		return errors.New(message.AuthenticationFailure)
+	// UserID, AuthToken, Alarm.UserID が一致する
+	if user.UserID == userID && user.AuthToken == authToken && requestAlarm.UserID == userID {
+	} else {
+		return errors.New(message.ErrorAuthenticationFailure)
 	}
 
 	// 既に登録されたアラームの件数を取得
@@ -41,8 +42,25 @@ func (s *AlarmService) AddAlarm(userID string, authToken string, alarm request.A
 		return errors.New("なんか登録してるアラームの件数多くね？")
 	}
 
+	// すでに登録されていないか調べる
+	result, err := s.Repository.IsExistAlarm(requestAlarm.AlarmID)
+	if err != nil {
+		return err
+	}
+	if result == false {
+		return errors.New("xxxxx")
+	}
+
 	// DatabaseAlarmに変換
-	databaseAlarm := converter.RequestAlarmToDatabaseAlarm(alarm)
+	var target string
+	if requestAlarm.Type == "IOS_PUSH_NOTIFICATION" {
+		target = user.IOSPlatformInfo.PushTokenSNSEndpoint
+	} else if requestAlarm.Type == "IOS_VOIP_PUSH_NOTIFICATION" {
+		target = user.IOSPlatformInfo.VoIPPushTokenSNSEndpoint
+	} else {
+		return errors.New(message.ErrorInvalidValue)
+	}
+	databaseAlarm := converter.RequestAlarmToDatabaseAlarm(requestAlarm, target)
 
 	// アラームを追加する
 	return s.Repository.InsertAlarm(databaseAlarm)
