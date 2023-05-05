@@ -33,3 +33,4 @@ Charalarmの新しいアーキテクチャです。
 - [DynamoDBについて](document/dynamodb.md)
 - [SQSについて](document/sqs.md)
 - [キャラクターについて](document/chara.md)
+- [キャラクターのリソースについて](document/chara-resource.md)
