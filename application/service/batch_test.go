@@ -4,12 +4,19 @@ import (
 	"encoding/json"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/request"
-	"github.com/takoikatakotako/charalarm-backend/sqs"
+	"math/rand"
 	"testing"
 	"time"
 )
+
+func init() {
+	// Repository
+	sqsRepository := repository.SQSRepository{IsLocal: true}
+	_ = sqsRepository.PurgeQueue()
+}
 
 func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 	// Repository
@@ -25,19 +32,20 @@ func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 	userID := uuid.New().String()
 	authToken := uuid.New().String()
 	const ipAddress = "127.0.0.1"
-	err := userService.Signup(userID, authToken, ipAddress)
+	const platform = "iOS"
+	err := userService.Signup(userID, authToken, platform, ipAddress)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// アラーム追加
 	alarmID := uuid.New().String()
-	hour := 8
-	minute := 13
+	hour := rand.Intn(12)
+	minute := rand.Intn(60)
 	requestAlarm := request.Alarm{
 		AlarmID:        alarmID,
 		UserID:         userID,
-		Type:           "VOIP_NOTIFICATION",
+		Type:           "IOS_VOIP_PUSH_NOTIFICATION",
 		Enable:         true,
 		Name:           "Alarm Name",
 		Hour:           hour,
@@ -61,7 +69,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 	}
 
 	// SQSに設定
-	err = batchService.QueryDynamoDBAndSendMessage(8, 13, time.Sunday)
+	err = batchService.QueryDynamoDBAndSendMessage(hour, minute, time.Sunday)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -72,9 +80,12 @@ func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 
-	assert.Equal(t, len(messages), 1)
-	getAlarmInfo := sqs.AlarmInfo{}
+	assert.Equal(t, 1, len(messages))
+	getAlarmInfo := entity.IOSVoIPPushAlarmInfoSQSMessage{}
 	body := *messages[0].Body
-	_ = json.Unmarshal([]byte(body), &getAlarmInfo)
+	err = json.Unmarshal([]byte(body), &getAlarmInfo)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
 	assert.Equal(t, getAlarmInfo.AlarmID, alarmID)
 }

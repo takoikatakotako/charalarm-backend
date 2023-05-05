@@ -10,7 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"github.com/google/uuid"
 	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
-	sqs_entity "github.com/takoikatakotako/charalarm-backend/sqs"
+	sqs_entity "github.com/takoikatakotako/charalarm-backend/entity"
 )
 
 const (
@@ -68,7 +68,7 @@ func (s *SQSRepository) GetQueueURL(queueName string) (string, error) {
 }
 
 // SendAlarmInfoToVoIPPushQueue SQS
-func (s *SQSRepository) SendAlarmInfoToVoIPPushQueue(alarmInfo sqs_entity.AlarmInfo) error {
+func (s *SQSRepository) SendAlarmInfoToVoIPPushQueue(alarmInfo sqs_entity.IOSVoIPPushAlarmInfoSQSMessage) error {
 	queueURL, err := s.GetQueueURL(VoIPPushQueueName)
 	if err != nil {
 		return err
@@ -118,7 +118,7 @@ func (s *SQSRepository) PurgeQueue() error {
 // //////////////////////////////////
 // Private Methods
 // //////////////////////////////////
-func (s *SQSRepository) sendAlarmInfoMessage(queueURL string, messageGroupId string, alarmInfo sqs_entity.AlarmInfo) error {
+func (s *SQSRepository) sendAlarmInfoMessage(queueURL string, messageGroupId string, alarmInfo sqs_entity.IOSVoIPPushAlarmInfoSQSMessage) error {
 	// decode
 	jsonBytes, err := json.Marshal(alarmInfo)
 	if err != nil {

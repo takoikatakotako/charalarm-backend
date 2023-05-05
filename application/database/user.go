@@ -9,11 +9,11 @@ const (
 type User struct {
 	UserID    string `dynamodbav:"userID"`
 	AuthToken string `dynamodbav:"authToken"`
+	Platform  string `dynamodbav:"platform"`
 
 	CreatedAt           string `dynamodbav:"createdAt"`
 	UpdatedAt           string `dynamodbav:"updatedAt"`
 	RegisteredIPAddress string `dynamodbav:"registeredIPAddress"`
 
-	IOSVoIPPushToken PushToken `dynamodbav:"iosVoIPPushToken"`
-	IOSPushToken     PushToken `dynamodbav:"iosPushToken"`
+	IOSPlatformInfo UserIOSPlatformInfo `dynamodbav:"iosPlatformInfo"`
 }

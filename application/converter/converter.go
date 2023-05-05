@@ -8,21 +8,23 @@ import (
 
 func DatabaseUserToResponseUserInfo(user database.User) response.UserInfoResponse {
 	return response.UserInfoResponse{
-		UserID:           user.UserID,
-		AuthToken:        maskAuthToken(user.AuthToken),
-		IOSPushToken:     DatabasePushTokenToResponsePushToken(user.IOSVoIPPushToken),
-		IOSVoIPPushToken: DatabasePushTokenToResponsePushToken(user.IOSVoIPPushToken),
+		UserID:          user.UserID,
+		AuthToken:       maskAuthToken(user.AuthToken),
+		Platform:        user.Platform,
+		IOSPlatformInfo: DatabaseIOSPlatformInfoToResponseIOSPlatformInfoResponse(user.IOSPlatformInfo),
 	}
 }
 
-func DatabasePushTokenToResponsePushToken(pushToken database.PushToken) response.PushToken {
-	return response.PushToken{
-		Token:          pushToken.Token,
-		SNSEndpointArn: pushToken.SNSEndpointArn,
+func DatabaseIOSPlatformInfoToResponseIOSPlatformInfoResponse(iOSPlatformInfo database.UserIOSPlatformInfo) response.IOSPlatformInfoResponse {
+	return response.IOSPlatformInfoResponse{
+		PushToken:                iOSPlatformInfo.PushToken,
+		PushTokenSNSEndpoint:     iOSPlatformInfo.PushTokenSNSEndpoint,
+		VoIPPushToken:            iOSPlatformInfo.VoIPPushToken,
+		VoIPPushTokenSNSEndpoint: iOSPlatformInfo.VoIPPushTokenSNSEndpoint,
 	}
 }
 
-func RequestAlarmToDatabaseAlarm(alarm request.Alarm) database.Alarm {
+func RequestAlarmToDatabaseAlarm(alarm request.Alarm, target string) database.Alarm {
 	// request.Alarmは時差があるため、UTCのdatabase.Alarmに変換する
 	var alarmHour int
 	var alarmMinute int
@@ -77,6 +79,7 @@ func RequestAlarmToDatabaseAlarm(alarm request.Alarm) database.Alarm {
 		AlarmID:        alarm.AlarmID,
 		UserID:         alarm.UserID,
 		Type:           alarm.Type,
+		Target:         target,
 		Enable:         alarm.Enable,
 		Name:           alarm.Name,
 		Hour:           alarmHour,

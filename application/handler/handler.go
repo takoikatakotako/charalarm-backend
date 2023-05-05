@@ -7,8 +7,8 @@ import (
 )
 
 func FailureResponse(statusCode int, message string) (events.APIGatewayProxyResponse, error) {
-	response := response.MessageResponse{Message: message}
-	jsonBytes, _ := json.Marshal(response)
+	res := response.MessageResponse{Message: message}
+	jsonBytes, _ := json.Marshal(res)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
 		StatusCode: statusCode,

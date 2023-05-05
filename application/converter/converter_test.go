@@ -51,7 +51,7 @@ func TestDatabaseCharaToResponseChara(t *testing.T) {
 func TestRequestAlarmToDatabaseAlarm(t *testing.T) {
 	alarmID := uuid.New().String()
 	userID := uuid.New().String()
-	const alarmType = "VOIP_NOTIFICATION"
+	const alarmType = "IOS_VOIP_PUSH_NOTIFICATION"
 	const alarmEnable = true
 	var alarmName = "alarmName"
 	const alarmHour = 8
@@ -67,6 +67,8 @@ func TestRequestAlarmToDatabaseAlarm(t *testing.T) {
 	const thursday = false
 	const friday = false
 	const saturday = true
+
+	const target = "target"
 
 	requestAlarm := request.Alarm{
 		AlarmID:        alarmID,
@@ -93,11 +95,12 @@ func TestRequestAlarmToDatabaseAlarm(t *testing.T) {
 		Saturday:  saturday,
 	}
 
-	databaseAlarm := RequestAlarmToDatabaseAlarm(requestAlarm)
+	databaseAlarm := RequestAlarmToDatabaseAlarm(requestAlarm, target)
 
 	assert.Equal(t, alarmID, databaseAlarm.AlarmID)
 	assert.Equal(t, userID, databaseAlarm.UserID)
 	assert.Equal(t, alarmType, databaseAlarm.Type)
+	assert.Equal(t, target, databaseAlarm.Target)
 	assert.Equal(t, alarmName, databaseAlarm.Name)
 	assert.Equal(t, 23, databaseAlarm.Hour)
 	assert.Equal(t, 30, databaseAlarm.Minute)
@@ -132,7 +135,7 @@ func TestRequestAlarmToDatabaseAlarmFeatureTimeDifference(t *testing.T) {
 		Saturday:  false,
 	}
 
-	databaseAlarm1 := RequestAlarmToDatabaseAlarm(requestAlarm1)
+	databaseAlarm1 := RequestAlarmToDatabaseAlarm(requestAlarm1, "target1")
 	assert.Equal(t, 23, databaseAlarm1.Hour)
 	assert.Equal(t, 13, databaseAlarm1.Minute)
 	assert.Equal(t, false, databaseAlarm1.Sunday)
@@ -159,7 +162,7 @@ func TestRequestAlarmToDatabaseAlarmFeatureTimeDifference(t *testing.T) {
 		Saturday:  false,
 	}
 
-	databaseAlarm2 := RequestAlarmToDatabaseAlarm(requestAlarm2)
+	databaseAlarm2 := RequestAlarmToDatabaseAlarm(requestAlarm2, "target2")
 	assert.Equal(t, 0, databaseAlarm2.Hour)
 	assert.Equal(t, 18, databaseAlarm2.Minute)
 	assert.Equal(t, true, databaseAlarm2.Sunday)
@@ -186,7 +189,7 @@ func TestRequestAlarmToDatabaseAlarmFeatureTimeDifference(t *testing.T) {
 		Saturday:  false,
 	}
 
-	databaseAlarm3 := RequestAlarmToDatabaseAlarm(requestAlarm3)
+	databaseAlarm3 := RequestAlarmToDatabaseAlarm(requestAlarm3, "target3")
 	assert.Equal(t, 0, databaseAlarm3.Hour)
 	assert.Equal(t, 0, databaseAlarm3.Minute)
 	assert.Equal(t, true, databaseAlarm3.Sunday)
@@ -213,7 +216,7 @@ func TestRequestAlarmToDatabaseAlarmFeatureTimeDifference(t *testing.T) {
 		Saturday:  false,
 	}
 
-	databaseAlarm4 := RequestAlarmToDatabaseAlarm(requestAlarm4)
+	databaseAlarm4 := RequestAlarmToDatabaseAlarm(requestAlarm4, "target4")
 	assert.Equal(t, 3, databaseAlarm4.Hour)
 	assert.Equal(t, 45, databaseAlarm4.Minute)
 	assert.Equal(t, false, databaseAlarm4.Sunday)
@@ -240,7 +243,7 @@ func TestRequestAlarmToDatabaseAlarmFeatureTimeDifference(t *testing.T) {
 		Saturday:  false,
 	}
 
-	databaseAlarm5 := RequestAlarmToDatabaseAlarm(requestAlarm5)
+	databaseAlarm5 := RequestAlarmToDatabaseAlarm(requestAlarm5, "target5")
 	assert.Equal(t, 8, databaseAlarm5.Hour)
 	assert.Equal(t, 12, databaseAlarm5.Minute)
 	assert.Equal(t, true, databaseAlarm5.Sunday)

@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/takoikatakotako/charalarm-backend/database"
-	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/validator"
@@ -33,14 +32,14 @@ func (s *UserService) GetUser(userID string, authToken string) (response.UserInf
 	return response.UserInfoResponse{}, errors.New(message.AuthenticationFailure)
 }
 
-func (s *UserService) Signup(userID string, authToken string, ipAddress string) error {
+func (s *UserService) Signup(userID string, authToken string, platform string, ipAddress string) error {
 	// バリデーション
 	if !validator.IsValidUUID(userID) || !validator.IsValidUUID(authToken) {
-		return errors.New(message.InvalidValue)
+		return errors.New(message.ErrorInvalidValue)
 	}
 
 	// Check User Is Exist
-	isExist, err := s.Repository.IsExistAnonymousUser(userID)
+	isExist, err := s.Repository.IsExistUser(userID)
 	if err != nil {
 		return err
 	}
@@ -55,6 +54,7 @@ func (s *UserService) Signup(userID string, authToken string, ipAddress string) 
 	user := database.User{
 		UserID:              userID,
 		AuthToken:           authToken,
+		Platform:            platform,
 		CreatedAt:           currentTime.Format(time.RFC3339),
 		UpdatedAt:           currentTime.Format(time.RFC3339),
 		RegisteredIPAddress: ipAddress,
@@ -76,19 +76,9 @@ func (s *UserService) Withdraw(userID string, authToken string) error {
 
 	// UserID, AuthTokenの一致を確認して削除
 	if user.UserID == userID && user.AuthToken == authToken {
-		return s.Repository.DeleteAnonymousUser(userID)
+		return s.Repository.DeleteUser(userID)
 	}
 
 	// 認証失敗
 	return errors.New(message.AuthenticationFailure)
-}
-
-// database.User を entity.AnonymousUser に変換
-func (s *UserService) convertDatabaseUserToEntityUser(user database.User) entity.User {
-	return entity.User{
-		UserID:           user.UserID,
-		AuthToken:        user.AuthToken,
-		IOSVoIPPushToken: entity.PushToken{},
-		IOSPushToken:     entity.PushToken{},
-	}
 }

@@ -5,20 +5,20 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/database"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 )
 
 func TestInfoUser(t *testing.T) {
+	// Repository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
 	userService := UserService{Repository: dynamoDBRepository}
 
+	// ユーザー作成
 	userID := uuid.New().String()
 	authToken := uuid.New().String()
 	ipAddress := "127.0.0.1"
-
-	// ユーザー作成
-	err := userService.Signup(userID, authToken, ipAddress)
+	platform := "iOS"
+	err := userService.Signup(userID, authToken, platform, ipAddress)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -34,20 +34,24 @@ func TestInfoUser(t *testing.T) {
 }
 
 func TestSignup(t *testing.T) {
-	repository := repository.DynamoDBRepository{IsLocal: true}
-	s := UserService{Repository: repository}
+	// Repository
+	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
 
-	userID := uuid.New().String()
-	authToken := uuid.New().String()
+	// Service
+	s := UserService{Repository: dynamoDBRepository}
 
 	// ユーザー作成
-	err := s.Signup(userID, authToken, "0.0.0.0")
+	userID := uuid.New().String()
+	authToken := uuid.New().String()
+	platform := "iOS"
+	ipAddress := "0.0.0.0"
+	err := s.Signup(userID, authToken, platform, ipAddress)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// ユーザー取得
-	getUser, err := repository.GetUser(userID)
+	getUser, err := dynamoDBRepository.GetUser(userID)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -58,21 +62,22 @@ func TestSignup(t *testing.T) {
 }
 
 func TestWithdraw(t *testing.T) {
-	repository := repository.DynamoDBRepository{IsLocal: true}
-	s := UserService{Repository: repository}
-
-	userID := uuid.New().String()
-	authToken := uuid.New().String()
+	// Repository
+	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
+	s := UserService{Repository: dynamoDBRepository}
 
 	// ユーザー作成
-	insertUser := database.User{UserID: userID, AuthToken: authToken}
-	err := repository.InsertUser(insertUser)
+	userID := uuid.New().String()
+	authToken := uuid.New().String()
+	platform := "iOS"
+	ipAddress := "0.0.0.0"
+	err := s.Signup(userID, authToken, platform, ipAddress)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// IsExist
-	firstIsExist, err := repository.IsExistAnonymousUser(userID)
+	firstIsExist, err := dynamoDBRepository.IsExistUser(userID)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -87,7 +92,7 @@ func TestWithdraw(t *testing.T) {
 	}
 
 	// IsExist
-	secondIsExist, err := repository.IsExistAnonymousUser(userID)
+	secondIsExist, err := dynamoDBRepository.IsExistUser(userID)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}

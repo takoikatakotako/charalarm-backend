@@ -1,6 +1,6 @@
 # Charalarm API
 
-xxxxx
+APIのエンドポイントとレスポンス一覧です。
 
 
 # /

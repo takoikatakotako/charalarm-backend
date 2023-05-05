@@ -7,14 +7,10 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/takoikatakotako/charalarm-backend/sqs"
 	"strings"
 
 	// "github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
-	// "github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	// "github.com/takoikatakotako/charalarm-backend/table"
-	// "github.com/takoikatakotako/charalarm-backend/validator"
 	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
 	"github.com/takoikatakotako/charalarm-backend/entity"
 )
@@ -55,43 +51,23 @@ func (s *SNSRepository) createSNSClient() (*sns.Client, error) {
 }
 
 // CreateIOSPushPlatformEndpoint iOS Platform Endpoint
-func (s *SNSRepository) CreateIOSPushPlatformEndpoint(pushToken string) (entity.CreatePlatformEndpointResponse, error) {
+func (s *SNSRepository) CreateIOSPushPlatformEndpoint(pushToken string) (string, error) {
 	platformApplicationArn, err := s.getPlatformApplicationARN(iOSPushPlatformApplication)
 	if err != nil {
-		return entity.CreatePlatformEndpointResponse{}, err
+		return "", err
 	}
 	return s.createPlatformEndpoint(platformApplicationArn, pushToken)
 }
 
-func (s *SNSRepository) CreateIOSVoipPushPlatformEndpoint(pushToken string) (entity.CreatePlatformEndpointResponse, error) {
+func (s *SNSRepository) CreateIOSVoipPushPlatformEndpoint(pushToken string) (string, error) {
 	platformApplicationArn, err := s.getPlatformApplicationARN(iOSVoIPPushPlatformApplication)
 	if err != nil {
-		return entity.CreatePlatformEndpointResponse{}, err
+		return "", err
 	}
 	return s.createPlatformEndpoint(platformApplicationArn, pushToken)
 }
 
-func (s *SNSRepository) createPlatformEndpoint(platformApplicationArn string, pushToken string) (entity.CreatePlatformEndpointResponse, error) {
-	client, err := s.createSNSClient()
-	if err != nil {
-		return entity.CreatePlatformEndpointResponse{}, err
-	}
-
-	// エンドポイント作成
-	getInput := &sns.CreatePlatformEndpointInput{
-		PlatformApplicationArn: aws.String(platformApplicationArn),
-		Token:                  aws.String(pushToken),
-	}
-	result, err := client.CreatePlatformEndpoint(context.Background(), getInput)
-	if err != nil {
-		return entity.CreatePlatformEndpointResponse{}, err
-	}
-
-	response := entity.CreatePlatformEndpointResponse{EndpointArn: *result.EndpointArn}
-	return response, nil
-}
-
-func (s *SNSRepository) PublishPlatformApplication(alarmInfo sqs.AlarmInfo) error {
+func (s *SNSRepository) CheckPlatformEndpointEnabled(endpoint string) error {
 	client, err := s.createSNSClient()
 	if err != nil {
 		return err
@@ -99,7 +75,7 @@ func (s *SNSRepository) PublishPlatformApplication(alarmInfo sqs.AlarmInfo) erro
 
 	// エンドポイントを取得
 	getEndpointAttributesInput := &sns.GetEndpointAttributesInput{
-		EndpointArn: aws.String(alarmInfo.SNSEndpointArn),
+		EndpointArn: aws.String(endpoint),
 	}
 	getEndpointAttributesOutput, err := client.GetEndpointAttributes(context.Background(), getEndpointAttributesInput)
 	if err != nil {
@@ -111,19 +87,25 @@ func (s *SNSRepository) PublishPlatformApplication(alarmInfo sqs.AlarmInfo) erro
 		return errors.New("EndpointがFalse")
 	}
 
-	// メッセージを作成
-	voipPushInfo := entity.VoIPPushInfo{}
-	voipPushInfo.CharaName = alarmInfo.CharaName
-	voipPushInfo.FilePath = alarmInfo.VoiceFilePath
-	jsonBytes, err := json.Marshal(voipPushInfo)
+	return nil
+}
+
+func (s *SNSRepository) PublishPlatformApplication(targetArn string, iosVoipPushSNSMessage entity.IOSVoIPPushSNSMessage) error {
+	client, err := s.createSNSClient()
 	if err != nil {
 		return err
 	}
 
-	// プッシュ通知
+	// Encode
+	jsonBytes, err := json.Marshal(iosVoipPushSNSMessage)
+	if err != nil {
+		return err
+	}
+
+	// プッシュ通知を発火
 	publishInput := &sns.PublishInput{
 		Message:   aws.String(string(jsonBytes)),
-		TargetArn: aws.String(alarmInfo.SNSEndpointArn),
+		TargetArn: aws.String(targetArn),
 	}
 	_, err = client.Publish(context.Background(), publishInput)
 	if err != nil {
@@ -132,6 +114,10 @@ func (s *SNSRepository) PublishPlatformApplication(alarmInfo sqs.AlarmInfo) erro
 
 	return nil
 }
+
+//////////////////////////////
+// Private Methods
+//////////////////////////////
 
 // getQueueURL QueueのURLを取得する
 func (s *SNSRepository) getPlatformApplicationARN(queueName string) (string, error) {
@@ -156,4 +142,23 @@ func (s *SNSRepository) getPlatformApplicationARN(queueName string) (string, err
 	}
 
 	return "", errors.New("platform Application Not Found")
+}
+
+func (s *SNSRepository) createPlatformEndpoint(platformApplicationArn string, pushToken string) (string, error) {
+	client, err := s.createSNSClient()
+	if err != nil {
+		return "", err
+	}
+
+	// エンドポイント作成
+	getInput := &sns.CreatePlatformEndpointInput{
+		PlatformApplicationArn: aws.String(platformApplicationArn),
+		Token:                  aws.String(pushToken),
+	}
+	result, err := client.CreatePlatformEndpoint(context.Background(), getInput)
+	if err != nil {
+		return "", err
+	}
+
+	return *result.EndpointArn, nil
 }

@@ -4,7 +4,7 @@ type Alarm struct {
 	AlarmID string `json:"alarmID"`
 	UserID  string `json:"userID"`
 
-	// REMOTE_NOTIFICATION VOIP_NOTIFICATION
+	// IOS_PUSH_NOTIFICATION, IOS_VOIP_PUSH_NOTIFICATION
 	Type           string  `json:"type"`
 	Enable         bool    `json:"enable"`
 	Name           string  `json:"name"`

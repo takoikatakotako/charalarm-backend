@@ -17,16 +17,17 @@ func TestAlarm(t *testing.T) {
 	userID := uuid.New().String()
 	authToken := uuid.New().String()
 	const ipAddress = "127.0.0.1"
-	err := userService.Signup(userID, authToken, ipAddress)
+	const platform = "iOS"
+	err := userService.Signup(userID, authToken, platform, ipAddress)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 
 	// アラーム作成
 	alarmID := uuid.New().String()
-	const alarmType = "VOIP_NOTIFICATION"
+	const alarmType = "IOS_VOIP_PUSH_NOTIFICATION"
 	const alarmEnable = true
-	var alarmName = "alarmName"
+	var alarmName = "Alarm Name"
 	const alarmHour = 8
 	const alarmMinute = 30
 	const alarmTimeDifference = float32(9.0)

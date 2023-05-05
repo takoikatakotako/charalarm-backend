@@ -1,6 +1,6 @@
 package entity
 
-type VoIPPushInfo struct {
+type IOSVoIPPushSNSMessage struct {
 	CharaName string `json:"charaName"`
 	FilePath  string `json:"filePath"`
 }
