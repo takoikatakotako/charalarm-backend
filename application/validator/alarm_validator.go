@@ -34,7 +34,7 @@ func ValidateAlarm(alarm database.Alarm) error {
 	// Enable
 
 	// Name
-	if alarm.Name != "" {
+	if alarm.Name == "" {
 		return errors.New(message.ErrorInvalidValue + ": Name")
 	}
 

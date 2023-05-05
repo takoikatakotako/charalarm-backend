@@ -8,7 +8,8 @@ import (
 	"time"
 )
 
-func TestInsertAlarmAndGet(t *testing.T) {
+func TestDynamoDBRepository_InsertAlarm(t *testing.T) {
+	// Repository
 	repository := DynamoDBRepository{IsLocal: true}
 
 	insertAlarm := createAlarm()
@@ -206,7 +207,7 @@ func TestInsertAndDeleteAlarmList(t *testing.T) {
 func createAlarm() database.Alarm {
 	alarmID := uuid.New().String()
 	userID := uuid.New().String()
-	alarmType := "VOIP_NOTIFICATION"
+	alarmType := "IOS_VOIP_PUSH_NOTIFICATION"
 	alarmEnable := true
 	alarmName := "My Alarm"
 	alarmHour := 8

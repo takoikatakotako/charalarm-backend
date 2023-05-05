@@ -25,9 +25,9 @@ func TestAlarm(t *testing.T) {
 
 	// アラーム作成
 	alarmID := uuid.New().String()
-	const alarmType = "VOIP_NOTIFICATION"
+	const alarmType = "IOS_VOIP_PUSH_NOTIFICATION"
 	const alarmEnable = true
-	var alarmName = "alarmName"
+	var alarmName = "Alarm Name"
 	const alarmHour = 8
 	const alarmMinute = 30
 	const alarmTimeDifference = float32(9.0)

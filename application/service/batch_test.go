@@ -45,7 +45,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 	requestAlarm := request.Alarm{
 		AlarmID:        alarmID,
 		UserID:         userID,
-		Type:           "VOIP_NOTIFICATION",
+		Type:           "IOS_VOIP_PUSH_NOTIFICATION",
 		Enable:         true,
 		Name:           "Alarm Name",
 		Hour:           hour,

@@ -24,7 +24,7 @@ func (d *DynamoDBRepository) IsExistAlarm(alarmID string) (bool, error) {
 	getInput := &dynamodb.GetItemInput{
 		TableName: aws.String(database.AlarmTableName),
 		Key: map[string]types.AttributeValue{
-			database.UserTableUserId: &types.AttributeValueMemberS{
+			database.AlarmTableColumnAlarmID: &types.AttributeValueMemberS{
 				Value: alarmID,
 			},
 		},

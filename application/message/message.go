@@ -20,4 +20,5 @@ const (
 	PlatformApplicationNotFound = "Platform Application Not Found"
 	ErrorInvalidValue           = "error invalid value"
 	ErrorAuthenticationFailure  = "error authentication failure"
+	ErrorAlarmAlreadyExists     = "error alarm already exists"
 )
