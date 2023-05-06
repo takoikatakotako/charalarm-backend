@@ -1,6 +1,6 @@
 package entity
 
 type IOSVoIPPushSNSMessage struct {
-	CharaName string `json:"charaName"`
-	FilePath  string `json:"filePath"`
+	CharaName    string `json:"charaName"`
+	VoiceFileURL string `json:"voiceFileURL"`
 }
