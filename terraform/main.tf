@@ -35,6 +35,7 @@ module "web_api" {
   acm_certificate_arn     = local.api_acm_certificate_arn
   application_version     = local.application_version
   application_bucket_name = local.application_bucket_name
+  resource_bucket_url     = local.resource_bucket_url
 }
 
 
