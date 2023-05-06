@@ -117,8 +117,8 @@ func DatabaseCharaToResponseChara(databaseChara database.Chara, baseURL string) 
 		Description: databaseChara.Description,
 		Profiles:    databaseCharaProfileListToResponseCharaProfileList(databaseChara.Profiles),
 		Resources:   databaseCharaToResponseCharaResourceList(databaseChara, baseURL),
-		Expression:  databaseCharaExpressionMapToResponseCharaExpressionMap(databaseChara.Expressions, baseURL),
-		Calls:       databaseCharaCallListToResponseCharaCallList(databaseChara.Calls, baseURL),
+		Expression:  databaseCharaExpressionMapToResponseCharaExpressionMap(databaseChara.Expressions, baseURL, databaseChara.CharaID),
+		Calls:       databaseCharaCallListToResponseCharaCallList(databaseChara.Calls, baseURL, databaseChara.CharaID),
 	}
 }
 
@@ -145,15 +145,15 @@ func databaseCharaToResponseCharaResourceList(databaseChara database.Chara, reso
 
 	// expressionsのリソースを生成
 	for _, databaseCharaExpression := range databaseChara.Expressions {
-		for _, image := range databaseCharaExpression.ImageFileNames {
+		for _, imageFileName := range databaseCharaExpression.ImageFileNames {
 			responseCharaResources = append(responseCharaResources, response.CharaResource{
-				FileURL: resourceBaseURL + "/" + image,
+				FileURL: createFileURL(resourceBaseURL, databaseChara.CharaID, imageFileName),
 			})
 		}
 
-		for _, voice := range databaseCharaExpression.VoiceFileNames {
+		for _, voiceFileName := range databaseCharaExpression.VoiceFileNames {
 			responseCharaResources = append(responseCharaResources, response.CharaResource{
-				FileURL: resourceBaseURL + "/" + voice,
+				FileURL: createFileURL(resourceBaseURL, databaseChara.CharaID, voiceFileName),
 			})
 		}
 	}
@@ -161,7 +161,7 @@ func databaseCharaToResponseCharaResourceList(databaseChara database.Chara, reso
 	// callsのリソースを生成
 	for _, databaseCharaCall := range databaseChara.Calls {
 		responseCharaResources = append(responseCharaResources, response.CharaResource{
-			FileURL: resourceBaseURL + "/" + databaseCharaCall.VoiceFileName,
+			FileURL: createFileURL(resourceBaseURL, databaseChara.CharaID, databaseCharaCall.VoiceFileName),
 		})
 	}
 
@@ -169,17 +169,17 @@ func databaseCharaToResponseCharaResourceList(databaseChara database.Chara, reso
 	return responseCharaResources
 }
 
-func databaseCharaExpressionMapToResponseCharaExpressionMap(databaseCharaExpressionMap map[string]database.CharaExpression, baseURL string) map[string]response.CharaExpression {
+func databaseCharaExpressionMapToResponseCharaExpressionMap(databaseCharaExpressionMap map[string]database.CharaExpression, baseURL string, charaID string) map[string]response.CharaExpression {
 	responseCharaExpressionMap := map[string]response.CharaExpression{}
 	for key, databaseCharaExpression := range databaseCharaExpressionMap {
 		// 画像とボイスにBase URLを追加する
 		responseImages := make([]string, 0)
-		for _, v := range databaseCharaExpression.ImageFileNames {
-			responseImages = append(responseImages, baseURL+"/"+v)
+		for _, imageFileName := range databaseCharaExpression.ImageFileNames {
+			responseImages = append(responseImages, createFileURL(baseURL, charaID, imageFileName))
 		}
 		responseVoices := make([]string, 0)
-		for _, v := range databaseCharaExpression.VoiceFileNames {
-			responseVoices = append(responseVoices, baseURL+"/"+v)
+		for _, voiceFileName := range databaseCharaExpression.VoiceFileNames {
+			responseVoices = append(responseVoices, createFileURL(baseURL, charaID, voiceFileName))
 		}
 
 		responseCharaExpression := response.CharaExpression{
@@ -191,19 +191,19 @@ func databaseCharaExpressionMapToResponseCharaExpressionMap(databaseCharaExpress
 	return responseCharaExpressionMap
 }
 
-func databaseCharaCallListToResponseCharaCallList(databaseCharaCallList []database.CharaCall, baseURL string) []response.CharaCall {
+func databaseCharaCallListToResponseCharaCallList(databaseCharaCallList []database.CharaCall, baseURL string, charaID string) []response.CharaCall {
 	responseCharaCallList := make([]response.CharaCall, 0)
 	for i := 0; i < len(databaseCharaCallList); i++ {
-		responseCharaCall := databaseCharaCallToResponseCharaCall(databaseCharaCallList[i], baseURL)
+		responseCharaCall := databaseCharaCallToResponseCharaCall(databaseCharaCallList[i], baseURL, charaID)
 		responseCharaCallList = append(responseCharaCallList, responseCharaCall)
 	}
 	return responseCharaCallList
 }
 
-func databaseCharaCallToResponseCharaCall(databaseCharaCall database.CharaCall, baseURL string) response.CharaCall {
+func databaseCharaCallToResponseCharaCall(databaseCharaCall database.CharaCall, baseURL string, charaID string) response.CharaCall {
 	return response.CharaCall{
 		Message:      databaseCharaCall.Message,
-		VoiceFileURL: baseURL + "/" + databaseCharaCall.VoiceFileName,
+		VoiceFileURL: createFileURL(baseURL, charaID, databaseCharaCall.VoiceFileName),
 	}
 }
 
@@ -294,4 +294,8 @@ func maskAuthToken(authToken string) string {
 		}
 	}
 	return r
+}
+
+func createFileURL(resourceBaseURL string, charaID string, fileName string) string {
+	return resourceBaseURL + "/" + charaID + "/" + fileName
 }
