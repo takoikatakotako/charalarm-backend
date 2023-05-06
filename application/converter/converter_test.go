@@ -16,36 +16,47 @@ func TestMaskAuthToken(t *testing.T) {
 }
 
 func TestDatabaseCharaToResponseChara(t *testing.T) {
-	baseURL := "https://swiswiswift.com/"
+	baseURL := "https://swiswiswift.com"
 
 	databaseChara := database.Chara{
 		CharaID:     uuid.NewString(),
 		Enable:      false,
 		Name:        "Snorlax",
 		Description: "Snorlax",
-		CharaProfiles: []database.CharaProfile{
+		Profiles: []database.CharaProfile{
 			{
 				Title: "プログラマ",
 				Name:  "かびごん小野",
 				URL:   "https://twitter.com/takoikatakotako",
 			},
 		},
-		CharaExpressions: map[string]database.CharaExpression{
+		Expressions: map[string]database.CharaExpression{
 			"normal": {
-				Images: []string{"normal1.png", "normal2.png"},
-				Voices: []string{"voice1.mp3", "voice2.mp3"},
+				ImageFileNames: []string{"normal1.png", "normal2.png"},
+				VoiceFileNames: []string{"voice1.mp3", "voice2.mp3"},
 			},
 		},
-		CharaCalls: []database.CharaCall{
+		Calls: []database.CharaCall{
 			{
-				Message: "カビゴン語でおはよう",
-				Voice:   "hello.caf",
+				Message:       "カビゴン語でおはよう",
+				VoiceFileName: "hello.caf",
 			},
 		},
 	}
 
 	responseChara := DatabaseCharaToResponseChara(databaseChara, baseURL)
 	assert.Equal(t, databaseChara.CharaID, responseChara.CharaID)
+	assert.Equal(t, "https://swiswiswift.com/normal1.png", responseChara.Expression["normal"].ImageFileURLs[0])
+	assert.Equal(t, "https://swiswiswift.com/normal2.png", responseChara.Expression["normal"].ImageFileURLs[1])
+	assert.Equal(t, "https://swiswiswift.com/voice1.mp3", responseChara.Expression["normal"].VoiceFileURLs[0])
+	assert.Equal(t, "https://swiswiswift.com/voice2.mp3", responseChara.Expression["normal"].VoiceFileURLs[1])
+	assert.Equal(t, "https://swiswiswift.com/hello.caf", responseChara.Calls[0].VoiceFileURL)
+	assert.Equal(t, 5, len(responseChara.Resources))
+	assert.Equal(t, "https://swiswiswift.com/normal1.png", responseChara.Resources[0].FileURL)
+	assert.Equal(t, "https://swiswiswift.com/normal2.png", responseChara.Resources[1].FileURL)
+	assert.Equal(t, "https://swiswiswift.com/voice1.mp3", responseChara.Resources[2].FileURL)
+	assert.Equal(t, "https://swiswiswift.com/voice2.mp3", responseChara.Resources[3].FileURL)
+	assert.Equal(t, "https://swiswiswift.com/hello.caf", responseChara.Resources[4].FileURL)
 }
 
 // request.Alarm から database.Alarm への変換ができる

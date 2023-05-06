@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	BaseURLKey = "BASE_URL"
+	BaseURLKey = "RESOURCE_BASE_URL"
 )
 
 type EnvironmentVariableRepository struct {
@@ -17,7 +17,7 @@ type EnvironmentVariableRepository struct {
 // GetBaseURL get base url
 func (e *EnvironmentVariableRepository) GetBaseURL() (string, error) {
 	if e.IsLocal {
-		return "http://localhost:4566/", nil
+		return "http://localhost:4566", nil
 	}
 
 	baseURL := os.Getenv(BaseURLKey)

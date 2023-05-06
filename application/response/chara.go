@@ -18,8 +18,7 @@ type CharaProfile struct {
 }
 
 type CharaResource struct {
-	DirectoryName string `json:"directoryName"`
-	FileURL       string `json:"fileURL"`
+	FileURL string `json:"fileURL"`
 }
 
 type CharaExpression struct {
@@ -28,6 +27,6 @@ type CharaExpression struct {
 }
 
 type CharaCall struct {
-	Message string `json:"message"`
-	FileURL string `json:"fileURL"`
+	Message      string `json:"message"`
+	VoiceFileURL string `json:"voiceFileURL"`
 }
