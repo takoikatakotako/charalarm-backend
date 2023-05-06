@@ -18,7 +18,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	charaID := event.PathParameters["id"]
 
 	// Get Chara
-	s := service.CharaService{Repository: repository.DynamoDBRepository{}}
+	s := service.CharaService{DynamoDBRepository: repository.DynamoDBRepository{}}
 	chara, err := s.GetChara(charaID)
 	if err != nil {
 		fmt.Println(err)

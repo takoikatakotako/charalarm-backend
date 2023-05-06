@@ -100,25 +100,25 @@ func RequestAlarmToDatabaseAlarm(alarm request.Alarm, target string) database.Al
 	return databaseAlarm
 }
 
-func DatabaseCharaListToResponseCharaList(charaList []database.Chara) []response.Chara {
+func DatabaseCharaListToResponseCharaList(charaList []database.Chara, baseURL string) []response.Chara {
 	responseCharaList := make([]response.Chara, 0)
 	for i := 0; i < len(charaList); i++ {
-		responseChara := DatabaseCharaToResponseChara(charaList[i])
+		responseChara := DatabaseCharaToResponseChara(charaList[i], baseURL)
 		responseCharaList = append(responseCharaList, responseChara)
 	}
 	return responseCharaList
 }
 
-func DatabaseCharaToResponseChara(databaseChara database.Chara) response.Chara {
+func DatabaseCharaToResponseChara(databaseChara database.Chara, baseURL string) response.Chara {
 	return response.Chara{
 		CharaID:     databaseChara.CharaID,
 		Enable:      databaseChara.Enable,
 		Name:        databaseChara.Name,
 		Description: databaseChara.Description,
-		Profiles:    databaseCharaProfileListToResponseCharaProfileList(databaseChara.CharaProfiles),
-		Resources:   databaseCharaToResponseCharaResourceList(databaseChara),
-		Expression:  databaseCharaExpressionMapToResponseCharaExpressionMap(databaseChara.CharaExpressions),
-		Calls:       databaseCharaCallListToResponseCharaCallList(databaseChara.CharaCalls),
+		Profiles:    databaseCharaProfileListToResponseCharaProfileList(databaseChara.Profiles),
+		Resources:   databaseCharaToResponseCharaResourceList(databaseChara, baseURL),
+		Expression:  databaseCharaExpressionMapToResponseCharaExpressionMap(databaseChara.Expressions, baseURL),
+		Calls:       databaseCharaCallListToResponseCharaCallList(databaseChara.Calls, baseURL),
 	}
 }
 
@@ -139,32 +139,29 @@ func databaseCharaProfileToResponseCharaProfile(databaseCharaProfile database.Ch
 	}
 }
 
-func databaseCharaToResponseCharaResourceList(databaseChara database.Chara) []response.CharaResource {
+func databaseCharaToResponseCharaResourceList(databaseChara database.Chara, resourceBaseURL string) []response.CharaResource {
 	// response.CharaResourcesを作成
 	responseCharaResources := make([]response.CharaResource, 0)
 
 	// expressionsのリソースを生成
-	for _, databaseCharaExpression := range databaseChara.CharaExpressions {
-		for _, image := range databaseCharaExpression.Images {
+	for _, databaseCharaExpression := range databaseChara.Expressions {
+		for _, image := range databaseCharaExpression.ImageFileNames {
 			responseCharaResources = append(responseCharaResources, response.CharaResource{
-				DirectoryName: "image",
-				FileName:      image,
+				FileURL: resourceBaseURL + "/" + image,
 			})
 		}
 
-		for _, voice := range databaseCharaExpression.Voices {
+		for _, voice := range databaseCharaExpression.VoiceFileNames {
 			responseCharaResources = append(responseCharaResources, response.CharaResource{
-				DirectoryName: "voice",
-				FileName:      voice,
+				FileURL: resourceBaseURL + "/" + voice,
 			})
 		}
 	}
 
 	// callsのリソースを生成
-	for _, databaseCharaCall := range databaseChara.CharaCalls {
+	for _, databaseCharaCall := range databaseChara.Calls {
 		responseCharaResources = append(responseCharaResources, response.CharaResource{
-			DirectoryName: "voice",
-			FileName:      databaseCharaCall.Voice,
+			FileURL: resourceBaseURL + "/" + databaseCharaCall.VoiceFileName,
 		})
 	}
 
@@ -172,31 +169,41 @@ func databaseCharaToResponseCharaResourceList(databaseChara database.Chara) []re
 	return responseCharaResources
 }
 
-func databaseCharaExpressionMapToResponseCharaExpressionMap(databaseCharaExpressionMap map[string]database.CharaExpression) map[string]response.CharaExpression {
+func databaseCharaExpressionMapToResponseCharaExpressionMap(databaseCharaExpressionMap map[string]database.CharaExpression, baseURL string) map[string]response.CharaExpression {
 	responseCharaExpressionMap := map[string]response.CharaExpression{}
-	for k, v := range databaseCharaExpressionMap {
-		responseCharaExpression := response.CharaExpression{
-			Images: v.Images,
-			Voices: v.Voices,
+	for key, databaseCharaExpression := range databaseCharaExpressionMap {
+		// 画像とボイスにBase URLを追加する
+		responseImages := make([]string, 0)
+		for _, v := range databaseCharaExpression.ImageFileNames {
+			responseImages = append(responseImages, baseURL+"/"+v)
 		}
-		responseCharaExpressionMap[k] = responseCharaExpression
+		responseVoices := make([]string, 0)
+		for _, v := range databaseCharaExpression.VoiceFileNames {
+			responseVoices = append(responseVoices, baseURL+"/"+v)
+		}
+
+		responseCharaExpression := response.CharaExpression{
+			ImageFileURLs: responseImages,
+			VoiceFileURLs: responseVoices,
+		}
+		responseCharaExpressionMap[key] = responseCharaExpression
 	}
 	return responseCharaExpressionMap
 }
 
-func databaseCharaCallListToResponseCharaCallList(databaseCharaCallList []database.CharaCall) []response.CharaCall {
+func databaseCharaCallListToResponseCharaCallList(databaseCharaCallList []database.CharaCall, baseURL string) []response.CharaCall {
 	responseCharaCallList := make([]response.CharaCall, 0)
 	for i := 0; i < len(databaseCharaCallList); i++ {
-		responseCharaCall := databaseCharaCallToResponseCharaCall(databaseCharaCallList[i])
+		responseCharaCall := databaseCharaCallToResponseCharaCall(databaseCharaCallList[i], baseURL)
 		responseCharaCallList = append(responseCharaCallList, responseCharaCall)
 	}
 	return responseCharaCallList
 }
 
-func databaseCharaCallToResponseCharaCall(databaseCharaCall database.CharaCall) response.CharaCall {
+func databaseCharaCallToResponseCharaCall(databaseCharaCall database.CharaCall, baseURL string) response.CharaCall {
 	return response.CharaCall{
-		Message: databaseCharaCall.Message,
-		Voice:   databaseCharaCall.Voice,
+		Message:      databaseCharaCall.Message,
+		VoiceFileURL: baseURL + "/" + databaseCharaCall.VoiceFileName,
 	}
 }
 

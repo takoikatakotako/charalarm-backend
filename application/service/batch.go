@@ -36,7 +36,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	if err != nil {
 		return err
 	}
-	randomCharaCallVoicesCount := len(randomChara.CharaCalls)
+	randomCharaCallVoicesCount := len(randomChara.Calls)
 	if randomCharaCallVoicesCount == 0 {
 		// TODO. エラーを収集する仕組みを追加
 		// エラーだよ
@@ -44,7 +44,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	}
 	randomCharaVoiceIndex := rand.Intn(randomCharaCallVoicesCount)
 	randomCharaName := randomChara.Name
-	randomVoiceFileName := randomChara.CharaCalls[randomCharaVoiceIndex].Voice
+	randomVoiceFileName := randomChara.Calls[randomCharaVoiceIndex].VoiceFileName
 
 	// ランダム用のメモを作成
 	b.RandomCharaNameAndVoiceFileURL = map[string]CharaNameAndVoiceFilePath{}
@@ -106,12 +106,12 @@ func (b *BatchService) forIOSVoIPPushNotification(alarm database.Alarm) error {
 			if err != nil {
 				return err
 			}
-			charaCallVoicesCount := len(chara.CharaCalls)
+			charaCallVoicesCount := len(chara.Calls)
 			if charaCallVoicesCount == 0 {
 				return errors.New("error can not find voice")
 			}
 			charaCallVoiceIndex := rand.Intn(charaCallVoicesCount)
-			charaCallVoiceFileName := chara.CharaCalls[charaCallVoiceIndex].Voice
+			charaCallVoiceFileName := chara.Calls[charaCallVoiceIndex].VoiceFileName
 			b.RandomCharaNameAndVoiceFileURL[alarm.CharaID] = CharaNameAndVoiceFilePath{CharaName: chara.Name, VoiceFilePath: charaCallVoiceFileName}
 
 			// 設定

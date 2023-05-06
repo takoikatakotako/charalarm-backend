@@ -6,13 +6,13 @@ const (
 )
 
 type Chara struct {
-	CharaID          string                     `dynamodbav:"charaID"`
-	Enable           bool                       `dynamodbav:"enable"`
-	Name             string                     `dynamodbav:"name"`
-	Description      string                     `dynamodbav:"description"`
-	CharaProfiles    []CharaProfile             `dynamodbav:"profiles"`
-	CharaExpressions map[string]CharaExpression `dynamodbav:"expressions"`
-	CharaCalls       []CharaCall                `dynamodbav:"calls"`
+	CharaID     string                     `dynamodbav:"charaID"`
+	Enable      bool                       `dynamodbav:"enable"`
+	Name        string                     `dynamodbav:"name"`
+	Description string                     `dynamodbav:"description"`
+	Profiles    []CharaProfile             `dynamodbav:"profiles"`
+	Expressions map[string]CharaExpression `dynamodbav:"expressions"`
+	Calls       []CharaCall                `dynamodbav:"calls"`
 }
 
 type CharaProfile struct {
@@ -22,16 +22,15 @@ type CharaProfile struct {
 }
 
 type CharaResource struct {
-	DirectoryName string `dynamodbav:"directoryName"`
-	FileName      string `dynamodbav:"fileName"`
+	FileName string `dynamodbav:"fileName"`
 }
 
 type CharaExpression struct {
-	Images []string `dynamodbav:"images"`
-	Voices []string `dynamodbav:"voices"`
+	ImageFileNames []string `dynamodbav:"imageFileNames"`
+	VoiceFileNames []string `dynamodbav:"voiceFileNames"`
 }
 
 type CharaCall struct {
-	Message string `dynamodbav:"message"`
-	Voice   string `dynamodbav:"voice"`
+	Message       string `dynamodbav:"message"`
+	VoiceFileName string `dynamodbav:"voiceFileName"`
 }

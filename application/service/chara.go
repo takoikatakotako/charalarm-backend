@@ -7,23 +7,37 @@ import (
 )
 
 type CharaService struct {
-	Repository repository.DynamoDBRepository
+	DynamoDBRepository            repository.DynamoDBRepository
+	EnvironmentVariableRepository repository.EnvironmentVariableRepository
 }
 
 // GetChara キャラクターを取得
 func (s *CharaService) GetChara(charaID string) (response.Chara, error) {
-	chara, err := s.Repository.GetChara(charaID)
+	chara, err := s.DynamoDBRepository.GetChara(charaID)
 	if err != nil {
 		return response.Chara{}, err
 	}
-	return converter.DatabaseCharaToResponseChara(chara), nil
+
+	// BaseURLを取得
+	baseURL, err := s.EnvironmentVariableRepository.GetBaseURL()
+	if err != nil {
+		return response.Chara{}, err
+	}
+
+	return converter.DatabaseCharaToResponseChara(chara, baseURL), nil
 }
 
 // GetCharaList キャラクター一覧を取得
 func (s *CharaService) GetCharaList() ([]response.Chara, error) {
-	charaList, err := s.Repository.GetCharaList()
+	charaList, err := s.DynamoDBRepository.GetCharaList()
 	if err != nil {
 		return []response.Chara{}, err
 	}
-	return converter.DatabaseCharaListToResponseCharaList(charaList), nil
+
+	// BaseURLを取得
+	baseURL, err := s.EnvironmentVariableRepository.GetBaseURL()
+	if err != nil {
+		return []response.Chara{}, err
+	}
+	return converter.DatabaseCharaListToResponseCharaList(charaList, baseURL), nil
 }

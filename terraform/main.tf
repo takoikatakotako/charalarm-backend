@@ -19,13 +19,13 @@ module "sqs" {
 }
 
 module "platform_application" {
-  source                            = "./platform_application"
-  apple_platform_team_id   = "5RH346BQ66"
-  apple_platform_bundle_id = "com.charalarm.staging"
-  ios_push_credential_file          = "AuthKey_NL6K5FR5S8.p8"
-  ios_push_platform_principal       = "NL6K5FR5S8"
-  ios_voip_push_private_file        = "staging-voip-20240210-privatekey.pem"
-  ios_voip_push_certificate_file    = "staging-voip-20240210-certificate.pem"
+  source                         = "./platform_application"
+  apple_platform_team_id         = "5RH346BQ66"
+  apple_platform_bundle_id       = "com.charalarm.staging"
+  ios_push_credential_file       = "AuthKey_NL6K5FR5S8.p8"
+  ios_push_platform_principal    = "NL6K5FR5S8"
+  ios_voip_push_private_file     = "staging-voip-20240210-privatekey.pem"
+  ios_voip_push_certificate_file = "staging-voip-20240210-certificate.pem"
 }
 
 module "web_api" {
@@ -35,6 +35,7 @@ module "web_api" {
   acm_certificate_arn     = local.api_acm_certificate_arn
   application_version     = local.application_version
   application_bucket_name = local.application_bucket_name
+  resource_bucket_url     = local.resource_bucket_url
 }
 
 

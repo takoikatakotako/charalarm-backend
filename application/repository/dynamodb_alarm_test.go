@@ -9,7 +9,7 @@ import (
 )
 
 func TestDynamoDBRepository_InsertAlarm(t *testing.T) {
-	// Repository
+	// DynamoDBRepository
 	repository := DynamoDBRepository{IsLocal: true}
 
 	insertAlarm := createAlarm()

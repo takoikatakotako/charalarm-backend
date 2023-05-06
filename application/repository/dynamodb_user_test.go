@@ -9,7 +9,7 @@ import (
 )
 
 func TestDynamoDBRepository_InsertUser(t *testing.T) {
-	// Repository
+	// DynamoDBRepository
 	repository := DynamoDBRepository{IsLocal: true}
 
 	// ユーザー作成
@@ -33,7 +33,7 @@ func TestDynamoDBRepository_InsertUser(t *testing.T) {
 }
 
 func TestInsertUserAndExist(t *testing.T) {
-	// Repository
+	// DynamoDBRepository
 	repository := DynamoDBRepository{IsLocal: true}
 
 	// UserInfo
@@ -67,7 +67,7 @@ func TestInsertUserAndExist(t *testing.T) {
 }
 
 func TestInsertUserAndDelete(t *testing.T) {
-	// Repository
+	// DynamoDBRepository
 	repository := DynamoDBRepository{IsLocal: true}
 
 	userID := uuid.New().String()

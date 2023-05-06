@@ -18,7 +18,13 @@ variable "application_bucket_name" {
   type = string
 }
 
+variable "resource_bucket_url" {
+  type = string
+}
 
 locals {
   application_bucket_s3_url = "s3://${aws_s3_bucket.application_bucket.bucket}"
+  variables = {
+    "RESOURCE_BASE_URL" = var.resource_bucket_url
+  }
 }

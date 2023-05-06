@@ -15,6 +15,12 @@ resource "aws_lambda_function" "lambda_function" {
   architectures = [
     "x86_64"
   ]
+
+  environment {
+    variables = var.enviroment_variables
+  }
+
+
   lifecycle {
     ignore_changes = [
       filename,

@@ -8,7 +8,12 @@ import (
 
 func TestCharalarmList(t *testing.T) {
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
-	service := CharaService{Repository: dynamoDBRepository}
+	environmentVariableRepository := repository.EnvironmentVariableRepository{IsLocal: true}
+
+	service := CharaService{
+		DynamoDBRepository:            dynamoDBRepository,
+		EnvironmentVariableRepository: environmentVariableRepository,
+	}
 
 	// トークン作成
 	charaList, err := service.GetCharaList()
