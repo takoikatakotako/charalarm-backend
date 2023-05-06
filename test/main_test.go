@@ -30,7 +30,7 @@ func TestScenario(t *testing.T) {
 	authToken := uuid.New().String()
 
 	// 新規登録ができる
-	statusCode, signUpResponse, err := userSignUp(userID, authToken)
+	statusCode, signUpResponse, err := userSignUp(userID, authToken, "iOS")
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -49,23 +49,24 @@ func TestScenario(t *testing.T) {
 	// アラームの情報を生成
 	alarmID := uuid.New().String()
 	alarm := entity.AlarmRequest{
-		AlarmID:      alarmID,
-		UserID:       userID,
-		AlarmType:    "VOIP_NOTIFICATION",
-		AlarmEnable:  true,
-		AlarmName:    "alarmName",
-		AlarmHour:    12,
-		AlarmMinute:  30,
-		CharaID:      "",
-		CharaName:    "charaName",
-		VoiceFileURL: "voiceFileURL",
-		Sunday:       true,
-		Monday:       false,
-		Tuesday:      true,
-		Wednesday:    false,
-		Thursday:     true,
-		Friday:       false,
-		Saturday:     true,
+		AlarmID:        alarmID,
+		UserID:         userID,
+		Type:           "VOIP_NOTIFICATION",
+		Enable:         true,
+		Name:           "alarmName",
+		Hour:           12,
+		Minute:         30,
+		TimeDifference: 9,
+		CharaID:        "",
+		CharaName:      "",
+		VoiceFileName:  "",
+		Sunday:         true,
+		Monday:         false,
+		Tuesday:        true,
+		Wednesday:      false,
+		Thursday:       true,
+		Friday:         false,
+		Saturday:       true,
 	}
 
 	// アラームを追加
@@ -107,12 +108,13 @@ func healthcheck() (int, entity.MessageResponse, error) {
 }
 
 // Post: /user/signup
-func userSignUp(userID string, authToken string) (int, entity.MessageResponse, error) {
+func userSignUp(userID string, authToken string, platform string) (int, entity.MessageResponse, error) {
 	requestUrl := Endpoint + "/user/signup"
 
-	requestBody := &entity.WithdrawRequest{
+	requestBody := &entity.SignUpRequest{
 		UserID:    userID,
 		AuthToken: authToken,
+		Platform:  platform,
 	}
 
 	jsonString, err := json.Marshal(requestBody)
