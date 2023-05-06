@@ -13,13 +13,13 @@ import (
 )
 
 func init() {
-	// Repository
+	// DynamoDBRepository
 	sqsRepository := repository.SQSRepository{IsLocal: true}
 	_ = sqsRepository.PurgeQueue()
 }
 
 func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
-	// Repository
+	// DynamoDBRepository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
 	sqsRepository := repository.SQSRepository{IsLocal: true}
 

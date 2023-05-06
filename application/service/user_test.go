@@ -9,7 +9,7 @@ import (
 )
 
 func TestInfoUser(t *testing.T) {
-	// Repository
+	// DynamoDBRepository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
 	userService := UserService{Repository: dynamoDBRepository}
 
@@ -34,7 +34,7 @@ func TestInfoUser(t *testing.T) {
 }
 
 func TestSignup(t *testing.T) {
-	// Repository
+	// DynamoDBRepository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
 
 	// Service
@@ -62,7 +62,7 @@ func TestSignup(t *testing.T) {
 }
 
 func TestWithdraw(t *testing.T) {
-	// Repository
+	// DynamoDBRepository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
 	s := UserService{Repository: dynamoDBRepository}
 

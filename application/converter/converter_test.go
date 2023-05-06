@@ -16,6 +16,8 @@ func TestMaskAuthToken(t *testing.T) {
 }
 
 func TestDatabaseCharaToResponseChara(t *testing.T) {
+	baseURL := "https://swiswiswift.com/"
+
 	databaseChara := database.Chara{
 		CharaID:     uuid.NewString(),
 		Enable:      false,
@@ -42,8 +44,7 @@ func TestDatabaseCharaToResponseChara(t *testing.T) {
 		},
 	}
 
-	responseChara := DatabaseCharaToResponseChara(databaseChara)
-
+	responseChara := DatabaseCharaToResponseChara(databaseChara, baseURL)
 	assert.Equal(t, databaseChara.CharaID, responseChara.CharaID)
 }
 
