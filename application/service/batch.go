@@ -86,11 +86,11 @@ func (b *BatchService) forIOSVoIPPushNotification(alarm database.Alarm) error {
 	if alarm.CharaID == "" || alarm.CharaID == "RANDOM" {
 		// CharaIDが無い場合 -> Charaとボイスをランダムにする
 		alarmInfo.CharaName = b.RandomCharaNameAndVoiceFileURL["RANDOM"].CharaName
-		alarmInfo.VoiceFilePath = b.RandomCharaNameAndVoiceFileURL["RANDOM"].VoiceFilePath
+		alarmInfo.VoiceFileURL = b.RandomCharaNameAndVoiceFileURL["RANDOM"].VoiceFilePath
 	} else if alarm.VoiceFileName == "" || alarm.VoiceFileName == "RANDOM" {
 		// CharaIDがあり、VoiceFileNameがある場合 -> 指定のキャラを使い、指定のボイスを使用する
 		alarmInfo.CharaName = alarm.CharaName
-		alarmInfo.VoiceFilePath = b.getVoiceFilePath(alarm.CharaID, alarm.VoiceFileName)
+		alarmInfo.VoiceFileURL = b.getVoiceFilePath(alarm.CharaID, alarm.VoiceFileName)
 	} else {
 		// CharaIDがあり、VoiceFileNameがない場合 -> 指定のキャラを使い、ボイスをランダム
 
@@ -99,7 +99,7 @@ func (b *BatchService) forIOSVoIPPushNotification(alarm database.Alarm) error {
 		if ok {
 			// キーがある場合
 			alarmInfo.CharaName = val.CharaName
-			alarmInfo.VoiceFilePath = val.VoiceFilePath
+			alarmInfo.VoiceFileURL = val.VoiceFilePath
 		} else {
 			// キーがないのでDynamoDBから取得する
 			chara, err := b.DynamoDBRepository.GetChara(alarm.CharaID)
@@ -116,7 +116,7 @@ func (b *BatchService) forIOSVoIPPushNotification(alarm database.Alarm) error {
 
 			// 設定
 			alarmInfo.CharaName = chara.Name
-			alarmInfo.VoiceFilePath = b.getVoiceFilePath(chara.CharaID, charaCallVoiceFileName)
+			alarmInfo.VoiceFileURL = b.getVoiceFilePath(chara.CharaID, charaCallVoiceFileName)
 		}
 	}
 

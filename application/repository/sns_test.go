@@ -50,7 +50,7 @@ func TestPublishPlatformApplication(t *testing.T) {
 	// 詰め替える
 	iOSVoIPPushSNSMessage := entity.IOSVoIPPushSNSMessage{}
 	iOSVoIPPushSNSMessage.CharaName = "キャラ名"
-	iOSVoIPPushSNSMessage.FilePath = "ファイルPath"
+	iOSVoIPPushSNSMessage.VoiceFileURL = "ファイルPath"
 
 	err = repository.PublishPlatformApplication(endpointArn, iOSVoIPPushSNSMessage)
 	if err != nil {

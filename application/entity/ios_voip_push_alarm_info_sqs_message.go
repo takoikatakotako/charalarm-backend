@@ -5,5 +5,5 @@ type IOSVoIPPushAlarmInfoSQSMessage struct {
 	UserID         string `json:"userID"`
 	SNSEndpointArn string `json:"snsEndpointArn"`
 	CharaName      string `json:"charaName"`
-	VoiceFilePath  string `json:"voiceFilePath"`
+	VoiceFileURL   string `json:"voiceFileURL"`
 }
