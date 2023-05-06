@@ -148,14 +148,14 @@ func databaseCharaToResponseCharaResourceList(databaseChara database.Chara, base
 		for _, image := range databaseCharaExpression.Images {
 			responseCharaResources = append(responseCharaResources, response.CharaResource{
 				DirectoryName: "image",
-				FileName:      baseURL + image,
+				FileURL:       baseURL + image,
 			})
 		}
 
 		for _, voice := range databaseCharaExpression.Voices {
 			responseCharaResources = append(responseCharaResources, response.CharaResource{
 				DirectoryName: "voice",
-				FileName:      baseURL + voice,
+				FileURL:       baseURL + voice,
 			})
 		}
 	}
@@ -164,7 +164,7 @@ func databaseCharaToResponseCharaResourceList(databaseChara database.Chara, base
 	for _, databaseCharaCall := range databaseChara.CharaCalls {
 		responseCharaResources = append(responseCharaResources, response.CharaResource{
 			DirectoryName: "voice",
-			FileName:      baseURL + databaseCharaCall.Voice,
+			FileURL:       baseURL + databaseCharaCall.Voice,
 		})
 	}
 
@@ -186,8 +186,8 @@ func databaseCharaExpressionMapToResponseCharaExpressionMap(databaseCharaExpress
 		}
 
 		responseCharaExpression := response.CharaExpression{
-			Images: responseImages,
-			Voices: responseVoices,
+			ImageFileURLs: responseImages,
+			VoiceFileURLs: responseVoices,
 		}
 		responseCharaExpressionMap[key] = responseCharaExpression
 	}
@@ -206,7 +206,7 @@ func databaseCharaCallListToResponseCharaCallList(databaseCharaCallList []databa
 func databaseCharaCallToResponseCharaCall(databaseCharaCall database.CharaCall, baseURL string) response.CharaCall {
 	return response.CharaCall{
 		Message: databaseCharaCall.Message,
-		Voice:   baseURL + databaseCharaCall.Voice,
+		FileURL: baseURL + databaseCharaCall.Voice,
 	}
 }
 

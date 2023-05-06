@@ -19,20 +19,15 @@ type CharaProfile struct {
 
 type CharaResource struct {
 	DirectoryName string `json:"directoryName"`
-	FileName      string `json:"fileName"`
+	FileURL       string `json:"fileURL"`
 }
 
 type CharaExpression struct {
-	Images []string `json:"images"`
-	Voices []string `json:"voices"`
+	ImageFileURLs []string `json:"imageFileURLs"`
+	VoiceFileURLs []string `json:"voiceFileURLs"`
 }
 
 type CharaCall struct {
 	Message string `json:"message"`
-	Voice   string `json:"voice"`
+	FileURL string `json:"fileURL"`
 }
-
-//type CharaNameAndVoiceFileURL struct {
-//	CharaName    string
-//	VoiceFileName string
-//}
