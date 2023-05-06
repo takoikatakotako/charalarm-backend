@@ -11,15 +11,16 @@ resource "aws_api_gateway_resource" "push_token_ios_push_add_resource" {
 # Lambda
 ##################################################
 module "push_token_ios_push_add_post_lambda_function" {
-  source        = "./lambda_function"
-  function_name = "push-token-ios-push-add-post-function"
-  role          = aws_iam_role.api_gateway_lambda_role.arn
-  handler       = "push_token_ios_push_add"
-  s3_bucket     = local.application_bucket_s3_url
-  s3_key        = "/${var.application_version}/push_token_ios_push_add.zip"
-  execution_arn = aws_api_gateway_rest_api.charalarm_rest_api.execution_arn
-  method        = "POST"
-  path          = "/push-token/ios/push/add"
+  source               = "./lambda_function"
+  function_name        = "push-token-ios-push-add-post-function"
+  role                 = aws_iam_role.api_gateway_lambda_role.arn
+  handler              = "push_token_ios_push_add"
+  s3_bucket            = local.application_bucket_s3_url
+  s3_key               = "/${var.application_version}/push_token_ios_push_add.zip"
+  execution_arn        = aws_api_gateway_rest_api.charalarm_rest_api.execution_arn
+  method               = "POST"
+  path                 = "/push-token/ios/push/add"
+  enviroment_variables = local.variables
 }
 
 ##################################################
