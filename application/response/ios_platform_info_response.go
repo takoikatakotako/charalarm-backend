@@ -1,8 +1,8 @@
 package response
 
 type IOSPlatformInfoResponse struct {
-	PushToken                string `dynamodbav:"pushToken"`
-	PushTokenSNSEndpoint     string `dynamodbav:"pushTokenSNSEndpoint"`
-	VoIPPushToken            string `dynamodbav:"voIPPushToken"`
-	VoIPPushTokenSNSEndpoint string `dynamodbav:"voIPPushTokenSNSEndpoint"`
+	PushToken                string `json:"pushToken"`
+	PushTokenSNSEndpoint     string `json:"pushTokenSNSEndpoint"`
+	VoIPPushToken            string `json:"voIPPushToken"`
+	VoIPPushTokenSNSEndpoint string `json:"voIPPushTokenSNSEndpoint"`
 }

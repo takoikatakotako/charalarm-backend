@@ -51,7 +51,7 @@ func TestScenario(t *testing.T) {
 	alarm := entity.AlarmRequest{
 		AlarmID:        alarmID,
 		UserID:         userID,
-		Type:           "VOIP_NOTIFICATION",
+		Type:           "IOS_VOIP_PUSH_NOTIFICATION",
 		Enable:         true,
 		Name:           "alarmName",
 		Hour:           12,
@@ -75,7 +75,7 @@ func TestScenario(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 	assert.Equal(t, statusCode, 200)
-	assert.Equal(t, "アラーム追加完了!", alarmAddResponse.Message)
+	assert.Equal(t, "Add Alarm Success!", alarmAddResponse.Message)
 
 	// 退会できる
 	statusCode, withdrawResponse, err := userWithdraw(userID, authToken)

@@ -1,5 +1,5 @@
 # Sandbox環境にWebAPIをデプロイ
-name: Deploy WebAPI in Sandbox
+name: Deploy For Sandbox
 
 on:
   workflow_dispatch:
