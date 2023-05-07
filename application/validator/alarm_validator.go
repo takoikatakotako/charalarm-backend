@@ -27,7 +27,7 @@ func ValidateAlarm(alarm database.Alarm) error {
 	}
 
 	// Target
-	if alarm.Target != "" {
+	if alarm.Target == "" {
 		return errors.New(message.ErrorInvalidValue + ": Target")
 	}
 
