@@ -28,6 +28,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	userID, authToken, err := auth.Basic(authorizationHeader)
 	if err != nil {
+		fmt.Println(err)
 		return handler.FailureResponse(http.StatusInternalServerError, message.AuthenticationFailure)
 	}
 
@@ -35,12 +36,15 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	req := request.AddAlarmRequest{}
 	err = json.Unmarshal([]byte(body), &req)
 	if err != nil {
+		fmt.Println(err)
 		return handler.FailureResponse(http.StatusBadRequest, message.InvalidValue)
 	}
-	alarm := req.Alarm
+	requestAlarm := req.Alarm
 
 	s := service.AlarmService{Repository: repository.DynamoDBRepository{}}
-	if err := s.AddAlarm(userID, authToken, alarm); err != nil {
+	if err := s.AddAlarm(userID, authToken, requestAlarm); err != nil {
+		fmt.Println(err)
+		fmt.Println("kokomade")
 		return handler.FailureResponse(http.StatusInternalServerError, message.AlarmAddFailure)
 	}
 
