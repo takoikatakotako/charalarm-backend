@@ -30,7 +30,7 @@ variable "path" {
   type = string
 }
 
-variable "enviroment_variables" {
+variable "environment_variables" {
   type = map(string)
 }
 
