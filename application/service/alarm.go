@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"github.com/takoikatakotako/charalarm-backend/converter"
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository"
@@ -45,6 +46,7 @@ func (s *AlarmService) AddAlarm(userID string, authToken string, requestAlarm re
 	// すでに登録されていないか調べる
 	isExist, err := s.Repository.IsExistAlarm(requestAlarm.AlarmID)
 	if err != nil {
+		fmt.Println("check is exist")
 		return err
 	}
 	if isExist {
@@ -58,6 +60,7 @@ func (s *AlarmService) AddAlarm(userID string, authToken string, requestAlarm re
 	} else if requestAlarm.Type == "IOS_VOIP_PUSH_NOTIFICATION" {
 		target = user.IOSPlatformInfo.VoIPPushTokenSNSEndpoint
 	} else {
+		fmt.Println("check is valid type")
 		return errors.New(message.ErrorInvalidValue)
 	}
 	databaseAlarm := converter.RequestAlarmToDatabaseAlarm(requestAlarm, target)
