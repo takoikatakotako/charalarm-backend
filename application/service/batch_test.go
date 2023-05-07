@@ -21,13 +21,14 @@ func init() {
 func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 	// DynamoDBRepository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
+	environmentVariableRepository := repository.EnvironmentVariableRepository{IsLocal: true}
 	sqsRepository := repository.SQSRepository{IsLocal: true}
 	snsRepository := repository.SNSRepository{IsLocal: true}
 
 	// Service
 	userService := UserService{Repository: dynamoDBRepository}
 	alarmService := AlarmService{Repository: dynamoDBRepository}
-	batchService := BatchService{DynamoDBRepository: dynamoDBRepository, SQSRepository: sqsRepository}
+	batchService := BatchService{EnvironmentVariableRepository: environmentVariableRepository, DynamoDBRepository: dynamoDBRepository, SQSRepository: sqsRepository}
 	pushTokenService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
 	// ユーザー作成

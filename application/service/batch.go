@@ -14,7 +14,8 @@ import (
 type BatchService struct {
 	DynamoDBRepository             repository.DynamoDBRepository
 	SQSRepository                  repository.SQSRepository
-	RandomCharaNameAndVoiceFileURL map[string]CharaNameAndVoiceFilePath
+	EnvironmentVariableRepository  repository.EnvironmentVariableRepository
+	randomCharaNameAndVoiceFileURL map[string]CharaNameAndVoiceFilePath
 }
 
 type CharaNameAndVoiceFilePath struct {
@@ -25,6 +26,12 @@ type CharaNameAndVoiceFilePath struct {
 func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday time.Weekday) error {
 	// クエリでアラームを取得
 	alarmList, err := b.DynamoDBRepository.QueryByAlarmTime(hour, minute, weekday)
+	if err != nil {
+		return err
+	}
+
+	// BaseURLを取得
+	resourceBaseURL, err := b.EnvironmentVariableRepository.GetResourceBaseURL()
 	if err != nil {
 		return err
 	}
@@ -47,9 +54,9 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	randomVoiceFileName := randomChara.Calls[randomCharaVoiceIndex].VoiceFileName
 
 	// ランダム用のメモを作成
-	b.RandomCharaNameAndVoiceFileURL = map[string]CharaNameAndVoiceFilePath{}
-	voiceFilePath := b.getVoiceFilePath(randomChara.CharaID, randomVoiceFileName)
-	b.RandomCharaNameAndVoiceFileURL["RANDOM"] = CharaNameAndVoiceFilePath{CharaName: randomCharaName, VoiceFilePath: voiceFilePath}
+	b.randomCharaNameAndVoiceFileURL = map[string]CharaNameAndVoiceFilePath{}
+	voiceFilePath := b.createVoiceFileURL(resourceBaseURL, randomChara.CharaID, randomVoiceFileName)
+	b.randomCharaNameAndVoiceFileURL["RANDOM"] = CharaNameAndVoiceFilePath{CharaName: randomCharaName, VoiceFilePath: voiceFilePath}
 
 	fmt.Println("----------------")
 	fmt.Printf("AlarmList: %v\n", alarmList)
@@ -58,7 +65,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	// 変換してSQSに送信
 	for _, alarm := range alarmList {
 		if alarm.Type == "IOS_VOIP_PUSH_NOTIFICATION" {
-			err := b.forIOSVoIPPushNotification(alarm)
+			err := b.forIOSVoIPPushNotification(resourceBaseURL, alarm)
 			if err != nil {
 				// TODO. エラーを収集する仕組みを追加
 				fmt.Printf("----------------")
@@ -71,11 +78,11 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	return nil
 }
 
-func (b *BatchService) getVoiceFilePath(charaDomain string, voiceFileName string) string {
-	return fmt.Sprintf("%s/voice/%s", charaDomain, voiceFileName)
+func (b *BatchService) createVoiceFileURL(resourceBaseURL string, charaID string, voiceFileName string) string {
+	return fmt.Sprintf("%s/%s/voice/%s", resourceBaseURL, charaID, voiceFileName)
 }
 
-func (b *BatchService) forIOSVoIPPushNotification(alarm database.Alarm) error {
+func (b *BatchService) forIOSVoIPPushNotification(resourceBaseURL string, alarm database.Alarm) error {
 	// AlarmInfoに変換
 	alarmInfo := entity.IOSVoIPPushAlarmInfoSQSMessage{}
 	alarmInfo.AlarmID = alarm.AlarmID
@@ -85,17 +92,17 @@ func (b *BatchService) forIOSVoIPPushNotification(alarm database.Alarm) error {
 	//
 	if alarm.CharaID == "" || alarm.CharaID == "RANDOM" {
 		// CharaIDが無い場合 -> Charaとボイスをランダムにする
-		alarmInfo.CharaName = b.RandomCharaNameAndVoiceFileURL["RANDOM"].CharaName
-		alarmInfo.VoiceFileURL = b.RandomCharaNameAndVoiceFileURL["RANDOM"].VoiceFilePath
+		alarmInfo.CharaName = b.randomCharaNameAndVoiceFileURL["RANDOM"].CharaName
+		alarmInfo.VoiceFileURL = b.randomCharaNameAndVoiceFileURL["RANDOM"].VoiceFilePath
 	} else if alarm.VoiceFileName == "" || alarm.VoiceFileName == "RANDOM" {
 		// CharaIDがあり、VoiceFileNameがある場合 -> 指定のキャラを使い、指定のボイスを使用する
 		alarmInfo.CharaName = alarm.CharaName
-		alarmInfo.VoiceFileURL = b.getVoiceFilePath(alarm.CharaID, alarm.VoiceFileName)
+		alarmInfo.VoiceFileURL = b.createVoiceFileURL(resourceBaseURL, alarm.CharaID, alarm.VoiceFileName)
 	} else {
 		// CharaIDがあり、VoiceFileNameがない場合 -> 指定のキャラを使い、ボイスをランダム
 
 		// メモ化が使われているかのチェック
-		val, ok := b.RandomCharaNameAndVoiceFileURL[alarm.CharaID]
+		val, ok := b.randomCharaNameAndVoiceFileURL[alarm.CharaID]
 		if ok {
 			// キーがある場合
 			alarmInfo.CharaName = val.CharaName
@@ -112,11 +119,11 @@ func (b *BatchService) forIOSVoIPPushNotification(alarm database.Alarm) error {
 			}
 			charaCallVoiceIndex := rand.Intn(charaCallVoicesCount)
 			charaCallVoiceFileName := chara.Calls[charaCallVoiceIndex].VoiceFileName
-			b.RandomCharaNameAndVoiceFileURL[alarm.CharaID] = CharaNameAndVoiceFilePath{CharaName: chara.Name, VoiceFilePath: charaCallVoiceFileName}
+			b.randomCharaNameAndVoiceFileURL[alarm.CharaID] = CharaNameAndVoiceFilePath{CharaName: chara.Name, VoiceFilePath: charaCallVoiceFileName}
 
 			// 設定
 			alarmInfo.CharaName = chara.Name
-			alarmInfo.VoiceFileURL = b.getVoiceFilePath(chara.CharaID, charaCallVoiceFileName)
+			alarmInfo.VoiceFileURL = b.createVoiceFileURL(resourceBaseURL, chara.CharaID, charaCallVoiceFileName)
 		}
 	}
 
