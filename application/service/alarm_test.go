@@ -9,9 +9,14 @@ import (
 )
 
 func TestAlarm(t *testing.T) {
+	// Repository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
+	snsRepository := repository.SNSRepository{IsLocal: true}
+
+	// Service
 	userService := UserService{Repository: dynamoDBRepository}
 	alarmService := AlarmService{Repository: dynamoDBRepository}
+	pushTokenService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
 	// ユーザー作成
 	userID := uuid.New().String()
@@ -19,6 +24,13 @@ func TestAlarm(t *testing.T) {
 	const ipAddress = "127.0.0.1"
 	const platform = "iOS"
 	err := userService.Signup(userID, authToken, platform, ipAddress)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// PlatformEndpointを追加
+	voIPPushToken := uuid.New().String()
+	err = pushTokenService.AddIOSVoipPushToken(userID, authToken, voIPPushToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
