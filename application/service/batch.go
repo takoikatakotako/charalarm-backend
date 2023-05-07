@@ -79,7 +79,7 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 }
 
 func (b *BatchService) createVoiceFileURL(resourceBaseURL string, charaID string, voiceFileName string) string {
-	return fmt.Sprintf("%s/%s/voice/%s", resourceBaseURL, charaID, voiceFileName)
+	return fmt.Sprintf("%s/%s/%s", resourceBaseURL, charaID, voiceFileName)
 }
 
 func (b *BatchService) forIOSVoIPPushNotification(resourceBaseURL string, alarm database.Alarm) error {
