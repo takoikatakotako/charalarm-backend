@@ -118,13 +118,13 @@ func (s *AlarmService) DeleteAlarm(userID string, authToken string, alarmID stri
 // GetAlarmList アラームを取得
 func (s *AlarmService) GetAlarmList(userID string, authToken string) ([]response.Alarm, error) {
 	// ユーザーを取得
-	anonymousUser, err := s.Repository.GetUser(userID)
+	user, err := s.Repository.GetUser(userID)
 	if err != nil {
 		return []response.Alarm{}, err
 	}
 
 	// UserID, AuthTokenが一致するか確認する
-	if anonymousUser.UserID == userID && anonymousUser.AuthToken == authToken {
+	if user.UserID == userID && user.AuthToken == authToken {
 		databaseAlarmList, err := s.Repository.GetAlarmList(userID)
 		if err != nil {
 			return []response.Alarm{}, err

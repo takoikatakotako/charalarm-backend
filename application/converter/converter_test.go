@@ -293,3 +293,7 @@ func TestRequestAlarmToDatabaseAlarmFeatureTimeDifference(t *testing.T) {
 	assert.Equal(t, true, databaseAlarm6.Friday)
 	assert.Equal(t, false, databaseAlarm6.Saturday)
 }
+
+func TestDatabaseAlarmToResponseAlarm(t *testing.T) {
+	//
+}

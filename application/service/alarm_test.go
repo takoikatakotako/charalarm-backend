@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestAlarm(t *testing.T) {
+func TestAlarmService_AddAlarm(t *testing.T) {
 	// Repository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
 	snsRepository := repository.SNSRepository{IsLocal: true}
@@ -40,8 +40,8 @@ func TestAlarm(t *testing.T) {
 	const alarmType = "IOS_VOIP_PUSH_NOTIFICATION"
 	const alarmEnable = true
 	var alarmName = "Alarm Name"
-	const alarmHour = 8
-	const alarmMinute = 30
+	const alarmHour = 23
+	const alarmMinute = 48
 	const alarmTimeDifference = float32(9.0)
 	const charaID = "charaID"
 	const charaName = "charaName"
@@ -161,4 +161,8 @@ func TestAlarm(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, 0, len(getAlarmList))
+}
+
+func TestAlarmService_AddAlarmAndGetAlarm(t *testing.T) {
+
 }
