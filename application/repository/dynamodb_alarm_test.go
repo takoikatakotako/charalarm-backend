@@ -205,37 +205,25 @@ func TestInsertAndDeleteAlarmList(t *testing.T) {
 }
 
 func createAlarm() database.Alarm {
-	alarmID := uuid.New().String()
-	userID := uuid.New().String()
-	alarmType := "IOS_VOIP_PUSH_NOTIFICATION"
-	alarmEnable := true
-	alarmName := "My Alarm"
-	alarmHour := 8
-	alarmMinute := 15
-	alarmTime := "08-15"
-	sunday := true
-	monday := true
-	tuesday := true
-	wednesday := true
-	thursday := true
-	friday := true
-	saturday := true
-
 	return database.Alarm{
-		AlarmID:   alarmID,
-		UserID:    userID,
-		Type:      alarmType,
-		Enable:    alarmEnable,
-		Name:      alarmName,
-		Hour:      alarmHour,
-		Time:      alarmTime,
-		Minute:    alarmMinute,
-		Sunday:    sunday,
-		Monday:    monday,
-		Tuesday:   tuesday,
-		Wednesday: wednesday,
-		Thursday:  thursday,
-		Friday:    friday,
-		Saturday:  saturday,
+		AlarmID: uuid.New().String(),
+		UserID:  uuid.New().String(),
+		Type:    "IOS_VOIP_PUSH_NOTIFICATION",
+		Target:  "target",
+
+		Enable:         true,
+		Name:           "My Alarm",
+		Hour:           8,
+		Minute:         15,
+		Time:           "08-15",
+		TimeDifference: 0,
+
+		Sunday:    true,
+		Monday:    true,
+		Tuesday:   true,
+		Wednesday: true,
+		Thursday:  true,
+		Friday:    true,
+		Saturday:  true,
 	}
 }

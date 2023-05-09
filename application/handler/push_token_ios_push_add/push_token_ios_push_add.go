@@ -43,7 +43,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 		DynamoDBRepository: repository.DynamoDBRepository{},
 		SNSRepository:      repository.SNSRepository{},
 	}
-	err = s.AddIOSVoipPushToken(userID, authToken, pushToken)
+	err = s.AddIOSPushToken(userID, authToken, pushToken)
 	if err != nil {
 		return handler.FailureResponse(http.StatusInternalServerError, message.UserUpdateFailure)
 	}

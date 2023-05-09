@@ -19,7 +19,7 @@ func (s *CharaService) GetChara(charaID string) (response.Chara, error) {
 	}
 
 	// BaseURLを取得
-	baseURL, err := s.EnvironmentVariableRepository.GetBaseURL()
+	baseURL, err := s.EnvironmentVariableRepository.GetResourceBaseURL()
 	if err != nil {
 		return response.Chara{}, err
 	}
@@ -35,7 +35,7 @@ func (s *CharaService) GetCharaList() ([]response.Chara, error) {
 	}
 
 	// BaseURLを取得
-	baseURL, err := s.EnvironmentVariableRepository.GetBaseURL()
+	baseURL, err := s.EnvironmentVariableRepository.GetResourceBaseURL()
 	if err != nil {
 		return []response.Chara{}, err
 	}

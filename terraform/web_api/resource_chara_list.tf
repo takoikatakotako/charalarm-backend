@@ -20,7 +20,7 @@ module "chara_list_post_lambda_function" {
   execution_arn        = aws_api_gateway_rest_api.charalarm_rest_api.execution_arn
   method               = "GET"
   path                 = "/chara/list"
-  enviroment_variables = local.variables
+  environment_variables = local.variables
 }
 
 ##################################################

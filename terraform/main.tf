@@ -41,6 +41,7 @@ module "web_api" {
 
 module "batch" {
   source = "./batch"
+    resource_bucket_url     = local.resource_bucket_url
 }
 
 module "worker" {

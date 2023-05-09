@@ -21,12 +21,15 @@ func init() {
 func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 	// DynamoDBRepository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
+	environmentVariableRepository := repository.EnvironmentVariableRepository{IsLocal: true}
 	sqsRepository := repository.SQSRepository{IsLocal: true}
+	snsRepository := repository.SNSRepository{IsLocal: true}
 
 	// Service
 	userService := UserService{Repository: dynamoDBRepository}
 	alarmService := AlarmService{Repository: dynamoDBRepository}
-	batchService := BatchService{DynamoDBRepository: dynamoDBRepository, SQSRepository: sqsRepository}
+	batchService := BatchService{EnvironmentVariableRepository: environmentVariableRepository, DynamoDBRepository: dynamoDBRepository, SQSRepository: sqsRepository}
+	pushTokenService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
 	// ユーザー作成
 	userID := uuid.New().String()
@@ -34,6 +37,13 @@ func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 	const ipAddress = "127.0.0.1"
 	const platform = "iOS"
 	err := userService.Signup(userID, authToken, platform, ipAddress)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// PlatformEndpointを作成
+	pushToken := uuid.New().String()
+	err = pushTokenService.AddIOSVoipPushToken(userID, authToken, pushToken)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}

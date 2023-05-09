@@ -266,4 +266,34 @@ func TestRequestAlarmToDatabaseAlarmFeatureTimeDifference(t *testing.T) {
 	assert.Equal(t, true, databaseAlarm5.Friday)
 	assert.Equal(t, false, databaseAlarm5.Saturday)
 
+	// 日本の(UTC+9)の23:48はUTCは当日の14:48
+	requestAlarm6 := request.Alarm{
+		Hour:           23,
+		Minute:         48,
+		TimeDifference: 9,
+
+		// Weekday
+		Sunday:    true,
+		Monday:    false,
+		Tuesday:   true,
+		Wednesday: false,
+		Thursday:  false,
+		Friday:    true,
+		Saturday:  false,
+	}
+
+	databaseAlarm6 := RequestAlarmToDatabaseAlarm(requestAlarm6, "target6")
+	assert.Equal(t, 14, databaseAlarm6.Hour)
+	assert.Equal(t, 48, databaseAlarm6.Minute)
+	assert.Equal(t, true, databaseAlarm6.Sunday)
+	assert.Equal(t, false, databaseAlarm6.Monday)
+	assert.Equal(t, true, databaseAlarm6.Tuesday)
+	assert.Equal(t, false, databaseAlarm6.Wednesday)
+	assert.Equal(t, false, databaseAlarm6.Thursday)
+	assert.Equal(t, true, databaseAlarm6.Friday)
+	assert.Equal(t, false, databaseAlarm6.Saturday)
+}
+
+func TestDatabaseAlarmToResponseAlarm(t *testing.T) {
+	//
 }

@@ -15,6 +15,11 @@ resource "aws_lambda_function" "batch_lambda_function" {
   architectures = [
     "x86_64"
   ]
+
+    environment {
+      variables = local.environment_variables
+    }
+
   lifecycle {
     ignore_changes = [
       filename,

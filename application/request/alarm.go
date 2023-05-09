@@ -1,10 +1,5 @@
 package request
 
-const (
-	xxxxx = "IOS_PUSH_NOTIFICATION"
-	yyyyy = "IOS_VOIP_PUSH_NOTIFICATION"
-)
-
 type Alarm struct {
 	AlarmID string `json:"alarmID"`
 	UserID  string `json:"userID"`

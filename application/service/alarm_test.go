@@ -8,10 +8,15 @@ import (
 	"testing"
 )
 
-func TestAlarm(t *testing.T) {
+func TestAlarmService_AddAlarm(t *testing.T) {
+	// Repository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
+	snsRepository := repository.SNSRepository{IsLocal: true}
+
+	// Service
 	userService := UserService{Repository: dynamoDBRepository}
 	alarmService := AlarmService{Repository: dynamoDBRepository}
+	pushTokenService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
 	// ユーザー作成
 	userID := uuid.New().String()
@@ -23,13 +28,20 @@ func TestAlarm(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 
+	// PlatformEndpointを追加
+	voIPPushToken := uuid.New().String()
+	err = pushTokenService.AddIOSVoipPushToken(userID, authToken, voIPPushToken)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
 	// アラーム作成
 	alarmID := uuid.New().String()
 	const alarmType = "IOS_VOIP_PUSH_NOTIFICATION"
 	const alarmEnable = true
 	var alarmName = "Alarm Name"
-	const alarmHour = 8
-	const alarmMinute = 30
+	const alarmHour = 23
+	const alarmMinute = 48
 	const alarmTimeDifference = float32(9.0)
 	const charaID = "charaID"
 	const charaName = "charaName"
@@ -149,4 +161,8 @@ func TestAlarm(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, 0, len(getAlarmList))
+}
+
+func TestAlarmService_AddAlarmAndGetAlarm(t *testing.T) {
+
 }

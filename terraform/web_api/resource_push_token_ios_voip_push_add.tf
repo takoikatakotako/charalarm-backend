@@ -20,7 +20,7 @@ module "push_token_ios_voip_push_add_post_lambda_function" {
   execution_arn        = aws_api_gateway_rest_api.charalarm_rest_api.execution_arn
   method               = "POST"
   path                 = "/push-token/ios/voip-push/add"
-  enviroment_variables = local.variables
+  environment_variables = local.variables
 }
 
 ##################################################

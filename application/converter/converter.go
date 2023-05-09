@@ -225,7 +225,7 @@ func DatabaseAlarmToResponseAlarm(alarm database.Alarm) response.Alarm {
 		// tomorrow
 		diff -= 24.0
 		alarmHour = int(diff)
-		alarmMinute = int((diff - float32(alarmHour)) * 60)
+		alarmMinute = int((diff-float32(alarmHour))*60 + 0.5)
 		alarmSunday = alarm.Monday
 		alarmMonday = alarm.Tuesday
 		alarmTuesday = alarm.Wednesday
@@ -236,7 +236,7 @@ func DatabaseAlarmToResponseAlarm(alarm database.Alarm) response.Alarm {
 	} else if diff >= 0 {
 		// today
 		alarmHour = int(diff)
-		alarmMinute = int((diff - float32(alarmHour)) * 60)
+		alarmMinute = int((diff-float32(alarmHour))*60 + 0.5)
 		alarmSunday = alarm.Sunday
 		alarmMonday = alarm.Monday
 		alarmTuesday = alarm.Tuesday
@@ -248,7 +248,7 @@ func DatabaseAlarmToResponseAlarm(alarm database.Alarm) response.Alarm {
 		// yesterday
 		diff += 24.0
 		alarmHour = int(diff)
-		alarmMinute = int((diff - float32(alarmHour)) * 60)
+		alarmMinute = int((diff-float32(alarmHour))*60 + 0.5)
 		alarmSaturday = alarm.Friday
 		alarmFriday = alarm.Thursday
 		alarmThursday = alarm.Wednesday

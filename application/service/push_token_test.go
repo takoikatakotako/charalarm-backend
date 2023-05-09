@@ -45,7 +45,7 @@ func TestPushTokenService_AddIOSPushToken(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, getUser.IOSPlatformInfo.PushToken, pushToken)
-	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.PushTokenSNSEndpoint, "arn:aws:sns:ap-northeast-1"))
+	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.PushTokenSNSEndpoint, "ios-push-platform-application"))
 }
 
 // iOSPushTokenを変更できる
@@ -85,7 +85,7 @@ func TestPushTokenService_AddIOSPushTokenCanChange(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, getUser.IOSPlatformInfo.PushToken, oldPushToken)
-	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.PushTokenSNSEndpoint, "arn:aws:sns:ap-northeast-1"))
+	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.PushTokenSNSEndpoint, "ios-push-platform-application"))
 
 	oldEndpoint := getUser.IOSPlatformInfo.PushTokenSNSEndpoint
 
@@ -103,7 +103,7 @@ func TestPushTokenService_AddIOSPushTokenCanChange(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, getUser.IOSPlatformInfo.PushToken, newPushToken)
-	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.PushTokenSNSEndpoint, "arn:aws:sns:ap-northeast-1"))
+	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.PushTokenSNSEndpoint, "ios-push-platform-application"))
 	assert.NotEqual(t, getUser.IOSPlatformInfo.PushTokenSNSEndpoint, oldEndpoint)
 	assert.Equal(t, getUser.IOSPlatformInfo.VoIPPushToken, "")
 	assert.Equal(t, getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint, "")
@@ -149,7 +149,7 @@ func TestPushTokenService_AddIOSPushTokenMultiTimes(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, pushToken, getUser.IOSPlatformInfo.PushToken)
-	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.PushTokenSNSEndpoint, "arn:aws:sns:ap-northeast-1"))
+	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.PushTokenSNSEndpoint, "ios-push-platform-application"))
 	assert.Equal(t, "", getUser.IOSPlatformInfo.VoIPPushToken)
 	assert.Equal(t, "", getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint)
 }
@@ -192,7 +192,7 @@ func TestPushTokenService_AddIOSVoipPushToken(t *testing.T) {
 	assert.Equal(t, "", getUser.IOSPlatformInfo.PushToken)
 	assert.Equal(t, "", getUser.IOSPlatformInfo.PushTokenSNSEndpoint)
 	assert.Equal(t, pushToken, getUser.IOSPlatformInfo.VoIPPushToken)
-	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint, "arn:aws:sns:ap-northeast-1"))
+	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint, "ios-voip-push-platform-application"))
 }
 
 // iOSVoIPPushTokenを変更できる
@@ -232,7 +232,7 @@ func TestPushTokenService_AddIOSVoipPushTokenCanChange(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, getUser.IOSPlatformInfo.VoIPPushToken, oldPushToken)
-	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint, "arn:aws:sns:ap-northeast-1"))
+	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint, "ios-voip-push-platform-application"))
 
 	oldSNSEndpoint := getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint
 
@@ -250,7 +250,7 @@ func TestPushTokenService_AddIOSVoipPushTokenCanChange(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, getUser.IOSPlatformInfo.VoIPPushToken, newPushToken)
-	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint, "arn:aws:sns:ap-northeast-1"))
+	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint, "ios-voip-push-platform-application"))
 	assert.NotEqual(t, oldSNSEndpoint, getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint)
 }
 
@@ -295,5 +295,5 @@ func TestPushTokenService_AddIOSVoipPushTokenMultiChange(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, getUser.IOSPlatformInfo.VoIPPushToken, pushToken)
-	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint, "arn:aws:sns:ap-northeast-1"))
+	assert.True(t, strings.Contains(getUser.IOSPlatformInfo.VoIPPushTokenSNSEndpoint, "ios-voip-push-platform-application"))
 }
