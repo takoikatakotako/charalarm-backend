@@ -13,12 +13,13 @@ import (
 )
 
 type UserService struct {
-	Repository repository.DynamoDBRepository
+	DynamoDBRepository repository.DynamoDBRepository
+	SNSRepository      repository.SNSRepository
 }
 
 func (s *UserService) GetUser(userID string, authToken string) (response.UserInfoResponse, error) {
 	// ユーザーを取得
-	user, err := s.Repository.GetUser(userID)
+	user, err := s.DynamoDBRepository.GetUser(userID)
 	if err != nil {
 		return response.UserInfoResponse{}, err
 	}
@@ -39,7 +40,7 @@ func (s *UserService) Signup(userID string, authToken string, platform string, i
 	}
 
 	// Check User Is Exist
-	isExist, err := s.Repository.IsExistUser(userID)
+	isExist, err := s.DynamoDBRepository.IsExistUser(userID)
 	if err != nil {
 		return err
 	}
@@ -59,7 +60,7 @@ func (s *UserService) Signup(userID string, authToken string, platform string, i
 		UpdatedAt:           currentTime.Format(time.RFC3339),
 		RegisteredIPAddress: ipAddress,
 	}
-	return s.Repository.InsertUser(user)
+	return s.DynamoDBRepository.InsertUser(user)
 }
 
 func (s *UserService) Withdraw(userID string, authToken string) error {
@@ -69,16 +70,27 @@ func (s *UserService) Withdraw(userID string, authToken string) error {
 	}
 
 	// ユーザーを取得
-	user, err := s.Repository.GetUser(userID)
+	user, err := s.DynamoDBRepository.GetUser(userID)
 	if err != nil {
 		return err
 	}
 
-	// UserID, AuthTokenの一致を確認して削除
+	// UserID, AuthTokenの一致を確認
 	if user.UserID == userID && user.AuthToken == authToken {
-		return s.Repository.DeleteUser(userID)
+	} else {
+		// 認証失敗
+		return errors.New(message.ErrorAuthenticationFailure)
 	}
 
-	// 認証失敗
-	return errors.New(message.AuthenticationFailure)
+	// PlatformEndpointを削除する
+	err = s.SNSRepository.DeletePlatformApplicationEndpoint(user.IOSPlatformInfo.PushTokenSNSEndpoint)
+	if err != nil {
+		return err
+	}
+	err = s.SNSRepository.DeletePlatformApplicationEndpoint(user.IOSPlatformInfo.VoIPPushTokenSNSEndpoint)
+	if err != nil {
+		return err
+	}
+
+	return s.DynamoDBRepository.DeleteUser(userID)
 }

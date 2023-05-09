@@ -16,7 +16,7 @@ func TestPushTokenService_AddIOSPushToken(t *testing.T) {
 	snsRepository := repository.SNSRepository{IsLocal: true}
 
 	// Service
-	userService := UserService{Repository: dynamoDBRepository}
+	userService := UserService{DynamoDBRepository: dynamoDBRepository}
 	pushService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
 	// ユーザー作成
@@ -55,7 +55,7 @@ func TestPushTokenService_AddIOSPushTokenCanChange(t *testing.T) {
 	snsRepository := repository.SNSRepository{IsLocal: true}
 
 	// Service
-	userService := UserService{Repository: dynamoDBRepository}
+	userService := UserService{DynamoDBRepository: dynamoDBRepository}
 	pushService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
 	// ユーザー作成
@@ -116,7 +116,7 @@ func TestPushTokenService_AddIOSPushTokenMultiTimes(t *testing.T) {
 	snsRepository := repository.SNSRepository{IsLocal: true}
 
 	// Service
-	userService := UserService{Repository: dynamoDBRepository}
+	userService := UserService{DynamoDBRepository: dynamoDBRepository}
 	pushService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
 	// ユーザー作成
@@ -161,7 +161,7 @@ func TestPushTokenService_AddIOSVoipPushToken(t *testing.T) {
 	snsRepository := repository.SNSRepository{IsLocal: true}
 
 	// Service
-	userService := UserService{Repository: dynamoDBRepository}
+	userService := UserService{DynamoDBRepository: dynamoDBRepository}
 	pushService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
 	// ユーザー作成
@@ -202,7 +202,7 @@ func TestPushTokenService_AddIOSVoipPushTokenCanChange(t *testing.T) {
 	snsRepository := repository.SNSRepository{IsLocal: true}
 
 	// Service
-	userService := UserService{Repository: dynamoDBRepository}
+	userService := UserService{DynamoDBRepository: dynamoDBRepository}
 	pushService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
 	// ユーザー作成
@@ -261,7 +261,7 @@ func TestPushTokenService_AddIOSVoipPushTokenMultiChange(t *testing.T) {
 	snsRepository := repository.SNSRepository{IsLocal: true}
 
 	// Service
-	userService := UserService{Repository: dynamoDBRepository}
+	userService := UserService{DynamoDBRepository: dynamoDBRepository}
 	pushService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
 	// ユーザー作成

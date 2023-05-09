@@ -9,12 +9,12 @@ import (
 )
 
 func TestAlarmService_AddAlarm(t *testing.T) {
-	// Repository
+	// DynamoDBRepository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
 	snsRepository := repository.SNSRepository{IsLocal: true}
 
 	// Service
-	userService := UserService{Repository: dynamoDBRepository}
+	userService := UserService{DynamoDBRepository: dynamoDBRepository}
 	alarmService := AlarmService{Repository: dynamoDBRepository}
 	pushTokenService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 

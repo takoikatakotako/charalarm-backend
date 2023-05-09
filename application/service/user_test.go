@@ -11,7 +11,7 @@ import (
 func TestInfoUser(t *testing.T) {
 	// DynamoDBRepository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
-	userService := UserService{Repository: dynamoDBRepository}
+	userService := UserService{DynamoDBRepository: dynamoDBRepository}
 
 	// ユーザー作成
 	userID := uuid.New().String()
@@ -38,7 +38,7 @@ func TestSignup(t *testing.T) {
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
 
 	// Service
-	s := UserService{Repository: dynamoDBRepository}
+	s := UserService{DynamoDBRepository: dynamoDBRepository}
 
 	// ユーザー作成
 	userID := uuid.New().String()
@@ -64,7 +64,7 @@ func TestSignup(t *testing.T) {
 func TestWithdraw(t *testing.T) {
 	// DynamoDBRepository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
-	s := UserService{Repository: dynamoDBRepository}
+	s := UserService{DynamoDBRepository: dynamoDBRepository}
 
 	// ユーザー作成
 	userID := uuid.New().String()
