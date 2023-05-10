@@ -83,13 +83,18 @@ func (s *UserService) Withdraw(userID string, authToken string) error {
 	}
 
 	// PlatformEndpointを削除する
-	err = s.SNSRepository.DeletePlatformApplicationEndpoint(user.IOSPlatformInfo.PushTokenSNSEndpoint)
-	if err != nil {
-		return err
+	if user.IOSPlatformInfo.PushTokenSNSEndpoint != "" {
+		err = s.SNSRepository.DeletePlatformApplicationEndpoint(user.IOSPlatformInfo.PushTokenSNSEndpoint)
+		if err != nil {
+			return err
+		}
 	}
-	err = s.SNSRepository.DeletePlatformApplicationEndpoint(user.IOSPlatformInfo.VoIPPushTokenSNSEndpoint)
-	if err != nil {
-		return err
+
+	if user.IOSPlatformInfo.VoIPPushTokenSNSEndpoint != "" {
+		err = s.SNSRepository.DeletePlatformApplicationEndpoint(user.IOSPlatformInfo.VoIPPushTokenSNSEndpoint)
+		if err != nil {
+			return err
+		}
 	}
 
 	return s.DynamoDBRepository.DeleteUser(userID)
