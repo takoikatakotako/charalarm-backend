@@ -295,5 +295,5 @@ func TestRequestAlarmToDatabaseAlarmFeatureTimeDifference(t *testing.T) {
 }
 
 func TestDatabaseAlarmToResponseAlarm(t *testing.T) {
-	//
+	//　TODO テストを追加
 }

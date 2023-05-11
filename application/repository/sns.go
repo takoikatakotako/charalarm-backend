@@ -59,6 +59,7 @@ func (s *SNSRepository) CreateIOSPushPlatformEndpoint(pushToken string) (string,
 	return s.createPlatformEndpoint(platformApplicationArn, pushToken)
 }
 
+// CreateIOSVoipPushPlatformEndpoint iOS Platform Endpoint
 func (s *SNSRepository) CreateIOSVoipPushPlatformEndpoint(pushToken string) (string, error) {
 	platformApplicationArn, err := s.getPlatformApplicationARN(iOSVoIPPushPlatformApplication)
 	if err != nil {
@@ -113,6 +114,22 @@ func (s *SNSRepository) PublishPlatformApplication(targetArn string, iosVoipPush
 	}
 
 	return nil
+}
+
+// エンドポイントを削除するコードを追加
+func (s *SNSRepository) DeletePlatformApplicationEndpoint(endpointArn string) error {
+	client, err := s.createSNSClient()
+	if err != nil {
+		return err
+	}
+
+	// プッシュ通知を発火
+	input := &sns.DeleteEndpointInput{
+		EndpointArn: aws.String(endpointArn),
+	}
+
+	_, err = client.DeleteEndpoint(context.Background(), input)
+	return err
 }
 
 //////////////////////////////

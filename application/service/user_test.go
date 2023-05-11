@@ -11,7 +11,7 @@ import (
 func TestInfoUser(t *testing.T) {
 	// DynamoDBRepository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
-	userService := UserService{Repository: dynamoDBRepository}
+	userService := UserService{DynamoDBRepository: dynamoDBRepository}
 
 	// ユーザー作成
 	userID := uuid.New().String()
@@ -38,7 +38,7 @@ func TestSignup(t *testing.T) {
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
 
 	// Service
-	s := UserService{Repository: dynamoDBRepository}
+	s := UserService{DynamoDBRepository: dynamoDBRepository}
 
 	// ユーザー作成
 	userID := uuid.New().String()
@@ -61,10 +61,10 @@ func TestSignup(t *testing.T) {
 	assert.Equal(t, authToken, getUser.AuthToken)
 }
 
-func TestWithdraw(t *testing.T) {
+func TestUserService_Withdraw(t *testing.T) {
 	// DynamoDBRepository
 	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
-	s := UserService{Repository: dynamoDBRepository}
+	s := UserService{DynamoDBRepository: dynamoDBRepository}
 
 	// ユーザー作成
 	userID := uuid.New().String()
@@ -99,4 +99,61 @@ func TestWithdraw(t *testing.T) {
 
 	// Assert
 	assert.Equal(t, secondIsExist, false)
+}
+
+func TestUserService_WithdrawAndCreateSamePushToken(t *testing.T) {
+	// 退会後に別のユーザーが同じ PushTokenでエンドポイントを作れる
+	// Repository
+	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
+	snsRepository := repository.SNSRepository{IsLocal: true}
+
+	// service
+	userService := UserService{
+		DynamoDBRepository: dynamoDBRepository,
+		SNSRepository:      snsRepository,
+	}
+
+	pushTokenService := PushTokenService{
+		DynamoDBRepository: dynamoDBRepository,
+		SNSRepository:      snsRepository,
+	}
+
+	// ユーザー作成
+	userID := uuid.New().String()
+	authToken := uuid.New().String()
+	platform := "iOS"
+	ipAddress := "0.0.0.0"
+	err := userService.Signup(userID, authToken, platform, ipAddress)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// エンドポイント作成
+	pushToken := uuid.New().String()
+	err = pushTokenService.AddIOSPushToken(userID, authToken, pushToken)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Withdraw
+	err = userService.Withdraw(userID, authToken)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// 別ユーザー作成
+	newUserID := uuid.New().String()
+	newAuthToken := uuid.New().String()
+	newPlatform := "iOS"
+	newIPAddress := "0.0.0.0"
+	err = userService.Signup(newUserID, newAuthToken, newPlatform, newIPAddress)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// PushToken作成
+	err = pushTokenService.AddIOSPushToken(newUserID, newAuthToken, pushToken)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
 }
