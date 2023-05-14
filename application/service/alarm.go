@@ -15,7 +15,7 @@ const (
 )
 
 type AlarmService struct {
-	Repository repository.DynamoDBRepository
+	Repository repository.DynamoDBRepositoryInterface
 }
 
 // AddAlarm アラームを追加

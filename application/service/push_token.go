@@ -8,7 +8,7 @@ import (
 )
 
 type PushTokenService struct {
-	DynamoDBRepository repository.DynamoDBRepository
+	DynamoDBRepository repository.DynamoDBRepositoryInterface
 	SNSRepository      repository.SNSRepository
 }
 

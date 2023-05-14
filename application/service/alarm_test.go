@@ -10,7 +10,7 @@ import (
 
 func TestAlarmService_AddAlarm(t *testing.T) {
 	// DynamoDBRepository
-	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
+	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
 	snsRepository := repository.SNSRepository{IsLocal: true}
 
 	// Service
