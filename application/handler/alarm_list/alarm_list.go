@@ -31,7 +31,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	}
 
 	// AlarmList
-	s := service.AlarmService{Repository: repository.DynamoDBRepository{}}
+	s := service.AlarmService{DynamoDBRepository: &repository.DynamoDBRepository{}}
 	alarmList, err := s.GetAlarmList(userID, authToken)
 	if err != nil {
 		return handler.FailureResponse(http.StatusInternalServerError, message.AlarmListFailure)

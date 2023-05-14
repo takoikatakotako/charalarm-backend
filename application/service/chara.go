@@ -7,7 +7,7 @@ import (
 )
 
 type CharaService struct {
-	DynamoDBRepository            repository.DynamoDBRepository
+	DynamoDBRepository            repository.DynamoDBRepositoryInterface
 	EnvironmentVariableRepository repository.EnvironmentVariableRepository
 }
 

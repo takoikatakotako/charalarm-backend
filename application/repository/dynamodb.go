@@ -22,4 +22,5 @@ type DynamoDBRepositoryInterface interface {
 	UpdateAlarm(alarm database.Alarm) error
 	IsExistUser(userID string) (bool, error)
 	DeleteUser(userID string) error
+	GetCharaList() ([]database.Chara, error)
 }

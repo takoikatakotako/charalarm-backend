@@ -15,7 +15,7 @@ func TestAlarmService_AddAlarm(t *testing.T) {
 
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
-	alarmService := AlarmService{Repository: dynamoDBRepository}
+	alarmService := AlarmService{DynamoDBRepository: dynamoDBRepository}
 	pushTokenService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
 	// ユーザー作成

@@ -23,7 +23,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	fmt.Printf("hour: %d minute: %d\n", hour, minute)
 
 	s := service.BatchService{
-		DynamoDBRepository: repository.DynamoDBRepository{},
+		DynamoDBRepository: &repository.DynamoDBRepository{},
 		SQSRepository:      repository.SQSRepository{},
 	}
 	err := s.QueryDynamoDBAndSendMessage(hour, minute, weekday)

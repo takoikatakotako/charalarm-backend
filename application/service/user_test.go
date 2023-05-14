@@ -103,7 +103,7 @@ func TestUserService_Withdraw(t *testing.T) {
 
 func TestUserService_WithdrawAndCreateSamePushToken(t *testing.T) {
 	// 退会後に別のユーザーが同じ PushTokenでエンドポイントを作れる
-	// Repository
+	// DynamoDBRepository
 	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
 	snsRepository := repository.SNSRepository{IsLocal: true}
 

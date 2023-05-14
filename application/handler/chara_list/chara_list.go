@@ -16,7 +16,7 @@ import (
 func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 
 	// CharaList
-	s := service.CharaService{DynamoDBRepository: repository.DynamoDBRepository{}}
+	s := service.CharaService{DynamoDBRepository: &repository.DynamoDBRepository{}}
 	charaList, err := s.GetCharaList()
 	if err != nil {
 		fmt.Println(err)

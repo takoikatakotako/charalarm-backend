@@ -27,7 +27,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
-	alarmService := AlarmService{Repository: dynamoDBRepository}
+	alarmService := AlarmService{DynamoDBRepository: dynamoDBRepository}
 	batchService := BatchService{EnvironmentVariableRepository: environmentVariableRepository, DynamoDBRepository: dynamoDBRepository, SQSRepository: sqsRepository}
 	pushTokenService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
