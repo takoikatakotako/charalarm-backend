@@ -18,7 +18,7 @@ func init() {
 	_ = sqsRepository.PurgeQueue()
 }
 
-func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
+func TestBatchService_QueryDynamoDBAndSendMessage_RandomCharaAndRandomVoice(t *testing.T) {
 	// キャラが決まっていない && ボイスファイル名も決まっていない
 
 	// DynamoDBRepository
@@ -104,7 +104,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage(t *testing.T) {
 	assert.NotEqual(t, "", getAlarmInfo.VoiceFileURL)
 }
 
-func TestBatchService_QueryDynamoDBAndSendMessage2(t *testing.T) {
+func TestBatchService_QueryDynamoDBAndSendMessage_DecidedCharaAndRandomVoice(t *testing.T) {
 	// キャラが決まっている && ボイスファイル名は決まっていない
 
 	// DynamoDBRepository
@@ -190,7 +190,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage2(t *testing.T) {
 	assert.NotEqual(t, "", getAlarmInfo.VoiceFileURL)
 }
 
-func TestBatchService_QueryDynamoDBAndSendMessage3(t *testing.T) {
+func TestBatchService_QueryDynamoDBAndSendMessage_DecidedCharaAndDecidedVoice(t *testing.T) {
 	// キャラが決まっている && ボイスファイル名は決まっている
 
 	// DynamoDBRepository
