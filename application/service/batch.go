@@ -8,7 +8,6 @@ import (
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"math/rand"
 	"time"
-	// "github.com/takoikatakotako/charalarm-backend/validator"
 )
 
 type BatchService struct {
@@ -94,7 +93,7 @@ func (b *BatchService) forIOSVoIPPushNotification(resourceBaseURL string, alarm 
 		// CharaIDが無い場合 -> Charaとボイスをランダムにする
 		alarmInfo.CharaName = b.randomCharaNameAndVoiceFileURL["RANDOM"].CharaName
 		alarmInfo.VoiceFileURL = b.randomCharaNameAndVoiceFileURL["RANDOM"].VoiceFilePath
-	} else if alarm.VoiceFileName == "" || alarm.VoiceFileName == "RANDOM" {
+	} else if alarm.CharaID != "" && alarm.CharaID != "RANDOM" && alarm.VoiceFileName != "" && alarm.VoiceFileName != "RANDOM" {
 		// CharaIDがあり、VoiceFileNameがある場合 -> 指定のキャラを使い、指定のボイスを使用する
 		alarmInfo.CharaName = alarm.CharaName
 		alarmInfo.VoiceFileURL = b.createVoiceFileURL(resourceBaseURL, alarm.CharaID, alarm.VoiceFileName)

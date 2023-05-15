@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestGetChara(t *testing.T) {
+func TestDynamoDBRepository_GetChara(t *testing.T) {
 	repository := DynamoDBRepository{IsLocal: true}
 
 	// com.charalarm.yui を取得できることを確認
@@ -29,6 +29,16 @@ func TestGetChara(t *testing.T) {
 	assert.Equal(t, "スクリプト", chara.Profiles[2].Title)
 	assert.Equal(t, "小旗ふたる！", chara.Profiles[2].Name)
 	assert.Equal(t, "https://twitter.com/Kass_kobataku", chara.Profiles[2].URL)
+	assert.Equal(t, "井上結衣さんのボイス15", chara.Calls[0].Message)
+	assert.Equal(t, "com-charalarm-yui-15.caf", chara.Calls[0].VoiceFileName)
+	assert.Equal(t, "井上結衣さんのボイス15", chara.Calls[0].Message)
+	assert.Equal(t, "normal.png", chara.Expressions["normal"].ImageFileNames[0])
+	assert.Equal(t, "com-charalarm-yui-1.caf", chara.Expressions["normal"].VoiceFileNames[0])
+
+	// fmt.Println(chara.Expressions["normal"])
+
+	// 	assert.Equal(t, "xxx", chara.Expressions["normal"].ImageFileNames[0])
+
 }
 
 func TestGetCharaNotFound(t *testing.T) {
