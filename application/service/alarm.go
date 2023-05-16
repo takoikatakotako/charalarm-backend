@@ -15,13 +15,13 @@ const (
 )
 
 type AlarmService struct {
-	Repository repository.DynamoDBRepository
+	DynamoDBRepository repository.DynamoDBRepositoryInterface
 }
 
 // AddAlarm アラームを追加
 func (s *AlarmService) AddAlarm(userID string, authToken string, requestAlarm request.Alarm) error {
 	// ユーザーを取得
-	user, err := s.Repository.GetUser(userID)
+	user, err := s.DynamoDBRepository.GetUser(userID)
 	if err != nil {
 		return err
 	}
@@ -33,7 +33,7 @@ func (s *AlarmService) AddAlarm(userID string, authToken string, requestAlarm re
 	}
 
 	// 既に登録されたアラームの件数を取得
-	list, err := s.Repository.GetAlarmList(userID)
+	list, err := s.DynamoDBRepository.GetAlarmList(userID)
 	if err != nil {
 		return err
 	}
@@ -44,7 +44,7 @@ func (s *AlarmService) AddAlarm(userID string, authToken string, requestAlarm re
 	}
 
 	// すでに登録されていないか調べる
-	isExist, err := s.Repository.IsExistAlarm(requestAlarm.AlarmID)
+	isExist, err := s.DynamoDBRepository.IsExistAlarm(requestAlarm.AlarmID)
 	if err != nil {
 		fmt.Println("check is exist")
 		return err
@@ -66,13 +66,13 @@ func (s *AlarmService) AddAlarm(userID string, authToken string, requestAlarm re
 	databaseAlarm := converter.RequestAlarmToDatabaseAlarm(requestAlarm, target)
 
 	// アラームを追加する
-	return s.Repository.InsertAlarm(databaseAlarm)
+	return s.DynamoDBRepository.InsertAlarm(databaseAlarm)
 }
 
 // EditAlarm アラームを更新
 func (s *AlarmService) EditAlarm(userID string, authToken string, requestAlarm request.Alarm) error {
 	// ユーザーを取得
-	user, err := s.Repository.GetUser(userID)
+	user, err := s.DynamoDBRepository.GetUser(userID)
 	if err != nil {
 		return err
 	}
@@ -95,13 +95,13 @@ func (s *AlarmService) EditAlarm(userID string, authToken string, requestAlarm r
 	databaseAlarm := converter.RequestAlarmToDatabaseAlarm(requestAlarm, target)
 
 	// アラームを更新する
-	return s.Repository.UpdateAlarm(databaseAlarm)
+	return s.DynamoDBRepository.UpdateAlarm(databaseAlarm)
 }
 
 // DeleteAlarm アラームを削除
 func (s *AlarmService) DeleteAlarm(userID string, authToken string, alarmID string) error {
 	// ユーザーを取得
-	anonymousUser, err := s.Repository.GetUser(userID)
+	anonymousUser, err := s.DynamoDBRepository.GetUser(userID)
 	if err != nil {
 		return err
 	}
@@ -112,26 +112,26 @@ func (s *AlarmService) DeleteAlarm(userID string, authToken string, alarmID stri
 	}
 
 	// アラームを削除する
-	return s.Repository.DeleteAlarm(alarmID)
+	return s.DynamoDBRepository.DeleteAlarm(alarmID)
 }
 
 // GetAlarmList アラームを取得
 func (s *AlarmService) GetAlarmList(userID string, authToken string) ([]response.Alarm, error) {
 	// ユーザーを取得
-	user, err := s.Repository.GetUser(userID)
+	user, err := s.DynamoDBRepository.GetUser(userID)
 	if err != nil {
 		return []response.Alarm{}, err
 	}
 
 	// UserID, AuthTokenが一致するか確認する
 	if user.UserID == userID && user.AuthToken == authToken {
-		databaseAlarmList, err := s.Repository.GetAlarmList(userID)
+		databaseAlarmList, err := s.DynamoDBRepository.GetAlarmList(userID)
 		if err != nil {
 			return []response.Alarm{}, err
 		}
 
 		// responseAlarmListに変換
-		responseAlarmList := []response.Alarm{}
+		responseAlarmList := make([]response.Alarm, 0)
 		for i := 0; i < len(databaseAlarmList); i++ {
 			databaseAlarm := databaseAlarmList[i]
 			responseAlarm := converter.DatabaseAlarmToResponseAlarm(databaseAlarm)

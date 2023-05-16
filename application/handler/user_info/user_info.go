@@ -28,7 +28,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	}
 
 	// info
-	s := service.UserService{DynamoDBRepository: repository.DynamoDBRepository{}}
+	s := service.UserService{DynamoDBRepository: &repository.DynamoDBRepository{}}
 	userInfo, err := s.GetUser(userID, authToken)
 	if err != nil {
 		return handler.FailureResponse(http.StatusInternalServerError, "fail to get user")

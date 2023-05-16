@@ -40,7 +40,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	alarmID := req.AlarmID
 
-	s := service.AlarmService{Repository: repository.DynamoDBRepository{}}
+	s := service.AlarmService{DynamoDBRepository: &repository.DynamoDBRepository{}}
 	err = s.DeleteAlarm(userID, authToken, alarmID)
 	if err != nil {
 		return handler.FailureResponse(http.StatusInternalServerError, message.AlarmDeleteFailure)

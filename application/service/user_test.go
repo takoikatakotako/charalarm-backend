@@ -10,7 +10,7 @@ import (
 
 func TestInfoUser(t *testing.T) {
 	// DynamoDBRepository
-	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
+	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
 
 	// ユーザー作成
@@ -35,7 +35,7 @@ func TestInfoUser(t *testing.T) {
 
 func TestSignup(t *testing.T) {
 	// DynamoDBRepository
-	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
+	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
 
 	// Service
 	s := UserService{DynamoDBRepository: dynamoDBRepository}
@@ -63,7 +63,7 @@ func TestSignup(t *testing.T) {
 
 func TestUserService_Withdraw(t *testing.T) {
 	// DynamoDBRepository
-	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
+	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
 	s := UserService{DynamoDBRepository: dynamoDBRepository}
 
 	// ユーザー作成
@@ -103,8 +103,8 @@ func TestUserService_Withdraw(t *testing.T) {
 
 func TestUserService_WithdrawAndCreateSamePushToken(t *testing.T) {
 	// 退会後に別のユーザーが同じ PushTokenでエンドポイントを作れる
-	// Repository
-	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
+	// DynamoDBRepository
+	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
 	snsRepository := repository.SNSRepository{IsLocal: true}
 
 	// service

@@ -40,7 +40,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	// add push token
 	s := service.PushTokenService{
-		DynamoDBRepository: repository.DynamoDBRepository{},
+		DynamoDBRepository: &repository.DynamoDBRepository{},
 		SNSRepository:      repository.SNSRepository{},
 	}
 	err = s.AddIOSVoipPushToken(userID, authToken, pushToken)

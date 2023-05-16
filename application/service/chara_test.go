@@ -7,7 +7,7 @@ import (
 )
 
 func TestCharalarmList(t *testing.T) {
-	dynamoDBRepository := repository.DynamoDBRepository{IsLocal: true}
+	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
 	environmentVariableRepository := repository.EnvironmentVariableRepository{IsLocal: true}
 
 	service := CharaService{

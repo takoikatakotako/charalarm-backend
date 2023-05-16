@@ -13,7 +13,7 @@ import (
 )
 
 type UserService struct {
-	DynamoDBRepository repository.DynamoDBRepository
+	DynamoDBRepository repository.DynamoDBRepositoryInterface
 	SNSRepository      repository.SNSRepository
 }
 
