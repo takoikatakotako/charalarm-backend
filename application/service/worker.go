@@ -7,7 +7,7 @@ import (
 )
 
 type WorkerService struct {
-	SNSRepository repository.SNSRepository
+	SNSRepository repository.SNSRepositoryInterface
 	SQSRepository repository.SQSRepository
 }
 

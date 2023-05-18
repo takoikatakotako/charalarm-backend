@@ -8,7 +8,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"strings"
-
 	// "github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
@@ -22,6 +21,10 @@ const (
 
 type SNSRepository struct {
 	IsLocal bool
+}
+
+type SNSRepositoryInterface interface {
+	CreateIOSPushPlatformEndpoint(pushToken string) (string, error)
 }
 
 func (s *SNSRepository) createSNSClient() (*sns.Client, error) {
