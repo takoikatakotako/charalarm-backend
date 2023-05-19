@@ -25,6 +25,8 @@ type SNSRepository struct {
 
 type SNSRepositoryInterface interface {
 	CreateIOSPushPlatformEndpoint(pushToken string) (string, error)
+	CheckPlatformEndpointEnabled(endpoint string) error
+	PublishPlatformApplication(targetArn string, iosVoipPushSNSMessage entity.IOSVoIPPushSNSMessage)
 }
 
 func (s *SNSRepository) createSNSClient() (*sns.Client, error) {
