@@ -9,7 +9,7 @@ import (
 
 type PushTokenService struct {
 	DynamoDBRepository repository.DynamoDBRepositoryInterface
-	SNSRepository      repository.SNSRepository
+	SNSRepository      repository.SNSRepositoryInterface
 }
 
 func (s *PushTokenService) AddIOSPushToken(userID string, authToken string, pushToken string) error {

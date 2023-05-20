@@ -41,7 +41,8 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	}
 	requestAlarm := req.Alarm
 
-	s := service.AlarmService{DynamoDBRepository: &repository.DynamoDBRepository{}}
+	dynamodbRepository := &repository.DynamoDBRepository{}
+	s := service.AlarmService{DynamoDBRepository: dynamodbRepository}
 	if err := s.AddAlarm(userID, authToken, requestAlarm); err != nil {
 		fmt.Println(err)
 		fmt.Println("kokomade")

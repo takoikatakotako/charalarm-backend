@@ -22,6 +22,11 @@ type SQSRepository struct {
 	IsLocal bool
 }
 
+type SQSRepositoryInterface interface {
+	SendMessageToVoIPPushDeadLetterQueue(messageBody string) error
+	SendAlarmInfoToVoIPPushQueue(alarmInfo sqs_entity.IOSVoIPPushAlarmInfoSQSMessage) error
+}
+
 func (s *SQSRepository) createSQSClient() (*sqs.Client, error) {
 	ctx := context.Background()
 

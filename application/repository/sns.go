@@ -26,7 +26,9 @@ type SNSRepository struct {
 type SNSRepositoryInterface interface {
 	CreateIOSPushPlatformEndpoint(pushToken string) (string, error)
 	CheckPlatformEndpointEnabled(endpoint string) error
+	CreateIOSVoipPushPlatformEndpoint(pushToken string) (string, error)
 	PublishPlatformApplication(targetArn string, iosVoipPushSNSMessage entity.IOSVoIPPushSNSMessage) error
+	DeletePlatformApplicationEndpoint(endpointArn string) error
 }
 
 func (s *SNSRepository) createSNSClient() (*sns.Client, error) {
@@ -121,7 +123,7 @@ func (s *SNSRepository) PublishPlatformApplication(targetArn string, iosVoipPush
 	return nil
 }
 
-// エンドポイントを削除するコードを追加
+// DeletePlatformApplicationEndpoint エンドポイントを削除するコードを追加
 func (s *SNSRepository) DeletePlatformApplicationEndpoint(endpointArn string) error {
 	client, err := s.createSNSClient()
 	if err != nil {

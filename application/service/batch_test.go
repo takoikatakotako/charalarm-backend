@@ -24,8 +24,8 @@ func TestBatchService_QueryDynamoDBAndSendMessage_RandomCharaAndRandomVoice(t *t
 	// DynamoDBRepository
 	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
 	environmentVariableRepository := repository.EnvironmentVariableRepository{IsLocal: true}
-	sqsRepository := repository.SQSRepository{IsLocal: true}
-	snsRepository := repository.SNSRepository{IsLocal: true}
+	sqsRepository := &repository.SQSRepository{IsLocal: true}
+	snsRepository := &repository.SNSRepository{IsLocal: true}
 
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
@@ -110,8 +110,8 @@ func TestBatchService_QueryDynamoDBAndSendMessage_DecidedCharaAndRandomVoice(t *
 	// DynamoDBRepository
 	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
 	environmentVariableRepository := repository.EnvironmentVariableRepository{IsLocal: true}
-	sqsRepository := repository.SQSRepository{IsLocal: true}
-	snsRepository := repository.SNSRepository{IsLocal: true}
+	sqsRepository := &repository.SQSRepository{IsLocal: true}
+	snsRepository := &repository.SNSRepository{IsLocal: true}
 
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
@@ -196,8 +196,8 @@ func TestBatchService_QueryDynamoDBAndSendMessage_DecidedCharaAndDecidedVoice(t 
 	// DynamoDBRepository
 	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
 	environmentVariableRepository := repository.EnvironmentVariableRepository{IsLocal: true}
-	sqsRepository := repository.SQSRepository{IsLocal: true}
-	snsRepository := repository.SNSRepository{IsLocal: true}
+	sqsRepository := &repository.SQSRepository{IsLocal: true}
+	snsRepository := &repository.SNSRepository{IsLocal: true}
 
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
