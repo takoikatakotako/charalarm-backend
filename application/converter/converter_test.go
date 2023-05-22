@@ -50,6 +50,7 @@ func TestDatabaseCharaToResponseChara(t *testing.T) {
 	assert.Equal(t, "https://swiswiswift.com/com.example.chara/normal2.png", responseChara.Expression["normal"].ImageFileURLs[1])
 	assert.Equal(t, "https://swiswiswift.com/com.example.chara/voice1.mp3", responseChara.Expression["normal"].VoiceFileURLs[0])
 	assert.Equal(t, "https://swiswiswift.com/com.example.chara/voice2.mp3", responseChara.Expression["normal"].VoiceFileURLs[1])
+	assert.Equal(t, "hello.caf", responseChara.Calls[0].VoiceFileName)
 	assert.Equal(t, "https://swiswiswift.com/com.example.chara/hello.caf", responseChara.Calls[0].VoiceFileURL)
 	assert.Equal(t, 5, len(responseChara.Resources))
 	assert.Equal(t, "https://swiswiswift.com/com.example.chara/normal1.png", responseChara.Resources[0].FileURL)
