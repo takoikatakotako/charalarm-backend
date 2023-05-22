@@ -27,6 +27,7 @@ type CharaExpression struct {
 }
 
 type CharaCall struct {
-	Message      string `json:"message"`
-	VoiceFileURL string `json:"voiceFileURL"`
+	Message       string `json:"message"`
+	VoiceFileName string `json:"voiceFileName"`
+	VoiceFileURL  string `json:"voiceFileURL"`
 }

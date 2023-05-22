@@ -202,8 +202,9 @@ func databaseCharaCallListToResponseCharaCallList(databaseCharaCallList []databa
 
 func databaseCharaCallToResponseCharaCall(databaseCharaCall database.CharaCall, baseURL string, charaID string) response.CharaCall {
 	return response.CharaCall{
-		Message:      databaseCharaCall.Message,
-		VoiceFileURL: createFileURL(baseURL, charaID, databaseCharaCall.VoiceFileName),
+		Message:       databaseCharaCall.Message,
+		VoiceFileName: databaseCharaCall.VoiceFileName,
+		VoiceFileURL:  createFileURL(baseURL, charaID, databaseCharaCall.VoiceFileName),
 	}
 }
 
