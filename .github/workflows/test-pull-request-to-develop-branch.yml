@@ -28,7 +28,7 @@ jobs:
           cd localstack && docker-compose up -d
 
       - name: Wait for Set up Docker
-      - run: sleep 30
+        run: sleep 30
 
       - name: Test
         run: |
