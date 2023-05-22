@@ -71,7 +71,7 @@ func TestSendMessage(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 
-	assert.Equal(t, len(messages), 1)
+	assert.Equal(t, 1, len(messages))
 	getAlarmInfo := entity.IOSVoIPPushAlarmInfoSQSMessage{}
 	body := *messages[0].Body
 	_ = json.Unmarshal([]byte(body), &getAlarmInfo)
