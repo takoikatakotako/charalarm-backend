@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/takoikatakotako/charalarm-backend/entity"
+	"os"
 	"testing"
 )
 
@@ -19,6 +20,18 @@ import (
 
 // 	assert.NotEqual(t, len(response.EndpointArn), 0)
 // }
+
+func TestMain(m *testing.M) {
+	// Before Tests
+	sqsRepository := SQSRepository{IsLocal: true}
+	_ = sqsRepository.PurgeQueue()
+
+	exitVal := m.Run()
+
+	// After Tests
+
+	os.Exit(exitVal)
+}
 
 func TestSQSRepository_GetQueueURL(t *testing.T) {
 	repository := SQSRepository{IsLocal: true}
@@ -58,7 +71,7 @@ func TestSendMessage(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 
-	assert.Equal(t, len(messages), 1)
+	assert.Equal(t, 1, len(messages))
 	getAlarmInfo := entity.IOSVoIPPushAlarmInfoSQSMessage{}
 	body := *messages[0].Body
 	_ = json.Unmarshal([]byte(body), &getAlarmInfo)

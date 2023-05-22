@@ -14,7 +14,7 @@ import (
 
 type UserService struct {
 	DynamoDBRepository repository.DynamoDBRepositoryInterface
-	SNSRepository      repository.SNSRepository
+	SNSRepository      repository.SNSRepositoryInterface
 }
 
 func (s *UserService) GetUser(userID string, authToken string) (response.UserInfoResponse, error) {

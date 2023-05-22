@@ -7,8 +7,8 @@ import (
 )
 
 type WorkerService struct {
-	SNSRepository repository.SNSRepository
-	SQSRepository repository.SQSRepository
+	SNSRepository repository.SNSRepositoryInterface
+	SQSRepository repository.SQSRepositoryInterface
 }
 
 // PublishPlatformApplication VoIPのプッシュ通知をする

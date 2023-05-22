@@ -13,9 +13,13 @@ import (
 )
 
 func Handler(ctx context.Context, event events.SQSEvent) (events.APIGatewayProxyResponse, error) {
+	// Repository
+	snsRepository := &repository.SNSRepository{}
+	sqsRepository := &repository.SQSRepository{}
+
 	s := service.WorkerService{
-		SNSRepository: repository.SNSRepository{},
-		SQSRepository: repository.SQSRepository{},
+		SNSRepository: snsRepository,
+		SQSRepository: sqsRepository,
 	}
 
 	for _, sqsMessage := range event.Records {

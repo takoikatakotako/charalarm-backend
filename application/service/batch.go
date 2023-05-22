@@ -12,7 +12,7 @@ import (
 
 type BatchService struct {
 	DynamoDBRepository             repository.DynamoDBRepositoryInterface
-	SQSRepository                  repository.SQSRepository
+	SQSRepository                  repository.SQSRepositoryInterface
 	EnvironmentVariableRepository  repository.EnvironmentVariableRepository
 	randomCharaNameAndVoiceFileURL map[string]CharaNameAndVoiceFilePath
 }

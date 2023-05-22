@@ -8,7 +8,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"strings"
-
 	// "github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
@@ -22,6 +21,14 @@ const (
 
 type SNSRepository struct {
 	IsLocal bool
+}
+
+type SNSRepositoryInterface interface {
+	CreateIOSPushPlatformEndpoint(pushToken string) (string, error)
+	CheckPlatformEndpointEnabled(endpoint string) error
+	CreateIOSVoipPushPlatformEndpoint(pushToken string) (string, error)
+	PublishPlatformApplication(targetArn string, iosVoipPushSNSMessage entity.IOSVoIPPushSNSMessage) error
+	DeletePlatformApplicationEndpoint(endpointArn string) error
 }
 
 func (s *SNSRepository) createSNSClient() (*sns.Client, error) {
@@ -116,7 +123,7 @@ func (s *SNSRepository) PublishPlatformApplication(targetArn string, iosVoipPush
 	return nil
 }
 
-// エンドポイントを削除するコードを追加
+// DeletePlatformApplicationEndpoint エンドポイントを削除するコードを追加
 func (s *SNSRepository) DeletePlatformApplicationEndpoint(endpointArn string) error {
 	client, err := s.createSNSClient()
 	if err != nil {
