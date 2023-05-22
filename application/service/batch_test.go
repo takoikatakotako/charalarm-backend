@@ -8,14 +8,20 @@ import (
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/request"
 	"math/rand"
+	"os"
 	"testing"
 	"time"
 )
 
-func init() {
-	// DynamoDBRepository
+func TestMain(m *testing.M) {
+	// Before Tests
 	sqsRepository := repository.SQSRepository{IsLocal: true}
 	_ = sqsRepository.PurgeQueue()
+
+	exitVal := m.Run()
+
+	// After Tests
+	os.Exit(exitVal)
 }
 
 func TestBatchService_QueryDynamoDBAndSendMessage_RandomCharaAndRandomVoice(t *testing.T) {
