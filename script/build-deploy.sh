@@ -11,32 +11,32 @@ pwd
 # Build
 ################################################################
 # alarm
-GOOS=linux GOARCH=amd64 go build -o build/alarm_add handler/alarm_add/alarm_add.go
-GOOS=linux GOARCH=amd64 go build -o build/alarm_edit handler/alarm_edit/alarm_edit.go
-GOOS=linux GOARCH=amd64 go build -o build/alarm_delete handler/alarm_delete/alarm_delete.go
-GOOS=linux GOARCH=amd64 go build -o build/alarm_list handler/alarm_list/alarm_list.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/alarm_add handler/alarm_add/alarm_add.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/alarm_edit handler/alarm_edit/alarm_edit.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/alarm_delete handler/alarm_delete/alarm_delete.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/alarm_list handler/alarm_list/alarm_list.go
 
 # batch
-GOOS=linux GOARCH=amd64 go build -o build/batch handler/batch/batch.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/batch handler/batch/batch.go
 
 # chara
-GOOS=linux GOARCH=amd64 go build -o build/chara_id handler/chara_id/chara_id.go
-GOOS=linux GOARCH=amd64 go build -o build/chara_list handler/chara_list/chara_list.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/chara_id handler/chara_id/chara_id.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/chara_list handler/chara_list/chara_list.go
 
 # healthcheck
-GOOS=linux GOARCH=amd64 go build -o build/healthcheck handler/healthcheck/healthcheck.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/healthcheck handler/healthcheck/healthcheck.go
 
 # push-token
-GOOS=linux GOARCH=amd64 go build -o build/push_token_ios_push_add handler/push_token_ios_push_add/push_token_ios_push_add.go
-GOOS=linux GOARCH=amd64 go build -o build/push_token_ios_voip_push_add handler/push_token_ios_voip_push_add/push_token_ios_voip_push_add.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/push_token_ios_push_add handler/push_token_ios_push_add/push_token_ios_push_add.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/push_token_ios_voip_push_add handler/push_token_ios_voip_push_add/push_token_ios_voip_push_add.go
 
 # user
-GOOS=linux GOARCH=amd64 go build -o build/user_info handler/user_info/user_info.go
-GOOS=linux GOARCH=amd64 go build -o build/user_signup handler/user_signup/user_signup.go
-GOOS=linux GOARCH=amd64 go build -o build/user_withdraw handler/user_withdraw/user_withdraw.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_info handler/user_info/user_info.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_signup handler/user_signup/user_signup.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_withdraw handler/user_withdraw/user_withdraw.go
 
 # worker
-GOOS=linux GOARCH=amd64 go build -o build/worker handler/worker/worker.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/worker handler/worker/worker.go
 
 
 ################################################################
