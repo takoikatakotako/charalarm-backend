@@ -23,12 +23,18 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/batch handler/batch/batc
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/chara_id handler/chara_id/chara_id.go
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/chara_list handler/chara_list/chara_list.go
 
+# maintenance
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/maintenance handler/maintenance/maintenance.go
+
 # healthcheck
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/healthcheck handler/healthcheck/healthcheck.go
 
 # push-token
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/push_token_ios_push_add handler/push_token_ios_push_add/push_token_ios_push_add.go
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/push_token_ios_voip_push_add handler/push_token_ios_voip_push_add/push_token_ios_voip_push_add.go
+
+# require
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/require handler/require/require.go
 
 # user
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_info handler/user_info/user_info.go
@@ -56,6 +62,9 @@ zip batch.zip batch
 # chara
 zip chara_id.zip chara_id
 zip chara_list.zip chara_list
+
+# maintenance
+zip maintenance.zip maintenance
 
 # healthcheck
 zip healthcheck.zip healthcheck
@@ -102,6 +111,9 @@ aws lambda update-function-code --function-name batch-function --s3-bucket $S3_B
 # chara
 aws lambda update-function-code --function-name chara-id-get-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/chara_id.zip
 aws lambda update-function-code --function-name chara-list-get-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/chara_list.zip
+
+# maintenance
+aws lambda update-function-code --function-name maintenance-get-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/maintenance.zip
 
 # healthcheck
 aws lambda update-function-code --function-name healthcheck-get-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/healthcheck.zip
