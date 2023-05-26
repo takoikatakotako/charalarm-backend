@@ -1,6 +1,7 @@
 package message
 
 const (
+	Healthy                            = "Healthy"
 	InvalidValue                       = "Invalid Value"
 	AuthenticationFailure              = "Authentication Failure"
 	UserSignupSuccess                  = "Sign Up Success!"

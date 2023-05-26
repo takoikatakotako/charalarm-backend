@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"github.com/takoikatakotako/charalarm-backend/message"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -12,7 +11,7 @@ import (
 )
 
 func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	res := response.MessageResponse{Message: message.Healthy}
+	res := response.Maintenance{Maintenance: true}
 	jsonBytes, _ := json.Marshal(res)
 
 	return events.APIGatewayProxyResponse{
