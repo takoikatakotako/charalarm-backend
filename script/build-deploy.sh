@@ -73,6 +73,9 @@ zip healthcheck.zip healthcheck
 zip push_token_ios_push_add.zip push_token_ios_push_add
 zip push_token_ios_voip_push_add.zip push_token_ios_voip_push_add
 
+# require
+zip require.zip require
+
 # user
 zip user_signup.zip user_signup
 zip user_info.zip user_info
@@ -121,6 +124,9 @@ aws lambda update-function-code --function-name healthcheck-get-function --s3-bu
 # push-notification
 aws lambda update-function-code --function-name push-token-ios-push-add-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/push_token_ios_push_add.zip
 aws lambda update-function-code --function-name push-token-ios-voip-push-add-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/push_token_ios_voip_push_add.zip
+
+# require
+aws lambda update-function-code --function-name require-get-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/require.zip
 
 # user
 aws lambda update-function-code --function-name user-signup-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/user_signup.zip

@@ -7,7 +7,6 @@ import (
 	"github.com/takoikatakotako/charalarm-backend/entity"
 	"os"
 	"testing"
-	"time"
 )
 
 // func TestCreateVoipPlatformEndpoint(t *testing.T) {
@@ -66,8 +65,6 @@ func TestSendMessage(t *testing.T) {
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
-
-	time.Sleep(1 * time.Second)
 
 	messages, err := repository.ReceiveAlarmInfoMessage()
 	if err != nil {
