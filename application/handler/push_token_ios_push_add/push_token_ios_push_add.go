@@ -48,7 +48,6 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	}
 	err = s.AddIOSPushToken(userID, authToken, pushToken)
 	if err != nil {
-		fmt.Println(err)
 		return handler.FailureResponse(http.StatusInternalServerError, message.UserUpdateFailure)
 	}
 

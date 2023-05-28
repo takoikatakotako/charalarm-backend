@@ -30,7 +30,10 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	}
 
 	// Withdraw
-	s := service.UserService{DynamoDBRepository: &repository.DynamoDBRepository{}}
+	s := service.UserService{
+		DynamoDBRepository: &repository.DynamoDBRepository{},
+		SNSRepository:      &repository.SNSRepository{},
+	}
 	err = s.Withdraw(userID, authToken)
 	if err != nil {
 		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
