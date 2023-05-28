@@ -27,14 +27,14 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	userID, authToken, err := auth.Basic(authorizationHeader)
 	if err != nil {
-		return handler.FailureResponse(http.StatusInternalServerError, message.AuthenticationFailure)
+		return handler.FailureResponse(http.StatusBadRequest, message.AuthenticationFailure)
 	}
 
 	req := request.AddPushTokenRequest{}
 	body := event.Body
 	err = json.Unmarshal([]byte(body), &req)
 	if err != nil {
-		return handler.FailureResponse(http.StatusInternalServerError, message.InvalidValue)
+		return handler.FailureResponse(http.StatusBadRequest, message.InvalidValue)
 	}
 	pushToken := req.PushToken
 
@@ -47,6 +47,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	}
 	err = s.AddIOSPushToken(userID, authToken, pushToken)
 	if err != nil {
+		fmt.Println(err)
 		return handler.FailureResponse(http.StatusInternalServerError, message.UserUpdateFailure)
 	}
 
