@@ -2,6 +2,7 @@ package repository
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/takoikatakotako/charalarm-backend/entity"
@@ -24,11 +25,14 @@ import (
 func TestMain(m *testing.M) {
 	// Before Tests
 	sqsRepository := SQSRepository{IsLocal: true}
-	_ = sqsRepository.PurgeQueue()
+	err := sqsRepository.PurgeQueue()
+	fmt.Print(err)
 
 	exitVal := m.Run()
 
 	// After Tests
+	err = sqsRepository.PurgeQueue()
+	fmt.Print(err)
 
 	os.Exit(exitVal)
 }
