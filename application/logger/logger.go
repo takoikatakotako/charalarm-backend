@@ -2,6 +2,6 @@ package logger
 
 import "fmt"
 
-func log(s string) {
-	fmt.Println(s)
+func log(err error) {
+	fmt.Println(err)
 }
