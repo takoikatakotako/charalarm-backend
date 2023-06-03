@@ -180,5 +180,8 @@ terraform.rc
 application/build/*
 .idea/*
 application/.idea/*
+terraform/credential.tf
+**/credential.tf
+*/credentials/*
 
 
