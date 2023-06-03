@@ -46,8 +46,10 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	}
 	randomCharaCallVoicesCount := len(randomChara.Calls)
 	if randomCharaCallVoicesCount == 0 {
-		// TODO. エラーを収集する仕組みを追加
-		// エラーだよ
+		// 不明なターゲット
+		pc, fileName, line, _ := runtime.Caller(1)
+		funcName := runtime.FuncForPC(pc).Name()
+		logger.Log(fileName, funcName, line, err)
 		return errors.New("ボイスがないぞ")
 	}
 	randomCharaVoiceIndex := rand.Intn(randomCharaCallVoicesCount)
@@ -61,6 +63,12 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 
 	// 変換してSQSに送信
 	for _, alarm := range alarmList {
+		// 有効ではない時は何もしない
+		if alarm.Enable == false {
+			continue
+		}
+
+		// タイプごとにだし分ける
 		if alarm.Type == "IOS_VOIP_PUSH_NOTIFICATION" {
 			err := b.forIOSVoIPPushNotification(resourceBaseURL, alarm)
 			if err != nil {
