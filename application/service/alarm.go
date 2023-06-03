@@ -2,12 +2,13 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"github.com/takoikatakotako/charalarm-backend/converter"
+	"github.com/takoikatakotako/charalarm-backend/logger"
 	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/request"
 	"github.com/takoikatakotako/charalarm-backend/response"
+	"runtime"
 )
 
 const (
@@ -46,7 +47,10 @@ func (s *AlarmService) AddAlarm(userID string, authToken string, requestAlarm re
 	// すでに登録されていないか調べる
 	isExist, err := s.DynamoDBRepository.IsExistAlarm(requestAlarm.AlarmID)
 	if err != nil {
-		fmt.Println("check is exist")
+		// すでに登録されているのが贈られてくのは不審
+		pc, fileName, line, _ := runtime.Caller(1)
+		funcName := runtime.FuncForPC(pc).Name()
+		logger.Log(fileName, funcName, line, err)
 		return err
 	}
 	if isExist {
@@ -60,7 +64,10 @@ func (s *AlarmService) AddAlarm(userID string, authToken string, requestAlarm re
 	} else if requestAlarm.Type == "IOS_VOIP_PUSH_NOTIFICATION" {
 		target = user.IOSPlatformInfo.VoIPPushTokenSNSEndpoint
 	} else {
-		fmt.Println("check is valid type")
+		// 不明なターゲット
+		pc, fileName, line, _ := runtime.Caller(1)
+		funcName := runtime.FuncForPC(pc).Name()
+		logger.Log(fileName, funcName, line, err)
 		return errors.New(message.ErrorInvalidValue)
 	}
 	databaseAlarm := converter.RequestAlarmToDatabaseAlarm(requestAlarm, target)

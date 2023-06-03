@@ -1,9 +1,16 @@
 package logger
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
-func log(err error) {
-	fmt.Println("----err--")
-	fmt.Println(err)
-	fmt.Println("-------")
+func Log(fileName string, funcName string, line int, err error) {
+	message := LogMessage{
+		Level:   "error",
+		Message: err.Error(),
+	}
+
+	jsonBytes, _ := json.Marshal(message)
+	fmt.Println(string(jsonBytes))
 }
