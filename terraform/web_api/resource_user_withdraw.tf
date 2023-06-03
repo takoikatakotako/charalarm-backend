@@ -11,15 +11,15 @@ resource "aws_api_gateway_resource" "user_withdraw_resource" {
 # Lambda
 ##################################################
 module "user_withdraw_post_lambda_function" {
-  source               = "./lambda_function"
-  function_name        = "user-withdraw-post-function"
-  role                 = aws_iam_role.api_gateway_lambda_role.arn
-  handler              = "user_withdraw"
-  s3_bucket            = local.application_bucket_s3_url
-  s3_key               = "/${var.application_version}/user_withdraw.zip"
-  execution_arn        = aws_api_gateway_rest_api.charalarm_rest_api.execution_arn
-  method               = "POST"
-  path                 = "/user/withdraw"
+  source                = "./lambda_function"
+  function_name         = "user-withdraw-post-function"
+  role                  = aws_iam_role.api_gateway_lambda_role.arn
+  handler               = "user_withdraw"
+  s3_bucket             = local.application_bucket_s3_url
+  s3_key                = "/${var.application_version}/user_withdraw.zip"
+  execution_arn         = aws_api_gateway_rest_api.charalarm_rest_api.execution_arn
+  method                = "POST"
+  path                  = "/user/withdraw"
   environment_variables = local.variables
 }
 

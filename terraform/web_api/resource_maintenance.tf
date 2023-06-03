@@ -11,15 +11,15 @@ resource "aws_api_gateway_resource" "maintenance_resource" {
 # Lambda
 ##################################################
 module "maintenance_get_lambda_function" {
-  source               = "./lambda_function"
-  function_name        = "maintenance-get-function"
-  role                 = aws_iam_role.api_gateway_lambda_role.arn
-  handler              = "maintenance"
-  s3_bucket            = local.application_bucket_s3_url
-  s3_key               = "/${var.application_version}/maintenance.zip"
-  execution_arn        = aws_api_gateway_rest_api.charalarm_rest_api.execution_arn
-  method               = "GET"
-  path                 = "/maintenance"
+  source                = "./lambda_function"
+  function_name         = "maintenance-get-function"
+  role                  = aws_iam_role.api_gateway_lambda_role.arn
+  handler               = "maintenance"
+  s3_bucket             = local.application_bucket_s3_url
+  s3_key                = "/${var.application_version}/maintenance.zip"
+  execution_arn         = aws_api_gateway_rest_api.charalarm_rest_api.execution_arn
+  method                = "GET"
+  path                  = "/maintenance"
   environment_variables = local.variables
 }
 

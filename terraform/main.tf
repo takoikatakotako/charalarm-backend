@@ -55,15 +55,16 @@ module "web_api" {
 
 
 module "batch" {
-  source = "./batch"
-    resource_bucket_url     = local.resource_bucket_url
+  source              = "./batch"
+  resource_bucket_url = local.resource_bucket_url
 }
 
 module "worker" {
-  source = "./worker"
+  source                    = "./worker"
+  datadog_log_forwarder_arn = local.datadog_log_forwarder_arn
 }
 
 module "datadog" {
   source     = "./datadog"
-  dd_api_key = "DD_API_KEY"
+  dd_api_key = local.dd_api_key
 }

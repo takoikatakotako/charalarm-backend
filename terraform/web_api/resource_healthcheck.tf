@@ -11,15 +11,15 @@ resource "aws_api_gateway_resource" "healthcheck_resource" {
 # Lambda
 ##################################################
 module "healthcheck_get_lambda_function" {
-  source               = "./lambda_function"
-  function_name        = "healthcheck-get-function"
-  role                 = aws_iam_role.api_gateway_lambda_role.arn
-  handler              = "healthcheck"
-  s3_bucket            = local.application_bucket_s3_url
-  s3_key               = "/${var.application_version}/healthcheck.zip"
-  execution_arn        = aws_api_gateway_rest_api.charalarm_rest_api.execution_arn
-  method               = "GET"
-  path                 = "/healthcheck"
+  source                = "./lambda_function"
+  function_name         = "healthcheck-get-function"
+  role                  = aws_iam_role.api_gateway_lambda_role.arn
+  handler               = "healthcheck"
+  s3_bucket             = local.application_bucket_s3_url
+  s3_key                = "/${var.application_version}/healthcheck.zip"
+  execution_arn         = aws_api_gateway_rest_api.charalarm_rest_api.execution_arn
+  method                = "GET"
+  path                  = "/healthcheck"
   environment_variables = local.variables
 }
 
