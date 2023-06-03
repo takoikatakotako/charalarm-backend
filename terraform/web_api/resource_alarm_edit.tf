@@ -21,6 +21,7 @@ module "alarm_edit_post_lambda_function" {
   method                = "POST"
   path                  = "/alarm/edit"
   environment_variables = local.variables
+  datadog_log_forwarder_arn = var.datadog_log_forwarder_arn
 }
 
 ##################################################

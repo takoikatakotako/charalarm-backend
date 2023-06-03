@@ -21,6 +21,7 @@ module "user_signup_post_lambda_function" {
   method                = "POST"
   path                  = "/user/signup"
   environment_variables = local.variables
+  datadog_log_forwarder_arn = var.datadog_log_forwarder_arn
 }
 
 ##################################################

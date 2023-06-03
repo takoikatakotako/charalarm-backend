@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"github.com/takoikatakotako/charalarm-backend/database"
 	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/logger"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"math/rand"
+	"runtime"
 	"time"
 )
 
@@ -57,19 +59,15 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	voiceFilePath := b.createVoiceFileURL(resourceBaseURL, randomChara.CharaID, randomVoiceFileName)
 	b.randomCharaNameAndVoiceFileURL["RANDOM"] = CharaNameAndVoiceFilePath{CharaName: randomCharaName, VoiceFilePath: voiceFilePath}
 
-	fmt.Println("----------------")
-	fmt.Printf("AlarmList: %v\n", alarmList)
-	fmt.Println("----------------")
-
 	// 変換してSQSに送信
 	for _, alarm := range alarmList {
 		if alarm.Type == "IOS_VOIP_PUSH_NOTIFICATION" {
 			err := b.forIOSVoIPPushNotification(resourceBaseURL, alarm)
 			if err != nil {
-				// TODO. エラーを収集する仕組みを追加
-				fmt.Printf("----------------")
-				fmt.Printf("error: %v", err)
-				fmt.Printf("----------------")
+				// 不明なターゲット
+				pc, fileName, line, _ := runtime.Caller(1)
+				funcName := runtime.FuncForPC(pc).Name()
+				logger.Log(fileName, funcName, line, err)
 				continue
 			}
 		}

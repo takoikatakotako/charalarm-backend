@@ -22,6 +22,10 @@ variable "resource_bucket_url" {
   type = string
 }
 
+variable "datadog_log_forwarder_arn" {
+  type = string
+}
+
 locals {
   application_bucket_s3_url = "s3://${aws_s3_bucket.application_bucket.bucket}"
   variables = {

@@ -27,6 +27,7 @@ module "chara_id_get_lambda_function" {
   method                = "GET"
   path                  = "/chara/id/{id}"
   environment_variables = local.variables
+  datadog_log_forwarder_arn = var.datadog_log_forwarder_arn
 }
 
 ##################################################

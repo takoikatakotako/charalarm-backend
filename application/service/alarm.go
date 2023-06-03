@@ -97,6 +97,10 @@ func (s *AlarmService) EditAlarm(userID string, authToken string, requestAlarm r
 	} else if requestAlarm.Type == "IOS_VOIP_PUSH_NOTIFICATION" {
 		target = user.IOSPlatformInfo.VoIPPushTokenSNSEndpoint
 	} else {
+		// 不明なターゲット
+		pc, fileName, line, _ := runtime.Caller(1)
+		funcName := runtime.FuncForPC(pc).Name()
+		logger.Log(fileName, funcName, line, err)
 		return errors.New(message.ErrorInvalidValue)
 	}
 	databaseAlarm := converter.RequestAlarmToDatabaseAlarm(requestAlarm, target)

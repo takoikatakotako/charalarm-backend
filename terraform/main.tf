@@ -44,13 +44,14 @@ module "platform_application" {
 }
 
 module "web_api" {
-  source                  = "./web_api"
-  domain                  = local.api_domain
-  route53_zone_id         = local.route53_zone_id
-  acm_certificate_arn     = local.api_acm_certificate_arn
-  application_version     = local.application_version
-  application_bucket_name = local.application_bucket_name
-  resource_bucket_url     = local.resource_bucket_url
+  source                    = "./web_api"
+  domain                    = local.api_domain
+  route53_zone_id           = local.route53_zone_id
+  acm_certificate_arn       = local.api_acm_certificate_arn
+  application_version       = local.application_version
+  application_bucket_name   = local.application_bucket_name
+  resource_bucket_url       = local.resource_bucket_url
+  datadog_log_forwarder_arn = local.datadog_log_forwarder_arn
 }
 
 

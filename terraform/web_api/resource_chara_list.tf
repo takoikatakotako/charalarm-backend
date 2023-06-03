@@ -21,6 +21,7 @@ module "chara_list_post_lambda_function" {
   method                = "GET"
   path                  = "/chara/list"
   environment_variables = local.variables
+  datadog_log_forwarder_arn = var.datadog_log_forwarder_arn
 }
 
 ##################################################

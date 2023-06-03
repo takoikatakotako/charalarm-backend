@@ -21,6 +21,7 @@ module "maintenance_get_lambda_function" {
   method                = "GET"
   path                  = "/maintenance"
   environment_variables = local.variables
+  datadog_log_forwarder_arn = var.datadog_log_forwarder_arn
 }
 
 ##################################################

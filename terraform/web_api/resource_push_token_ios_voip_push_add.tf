@@ -21,6 +21,7 @@ module "push_token_ios_voip_push_add_post_lambda_function" {
   method                = "POST"
   path                  = "/push-token/ios/voip-push/add"
   environment_variables = local.variables
+  datadog_log_forwarder_arn = var.datadog_log_forwarder_arn
 }
 
 ##################################################

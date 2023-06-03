@@ -38,15 +38,17 @@ resource "aws_cloudwatch_log_group" "log_group" {
   retention_in_days = 90
 }
 
-###################################################
-## Subscription Filter
-###################################################
-#resource "aws_cloudwatch_log_subscription_filter" "log_filter" {
-#  name            = "Error Subscription Filter"
-#  log_group_name  = aws_cloudwatch_log_group.log_group.name
-#  filter_pattern  = ""
-#  destination_arn = "arn:aws:lambda:ap-northeast-1:397693451628:function:datadog-forwarder"
-#}
+##################################################
+# Subscription Filter
+##################################################
+resource "aws_cloudwatch_log_subscription_filter" "log_filter" {
+  name            = "Error Subscription Filter"
+  log_group_name  = aws_cloudwatch_log_group.log_group.name
+  # filter_pattern  = "{ $.level = \"error\" }"
+  filter_pattern  = ""
+  destination_arn = var.datadog_log_forwarder_arn
+}
+
 
 ##################################################
 # Permission
