@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/takoikatakotako/charalarm-backend/message"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -26,11 +27,14 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	userID, authToken, err := auth.Basic(authorizationHeader)
 	if err != nil {
-		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
+		return handler.FailureResponse(http.StatusBadRequest, message.ErrorInvalidValue)
 	}
 
 	// Withdraw
-	s := service.UserService{DynamoDBRepository: &repository.DynamoDBRepository{}}
+	s := service.UserService{
+		DynamoDBRepository: &repository.DynamoDBRepository{},
+		SNSRepository:      &repository.SNSRepository{},
+	}
 	err = s.Withdraw(userID, authToken)
 	if err != nil {
 		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")

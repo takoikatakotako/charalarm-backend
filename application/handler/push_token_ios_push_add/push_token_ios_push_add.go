@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/takoikatakotako/charalarm-backend/handler"
 	"github.com/takoikatakotako/charalarm-backend/message"
+	"github.com/takoikatakotako/charalarm-backend/response"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -27,14 +28,14 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	userID, authToken, err := auth.Basic(authorizationHeader)
 	if err != nil {
-		return handler.FailureResponse(http.StatusInternalServerError, message.AuthenticationFailure)
+		return handler.FailureResponse(http.StatusBadRequest, message.AuthenticationFailure)
 	}
 
 	req := request.AddPushTokenRequest{}
 	body := event.Body
 	err = json.Unmarshal([]byte(body), &req)
 	if err != nil {
-		return handler.FailureResponse(http.StatusInternalServerError, message.InvalidValue)
+		return handler.FailureResponse(http.StatusBadRequest, message.InvalidValue)
 	}
 	pushToken := req.PushToken
 
@@ -50,7 +51,8 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 		return handler.FailureResponse(http.StatusInternalServerError, message.UserUpdateFailure)
 	}
 
-	jsonBytes, _ := json.Marshal(message.UserUpdateSuccess)
+	res := response.MessageResponse{Message: message.UserUpdateSuccess}
+	jsonBytes, _ := json.Marshal(res)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
 		StatusCode: http.StatusOK,

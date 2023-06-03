@@ -38,6 +38,17 @@ resource "aws_cloudwatch_log_group" "log_group" {
   retention_in_days = 90
 }
 
+##################################################
+# Subscription Filter
+##################################################
+resource "aws_cloudwatch_log_subscription_filter" "log_filter" {
+  name            = "Error Subscription Filter"
+  log_group_name  = aws_cloudwatch_log_group.log_group.name
+  # filter_pattern  = "{ $.level = \"error\" }"
+  filter_pattern  = ""
+  destination_arn = var.datadog_log_forwarder_arn
+}
+
 
 ##################################################
 # Permission
@@ -51,6 +62,7 @@ resource "aws_lambda_permission" "lambda_permission" {
   # The /*/*/* part allows invocation from any stage, method and resource path
   source_arn = "${var.execution_arn}/*/${var.method}${var.path}"
 }
+
 
 
 # aws lambda get-policy --function-name user-signup-anonymous-post-function --profile sandbox | jq
