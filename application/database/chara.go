@@ -8,6 +8,8 @@ const (
 type Chara struct {
 	CharaID     string                     `dynamodbav:"charaID"`
 	Enable      bool                       `dynamodbav:"enable"`
+	CreatedAt   string                     `dynamodbav:"created_at"`
+	UpdatedAd   string                     `dynamodbav:"updated_at"`
 	Name        string                     `dynamodbav:"name"`
 	Description string                     `dynamodbav:"description"`
 	Profiles    []CharaProfile             `dynamodbav:"profiles"`

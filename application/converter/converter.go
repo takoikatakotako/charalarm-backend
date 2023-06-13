@@ -114,6 +114,8 @@ func DatabaseCharaToResponseChara(databaseChara database.Chara, baseURL string) 
 		CharaID:     databaseChara.CharaID,
 		Enable:      databaseChara.Enable,
 		Name:        databaseChara.Name,
+		CreatedAt:   databaseChara.CreatedAt,
+		UpdatedAt:   databaseChara.UpdatedAd,
 		Description: databaseChara.Description,
 		Profiles:    databaseCharaProfileListToResponseCharaProfileList(databaseChara.Profiles),
 		Resources:   databaseCharaToResponseCharaResourceList(databaseChara, baseURL),
