@@ -4,8 +4,8 @@ type Chara struct {
 	CharaID     string                     `json:"charaID"`
 	Enable      bool                       `json:"enable"`
 	Name        string                     `json:"name"`
-	CreatedAt   string                     `json:"created_at"`
-	UpdatedAt   string                     `json:"updated_at"`
+	CreatedAt   string                     `json:"createdAt"`
+	UpdatedAt   string                     `json:"updatedAt"`
 	Description string                     `json:"description"`
 	Profiles    []CharaProfile             `json:"profiles"`
 	Resources   []CharaResource            `json:"resources"`
