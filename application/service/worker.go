@@ -21,6 +21,7 @@ func (service *WorkerService) PublishPlatformApplication(alarmInfo entity.IOSVoI
 
 	// 送信用の Message に変換
 	iOSVoIPPushSNSMessage := entity.IOSVoIPPushSNSMessage{}
+	iOSVoIPPushSNSMessage.CharaID = alarmInfo.CharaID
 	iOSVoIPPushSNSMessage.CharaName = alarmInfo.CharaName
 	iOSVoIPPushSNSMessage.VoiceFileURL = alarmInfo.VoiceFileURL
 

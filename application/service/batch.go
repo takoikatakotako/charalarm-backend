@@ -20,6 +20,7 @@ type BatchService struct {
 }
 
 type CharaNameAndVoiceFilePath struct {
+	CharaID       string
 	CharaName     string
 	VoiceFilePath string
 }
@@ -53,13 +54,12 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 		return errors.New("ボイスがないぞ")
 	}
 	randomCharaVoiceIndex := rand.Intn(randomCharaCallVoicesCount)
-	randomCharaName := randomChara.Name
 	randomVoiceFileName := randomChara.Calls[randomCharaVoiceIndex].VoiceFileName
 
 	// ランダム用のメモを作成
 	b.randomCharaNameAndVoiceFileURL = map[string]CharaNameAndVoiceFilePath{}
 	voiceFilePath := b.createVoiceFileURL(resourceBaseURL, randomChara.CharaID, randomVoiceFileName)
-	b.randomCharaNameAndVoiceFileURL["RANDOM"] = CharaNameAndVoiceFilePath{CharaName: randomCharaName, VoiceFilePath: voiceFilePath}
+	b.randomCharaNameAndVoiceFileURL["RANDOM"] = CharaNameAndVoiceFilePath{CharaID: randomChara.CharaID, CharaName: randomChara.Name, VoiceFilePath: voiceFilePath}
 
 	// 変換してSQSに送信
 	for _, alarm := range alarmList {
@@ -97,10 +97,12 @@ func (b *BatchService) forIOSVoIPPushNotification(resourceBaseURL string, alarm 
 	//
 	if alarm.CharaID == "" || alarm.CharaID == "RANDOM" {
 		// CharaIDが無い場合 -> Charaとボイスをランダムにする
+		alarmInfo.CharaID = b.randomCharaNameAndVoiceFileURL["RANDOM"].CharaID
 		alarmInfo.CharaName = b.randomCharaNameAndVoiceFileURL["RANDOM"].CharaName
 		alarmInfo.VoiceFileURL = b.randomCharaNameAndVoiceFileURL["RANDOM"].VoiceFilePath
 	} else if alarm.CharaID != "" && alarm.CharaID != "RANDOM" && alarm.VoiceFileName != "" && alarm.VoiceFileName != "RANDOM" {
 		// CharaIDがあり、VoiceFileNameがある場合 -> 指定のキャラを使い、指定のボイスを使用する
+		alarmInfo.CharaID = alarm.CharaID
 		alarmInfo.CharaName = alarm.CharaName
 		alarmInfo.VoiceFileURL = b.createVoiceFileURL(resourceBaseURL, alarm.CharaID, alarm.VoiceFileName)
 	} else {
@@ -110,6 +112,7 @@ func (b *BatchService) forIOSVoIPPushNotification(resourceBaseURL string, alarm 
 		val, ok := b.randomCharaNameAndVoiceFileURL[alarm.CharaID]
 		if ok {
 			// キーがある場合
+			alarmInfo.CharaID = val.CharaID
 			alarmInfo.CharaName = val.CharaName
 			alarmInfo.VoiceFileURL = val.VoiceFilePath
 		} else {
@@ -127,6 +130,7 @@ func (b *BatchService) forIOSVoIPPushNotification(resourceBaseURL string, alarm 
 			b.randomCharaNameAndVoiceFileURL[alarm.CharaID] = CharaNameAndVoiceFilePath{CharaName: chara.Name, VoiceFilePath: charaCallVoiceFileName}
 
 			// 設定
+			alarmInfo.CharaID = chara.CharaID
 			alarmInfo.CharaName = chara.Name
 			alarmInfo.VoiceFileURL = b.createVoiceFileURL(resourceBaseURL, chara.CharaID, charaCallVoiceFileName)
 		}
