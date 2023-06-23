@@ -3,7 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/takoikatakotako/charalarm-backend/response"
+	"github.com/takoikatakotako/charalarm-backend/entity/response"
 )
 
 func FailureResponse(statusCode int, message string) (events.APIGatewayProxyResponse, error) {

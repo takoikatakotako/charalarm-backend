@@ -2,8 +2,8 @@ package converter
 
 import (
 	"github.com/takoikatakotako/charalarm-backend/database"
-	"github.com/takoikatakotako/charalarm-backend/request"
-	"github.com/takoikatakotako/charalarm-backend/response"
+	"github.com/takoikatakotako/charalarm-backend/entity/request"
+	"github.com/takoikatakotako/charalarm-backend/entity/response"
 )
 
 func DatabaseUserToResponseUserInfo(user database.User) response.UserInfoResponse {

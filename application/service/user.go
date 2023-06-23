@@ -3,7 +3,7 @@ package service
 import (
 	"errors"
 	"github.com/takoikatakotako/charalarm-backend/converter"
-	"github.com/takoikatakotako/charalarm-backend/response"
+	"github.com/takoikatakotako/charalarm-backend/entity/response"
 	"time"
 
 	"github.com/takoikatakotako/charalarm-backend/database"

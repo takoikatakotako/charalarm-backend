@@ -2,8 +2,8 @@ package service
 
 import (
 	"github.com/takoikatakotako/charalarm-backend/converter"
+	"github.com/takoikatakotako/charalarm-backend/entity/response"
 	"github.com/takoikatakotako/charalarm-backend/repository"
-	"github.com/takoikatakotako/charalarm-backend/response"
 )
 
 type CharaService struct {
