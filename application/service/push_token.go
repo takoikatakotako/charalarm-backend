@@ -2,14 +2,15 @@ package service
 
 import (
 	"errors"
+	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/repository/sns"
 
 	"github.com/takoikatakotako/charalarm-backend/message"
-	"github.com/takoikatakotako/charalarm-backend/repository"
 )
 
 type PushTokenService struct {
-	DynamoDBRepository repository.DynamoDBRepositoryInterface
-	SNSRepository      repository.SNSRepositoryInterface
+	DynamoDBRepository dynamodb.DynamoDBRepositoryInterface
+	SNSRepository      sns.SNSRepositoryInterface
 }
 
 func (s *PushTokenService) AddIOSPushToken(userID string, authToken string, pushToken string) error {

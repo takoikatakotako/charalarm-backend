@@ -1,4 +1,4 @@
-package repository
+package sns
 
 import (
 	"context"

@@ -2,12 +2,12 @@ package service
 
 import (
 	"errors"
-	"github.com/takoikatakotako/charalarm-backend/converter"
 	"github.com/takoikatakotako/charalarm-backend/entity/request"
 	"github.com/takoikatakotako/charalarm-backend/entity/response"
-	"github.com/takoikatakotako/charalarm-backend/logger"
 	"github.com/takoikatakotako/charalarm-backend/message"
-	"github.com/takoikatakotako/charalarm-backend/repository"
+	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/util/converter"
+	"github.com/takoikatakotako/charalarm-backend/util/logger"
 	"runtime"
 )
 
@@ -16,7 +16,7 @@ const (
 )
 
 type AlarmService struct {
-	DynamoDBRepository repository.DynamoDBRepositoryInterface
+	DynamoDBRepository dynamodb.DynamoDBRepositoryInterface
 }
 
 // AddAlarm アラームを追加

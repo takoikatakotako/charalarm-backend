@@ -3,13 +3,14 @@ package service
 import (
 	"github.com/takoikatakotako/charalarm-backend/entity/sns"
 	"github.com/takoikatakotako/charalarm-backend/entity/sqs"
-	"github.com/takoikatakotako/charalarm-backend/repository"
+	sns2 "github.com/takoikatakotako/charalarm-backend/repository/sns"
+	sqs2 "github.com/takoikatakotako/charalarm-backend/repository/sqs"
 	// "github.com/takoikatakotako/charalarm-backend/validator"
 )
 
 type WorkerService struct {
-	SNSRepository repository.SNSRepositoryInterface
-	SQSRepository repository.SQSRepositoryInterface
+	SNSRepository sns2.SNSRepositoryInterface
+	SQSRepository sqs2.SQSRepositoryInterface
 }
 
 // PublishPlatformApplication VoIPのプッシュ通知をする

@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/takoikatakotako/charalarm-backend/handler"
 	"github.com/takoikatakotako/charalarm-backend/message"
-	"github.com/takoikatakotako/charalarm-backend/repository"
+	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
 	"github.com/takoikatakotako/charalarm-backend/service"
 	"net/http"
 )
@@ -18,7 +18,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	charaID := event.PathParameters["id"]
 
 	// Get Chara
-	s := service.CharaService{DynamoDBRepository: &repository.DynamoDBRepository{}}
+	s := service.CharaService{DynamoDBRepository: &dynamodb.DynamoDBRepository{}}
 	chara, err := s.GetChara(charaID)
 	if err != nil {
 		fmt.Println(err)

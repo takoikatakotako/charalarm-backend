@@ -7,7 +7,8 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/takoikatakotako/charalarm-backend/entity/response"
-	"github.com/takoikatakotako/charalarm-backend/repository"
+	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/repository/sqs"
 	"github.com/takoikatakotako/charalarm-backend/service"
 	"net/http"
 	"time"
@@ -22,8 +23,8 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	fmt.Printf("hour: %d minute: %d\n", hour, minute)
 
-	dynamodbRepository := &repository.DynamoDBRepository{}
-	sqsRepository := &repository.SQSRepository{}
+	dynamodbRepository := &dynamodb.DynamoDBRepository{}
+	sqsRepository := &sqs.SQSRepository{}
 	s := service.BatchService{
 		DynamoDBRepository: dynamodbRepository,
 		SQSRepository:      sqsRepository,

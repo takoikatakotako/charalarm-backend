@@ -5,17 +5,19 @@ import (
 	"fmt"
 	"github.com/takoikatakotako/charalarm-backend/database"
 	"github.com/takoikatakotako/charalarm-backend/entity/sqs"
-	"github.com/takoikatakotako/charalarm-backend/logger"
-	"github.com/takoikatakotako/charalarm-backend/repository"
+	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/repository/environment_variable"
+	sqs2 "github.com/takoikatakotako/charalarm-backend/repository/sqs"
+	"github.com/takoikatakotako/charalarm-backend/util/logger"
 	"math/rand"
 	"runtime"
 	"time"
 )
 
 type BatchService struct {
-	DynamoDBRepository             repository.DynamoDBRepositoryInterface
-	SQSRepository                  repository.SQSRepositoryInterface
-	EnvironmentVariableRepository  repository.EnvironmentVariableRepository
+	DynamoDBRepository             dynamodb.DynamoDBRepositoryInterface
+	SQSRepository                  sqs2.SQSRepositoryInterface
+	EnvironmentVariableRepository  environment_variable.EnvironmentVariableRepository
 	randomCharaNameAndVoiceFileURL map[string]CharaNameAndVoiceFilePath
 }
 

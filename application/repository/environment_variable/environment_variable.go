@@ -1,4 +1,4 @@
-package repository
+package environment_variable
 
 import (
 	"errors"
