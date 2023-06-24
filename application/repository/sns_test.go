@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/entity/sns"
 	"strings"
 	"testing"
 )
@@ -48,7 +48,7 @@ func TestPublishPlatformApplication(t *testing.T) {
 	}
 
 	// 詰め替える
-	iOSVoIPPushSNSMessage := entity.IOSVoIPPushSNSMessage{}
+	iOSVoIPPushSNSMessage := sns.IOSVoIPPushSNSMessage{}
 	iOSVoIPPushSNSMessage.CharaName = "キャラ名"
 	iOSVoIPPushSNSMessage.VoiceFileURL = "ファイルPath"
 

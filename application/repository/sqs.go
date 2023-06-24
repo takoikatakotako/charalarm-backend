@@ -10,7 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"github.com/google/uuid"
 	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
-	sqs_entity "github.com/takoikatakotako/charalarm-backend/entity"
+	sqs_entity "github.com/takoikatakotako/charalarm-backend/entity/sqs"
 )
 
 const (

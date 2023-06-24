@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/entity/sqs"
 	"github.com/takoikatakotako/charalarm-backend/handler"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"github.com/takoikatakotako/charalarm-backend/service"
@@ -24,7 +24,7 @@ func Handler(ctx context.Context, event events.SQSEvent) (events.APIGatewayProxy
 
 	for _, sqsMessage := range event.Records {
 		// Decode
-		req := entity.IOSVoIPPushAlarmInfoSQSMessage{}
+		req := sqs.IOSVoIPPushAlarmInfoSQSMessage{}
 		err := json.Unmarshal([]byte(sqsMessage.Body), &req)
 		if err != nil {
 			// Decode失敗のためデッドレターキューに送信

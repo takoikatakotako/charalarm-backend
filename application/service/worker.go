@@ -1,7 +1,8 @@
 package service
 
 import (
-	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/entity/sns"
+	"github.com/takoikatakotako/charalarm-backend/entity/sqs"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	// "github.com/takoikatakotako/charalarm-backend/validator"
 )
@@ -12,7 +13,7 @@ type WorkerService struct {
 }
 
 // PublishPlatformApplication VoIPのプッシュ通知をする
-func (service *WorkerService) PublishPlatformApplication(alarmInfo entity.IOSVoIPPushAlarmInfoSQSMessage) error {
+func (service *WorkerService) PublishPlatformApplication(alarmInfo sqs.IOSVoIPPushAlarmInfoSQSMessage) error {
 	// エンドポイントが有効か確認
 	err := service.SNSRepository.CheckPlatformEndpointEnabled(alarmInfo.SNSEndpointArn)
 	if err != nil {
@@ -20,7 +21,7 @@ func (service *WorkerService) PublishPlatformApplication(alarmInfo entity.IOSVoI
 	}
 
 	// 送信用の Message に変換
-	iOSVoIPPushSNSMessage := entity.IOSVoIPPushSNSMessage{}
+	iOSVoIPPushSNSMessage := sns.IOSVoIPPushSNSMessage{}
 	iOSVoIPPushSNSMessage.CharaID = alarmInfo.CharaID
 	iOSVoIPPushSNSMessage.CharaName = alarmInfo.CharaName
 	iOSVoIPPushSNSMessage.VoiceFileURL = alarmInfo.VoiceFileURL

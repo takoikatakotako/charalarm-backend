@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/entity"
+	"github.com/takoikatakotako/charalarm-backend/entity/sqs"
 	"os"
 	"testing"
 )
@@ -57,7 +57,7 @@ func TestSendMessage(t *testing.T) {
 
 	alarmID := uuid.New().String()
 	userID := uuid.New().String()
-	alarmInfo := entity.IOSVoIPPushAlarmInfoSQSMessage{
+	alarmInfo := sqs.IOSVoIPPushAlarmInfoSQSMessage{
 		AlarmID:        alarmID,
 		UserID:         userID,
 		SNSEndpointArn: "dummy",
@@ -76,7 +76,7 @@ func TestSendMessage(t *testing.T) {
 	}
 
 	assert.Equal(t, 1, len(messages))
-	getAlarmInfo := entity.IOSVoIPPushAlarmInfoSQSMessage{}
+	getAlarmInfo := sqs.IOSVoIPPushAlarmInfoSQSMessage{}
 	body := *messages[0].Body
 	_ = json.Unmarshal([]byte(body), &getAlarmInfo)
 	assert.Equal(t, getAlarmInfo.AlarmID, alarmID)

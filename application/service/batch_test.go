@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/entity"
 	"github.com/takoikatakotako/charalarm-backend/entity/request"
+	"github.com/takoikatakotako/charalarm-backend/entity/sqs"
 	"github.com/takoikatakotako/charalarm-backend/repository"
 	"math/rand"
 	"os"
@@ -99,7 +99,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage_RandomCharaAndRandomVoice(t *t
 	}
 
 	assert.Equal(t, 1, len(messages))
-	getAlarmInfo := entity.IOSVoIPPushAlarmInfoSQSMessage{}
+	getAlarmInfo := sqs.IOSVoIPPushAlarmInfoSQSMessage{}
 	body := *messages[0].Body
 	err = json.Unmarshal([]byte(body), &getAlarmInfo)
 	if err != nil {
@@ -185,7 +185,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage_DecidedCharaAndRandomVoice(t *
 	}
 
 	assert.Equal(t, 1, len(messages))
-	getAlarmInfo := entity.IOSVoIPPushAlarmInfoSQSMessage{}
+	getAlarmInfo := sqs.IOSVoIPPushAlarmInfoSQSMessage{}
 	body := *messages[0].Body
 	err = json.Unmarshal([]byte(body), &getAlarmInfo)
 	if err != nil {
@@ -271,7 +271,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage_DecidedCharaAndDecidedVoice(t 
 	}
 
 	assert.Equal(t, 1, len(messages))
-	getAlarmInfo := entity.IOSVoIPPushAlarmInfoSQSMessage{}
+	getAlarmInfo := sqs.IOSVoIPPushAlarmInfoSQSMessage{}
 	body := *messages[0].Body
 	err = json.Unmarshal([]byte(body), &getAlarmInfo)
 	if err != nil {
