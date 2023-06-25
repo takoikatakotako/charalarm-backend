@@ -2,7 +2,7 @@ package environment_variable
 
 import (
 	"errors"
-	"github.com/takoikatakotako/charalarm-backend/message"
+	"github.com/takoikatakotako/charalarm-backend/util/message"
 	"os"
 )
 

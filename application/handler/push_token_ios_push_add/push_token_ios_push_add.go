@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"github.com/takoikatakotako/charalarm-backend/entity/response"
 	"github.com/takoikatakotako/charalarm-backend/handler"
-	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
 	"github.com/takoikatakotako/charalarm-backend/repository/sns"
 	"github.com/takoikatakotako/charalarm-backend/util/auth"
+	"github.com/takoikatakotako/charalarm-backend/util/message"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"

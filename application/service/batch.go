@@ -3,7 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
-	"github.com/takoikatakotako/charalarm-backend/database"
+	"github.com/takoikatakotako/charalarm-backend/entity/database"
 	"github.com/takoikatakotako/charalarm-backend/entity/sqs"
 	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
 	"github.com/takoikatakotako/charalarm-backend/repository/environment_variable"

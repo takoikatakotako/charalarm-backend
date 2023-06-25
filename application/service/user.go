@@ -6,11 +6,11 @@ import (
 	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
 	"github.com/takoikatakotako/charalarm-backend/repository/sns"
 	"github.com/takoikatakotako/charalarm-backend/util/converter"
+	"github.com/takoikatakotako/charalarm-backend/util/message"
 	"github.com/takoikatakotako/charalarm-backend/util/validator"
 	"time"
 
-	"github.com/takoikatakotako/charalarm-backend/database"
-	"github.com/takoikatakotako/charalarm-backend/message"
+	"github.com/takoikatakotako/charalarm-backend/entity/database"
 )
 
 type UserService struct {
