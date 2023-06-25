@@ -19,7 +19,7 @@ func Handler(ctx context.Context, event events.SQSEvent) (events.APIGatewayProxy
 	snsRepository := &sns.SNSRepository{}
 	sqsRepository := &sqsRepo.SQSRepository{}
 
-	s := service.WorkerService{
+	s := service.CallWorkerService{
 		SNSRepository: snsRepository,
 		SQSRepository: sqsRepository,
 	}

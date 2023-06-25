@@ -8,13 +8,13 @@ import (
 	// "github.com/takoikatakotako/charalarm-backend/validator"
 )
 
-type WorkerService struct {
+type CallWorkerService struct {
 	SNSRepository sns2.SNSRepositoryInterface
 	SQSRepository sqs2.SQSRepositoryInterface
 }
 
 // PublishPlatformApplication VoIPのプッシュ通知をする
-func (service *WorkerService) PublishPlatformApplication(alarmInfo sqs.IOSVoIPPushAlarmInfoSQSMessage) error {
+func (service *CallWorkerService) PublishPlatformApplication(alarmInfo sqs.IOSVoIPPushAlarmInfoSQSMessage) error {
 	// エンドポイントが有効か確認
 	err := service.SNSRepository.CheckPlatformEndpointEnabled(alarmInfo.SNSEndpointArn)
 	if err != nil {
@@ -32,7 +32,7 @@ func (service *WorkerService) PublishPlatformApplication(alarmInfo sqs.IOSVoIPPu
 }
 
 // SendMessageToDeadLetter エラーのあるメッセージをデッドレターに送信
-func (service *WorkerService) SendMessageToDeadLetter(messageBody string) error {
+func (service *CallWorkerService) SendMessageToDeadLetter(messageBody string) error {
 	// キューに送信
 	return service.SQSRepository.SendMessageToVoIPPushDeadLetterQueue(messageBody)
 }

@@ -7,16 +7,16 @@ import (
 	"github.com/takoikatakotako/charalarm-backend/entity/sqs"
 	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
 	"github.com/takoikatakotako/charalarm-backend/repository/environment_variable"
-	sqs2 "github.com/takoikatakotako/charalarm-backend/repository/sqs"
+	sqsRepo "github.com/takoikatakotako/charalarm-backend/repository/sqs"
 	"github.com/takoikatakotako/charalarm-backend/util/logger"
 	"math/rand"
 	"runtime"
 	"time"
 )
 
-type BatchService struct {
+type CallBatchService struct {
 	DynamoDBRepository             dynamodb.DynamoDBRepositoryInterface
-	SQSRepository                  sqs2.SQSRepositoryInterface
+	SQSRepository                  sqsRepo.SQSRepositoryInterface
 	EnvironmentVariableRepository  environment_variable.EnvironmentVariableRepository
 	randomCharaNameAndVoiceFileURL map[string]CharaNameAndVoiceFilePath
 }
@@ -27,7 +27,7 @@ type CharaNameAndVoiceFilePath struct {
 	VoiceFilePath string
 }
 
-func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday time.Weekday) error {
+func (b *CallBatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday time.Weekday) error {
 	// クエリでアラームを取得
 	alarmList, err := b.DynamoDBRepository.QueryByAlarmTime(hour, minute, weekday)
 	if err != nil {
@@ -85,11 +85,11 @@ func (b *BatchService) QueryDynamoDBAndSendMessage(hour int, minute int, weekday
 	return nil
 }
 
-func (b *BatchService) createVoiceFileURL(resourceBaseURL string, charaID string, voiceFileName string) string {
+func (b *CallBatchService) createVoiceFileURL(resourceBaseURL string, charaID string, voiceFileName string) string {
 	return fmt.Sprintf("%s/%s/%s", resourceBaseURL, charaID, voiceFileName)
 }
 
-func (b *BatchService) forIOSVoIPPushNotification(resourceBaseURL string, alarm database.Alarm) error {
+func (b *CallBatchService) forIOSVoIPPushNotification(resourceBaseURL string, alarm database.Alarm) error {
 	// AlarmInfoに変換
 	alarmInfo := sqs.IOSVoIPPushAlarmInfoSQSMessage{}
 	alarmInfo.AlarmID = alarm.AlarmID

@@ -23,7 +23,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	dynamodbRepository := &dynamodb.DynamoDBRepository{}
 	sqsRepository := &sqs.SQSRepository{}
-	s := service.BatchService{
+	s := service.CallBatchService{
 		DynamoDBRepository: dynamodbRepository,
 		SQSRepository:      sqsRepository,
 	}
