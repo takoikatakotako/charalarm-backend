@@ -1,14 +1,12 @@
-# Sandbox環境にWebAPIをデプロイ
-name: Deploy For Sandbox
+# Production環境にWebAPIをデプロイ
+name: Deploy For Production
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ develop ]
 
 env:
   APPLICATION_VERSION: 0.0.1
-  S3_BUCKET_NAME: application.charalarm.sandbox.swiswiswift.com
+  S3_BUCKET_NAME: application.charalarm.com
 
 jobs:
   test:
