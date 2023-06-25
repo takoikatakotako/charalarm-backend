@@ -24,8 +24,11 @@ module "dynamodb" {
 }
 
 module "resource" {
-  source      = "./resource"
-  bucket_name = local.resource_bucket_name
+  source              = "./resource"
+  bucket_name         = local.resource_bucket_name
+  acm_certificate_arn = local.resource_acm_certificate_arn
+  domain              = local.resource_domain
+  zone_id             = local.route53_zone_id
 }
 
 module "sqs" {
@@ -50,14 +53,14 @@ module "web_api" {
   acm_certificate_arn       = local.api_acm_certificate_arn
   application_version       = local.application_version
   application_bucket_name   = local.application_bucket_name
-  resource_bucket_url       = local.resource_bucket_url
+  resource_domain           = local.resource_domain
   datadog_log_forwarder_arn = local.datadog_log_forwarder_arn
 }
 
 
 module "batch" {
-  source              = "./batch"
-  resource_bucket_url = local.resource_bucket_url
+  source          = "./batch"
+  resource_domain = local.resource_domain
 }
 
 module "worker" {

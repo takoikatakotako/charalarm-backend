@@ -1,9 +1,10 @@
-variable "resource_bucket_url" {
+variable "resource_domain" {
   type = string
 }
 
+
 locals {
   environment_variables = {
-    "RESOURCE_BASE_URL" = var.resource_bucket_url
+    "RESOURCE_BASE_URL" = "https://${var.resource_domain}"
   }
 }
