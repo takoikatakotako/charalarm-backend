@@ -1,19 +1,20 @@
 package service
 
 import (
+	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/repository/sns"
 	"strings"
 	"testing"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/repository"
 )
 
 // iOSPushTokenを登録できる
 func TestPushTokenService_AddIOSPushToken(t *testing.T) {
 	// DynamoDBRepository
-	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
-	snsRepository := &repository.SNSRepository{IsLocal: true}
+	dynamoDBRepository := &dynamodb.DynamoDBRepository{IsLocal: true}
+	snsRepository := &sns.SNSRepository{IsLocal: true}
 
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
@@ -51,8 +52,8 @@ func TestPushTokenService_AddIOSPushToken(t *testing.T) {
 // iOSPushTokenを変更できる
 func TestPushTokenService_AddIOSPushTokenCanChange(t *testing.T) {
 	// DynamoDBRepository
-	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
-	snsRepository := &repository.SNSRepository{IsLocal: true}
+	dynamoDBRepository := &dynamodb.DynamoDBRepository{IsLocal: true}
+	snsRepository := &sns.SNSRepository{IsLocal: true}
 
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
@@ -112,8 +113,8 @@ func TestPushTokenService_AddIOSPushTokenCanChange(t *testing.T) {
 // iOSPushTokenを複数回更新できる
 func TestPushTokenService_AddIOSPushTokenMultiTimes(t *testing.T) {
 	// DynamoDBRepository
-	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
-	snsRepository := &repository.SNSRepository{IsLocal: true}
+	dynamoDBRepository := &dynamodb.DynamoDBRepository{IsLocal: true}
+	snsRepository := &sns.SNSRepository{IsLocal: true}
 
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
@@ -157,8 +158,8 @@ func TestPushTokenService_AddIOSPushTokenMultiTimes(t *testing.T) {
 // iOSVoIPPushTokenを登録できる
 func TestPushTokenService_AddIOSVoipPushToken(t *testing.T) {
 	// DynamoDBRepository
-	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
-	snsRepository := &repository.SNSRepository{IsLocal: true}
+	dynamoDBRepository := &dynamodb.DynamoDBRepository{IsLocal: true}
+	snsRepository := &sns.SNSRepository{IsLocal: true}
 
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
@@ -198,8 +199,8 @@ func TestPushTokenService_AddIOSVoipPushToken(t *testing.T) {
 // iOSVoIPPushTokenを変更できる
 func TestPushTokenService_AddIOSVoipPushTokenCanChange(t *testing.T) {
 	// DynamoDBRepository
-	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
-	snsRepository := &repository.SNSRepository{IsLocal: true}
+	dynamoDBRepository := &dynamodb.DynamoDBRepository{IsLocal: true}
+	snsRepository := &sns.SNSRepository{IsLocal: true}
 
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
@@ -257,8 +258,8 @@ func TestPushTokenService_AddIOSVoipPushTokenCanChange(t *testing.T) {
 // iOSVoIPPushTokenを複数回変更できる
 func TestPushTokenService_AddIOSVoipPushTokenMultiChange(t *testing.T) {
 	// DynamoDBRepository
-	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
-	snsRepository := &repository.SNSRepository{IsLocal: true}
+	dynamoDBRepository := &dynamodb.DynamoDBRepository{IsLocal: true}
+	snsRepository := &sns.SNSRepository{IsLocal: true}
 
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}

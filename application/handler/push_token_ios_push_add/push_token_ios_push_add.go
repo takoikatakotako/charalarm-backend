@@ -4,16 +4,17 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/takoikatakotako/charalarm-backend/entity/response"
 	"github.com/takoikatakotako/charalarm-backend/handler"
 	"github.com/takoikatakotako/charalarm-backend/message"
-	"github.com/takoikatakotako/charalarm-backend/response"
+	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/repository/sns"
+	"github.com/takoikatakotako/charalarm-backend/util/auth"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/takoikatakotako/charalarm-backend/auth"
-	"github.com/takoikatakotako/charalarm-backend/repository"
-	"github.com/takoikatakotako/charalarm-backend/request"
+	"github.com/takoikatakotako/charalarm-backend/entity/request"
 	"github.com/takoikatakotako/charalarm-backend/service"
 )
 
@@ -40,8 +41,8 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	pushToken := req.PushToken
 
 	// add push token
-	dynamodbRepository := &repository.DynamoDBRepository{}
-	snsRepository := &repository.SNSRepository{}
+	dynamodbRepository := &dynamodb.DynamoDBRepository{}
+	snsRepository := &sns.SNSRepository{}
 	s := service.PushTokenService{
 		DynamoDBRepository: dynamodbRepository,
 		SNSRepository:      snsRepository,

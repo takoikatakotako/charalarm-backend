@@ -1,4 +1,4 @@
-package repository
+package dynamodb
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/takoikatakotako/charalarm-backend/database"
-	"github.com/takoikatakotako/charalarm-backend/validator"
+	"github.com/takoikatakotako/charalarm-backend/util/validator"
 	"time"
 )
 

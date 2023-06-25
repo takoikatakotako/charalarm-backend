@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/takoikatakotako/charalarm-backend/auth"
 	"github.com/takoikatakotako/charalarm-backend/handler"
-	"github.com/takoikatakotako/charalarm-backend/repository"
+	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
 	"github.com/takoikatakotako/charalarm-backend/service"
+	"github.com/takoikatakotako/charalarm-backend/util/auth"
 	"net/http"
 )
 
@@ -28,7 +28,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	}
 
 	// info
-	s := service.UserService{DynamoDBRepository: &repository.DynamoDBRepository{}}
+	s := service.UserService{DynamoDBRepository: &dynamodb.DynamoDBRepository{}}
 	userInfo, err := s.GetUser(userID, authToken)
 	if err != nil {
 		return handler.FailureResponse(http.StatusInternalServerError, "fail to get user")

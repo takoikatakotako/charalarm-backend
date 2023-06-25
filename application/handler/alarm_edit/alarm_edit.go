@@ -4,16 +4,16 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/takoikatakotako/charalarm-backend/entity/response"
 	"github.com/takoikatakotako/charalarm-backend/message"
+	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/util/auth"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/takoikatakotako/charalarm-backend/auth"
+	"github.com/takoikatakotako/charalarm-backend/entity/request"
 	"github.com/takoikatakotako/charalarm-backend/handler"
-	"github.com/takoikatakotako/charalarm-backend/repository"
-	"github.com/takoikatakotako/charalarm-backend/request"
-	"github.com/takoikatakotako/charalarm-backend/response"
 	"github.com/takoikatakotako/charalarm-backend/service"
 )
 
@@ -40,7 +40,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 
 	alarm := req.Alarm
 
-	s := service.AlarmService{DynamoDBRepository: &repository.DynamoDBRepository{}}
+	s := service.AlarmService{DynamoDBRepository: &dynamodb.DynamoDBRepository{}}
 
 	if err := s.EditAlarm(userID, authToken, alarm); err != nil {
 		return handler.FailureResponse(http.StatusInternalServerError, message.AlarmEditFailure)

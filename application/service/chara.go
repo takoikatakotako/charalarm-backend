@@ -1,14 +1,15 @@
 package service
 
 import (
-	"github.com/takoikatakotako/charalarm-backend/converter"
-	"github.com/takoikatakotako/charalarm-backend/repository"
-	"github.com/takoikatakotako/charalarm-backend/response"
+	"github.com/takoikatakotako/charalarm-backend/entity/response"
+	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/repository/environment_variable"
+	"github.com/takoikatakotako/charalarm-backend/util/converter"
 )
 
 type CharaService struct {
-	DynamoDBRepository            repository.DynamoDBRepositoryInterface
-	EnvironmentVariableRepository repository.EnvironmentVariableRepository
+	DynamoDBRepository            dynamodb.DynamoDBRepositoryInterface
+	EnvironmentVariableRepository environment_variable.EnvironmentVariableRepository
 }
 
 // GetChara キャラクターを取得

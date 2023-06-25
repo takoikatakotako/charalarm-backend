@@ -3,15 +3,16 @@ package service
 import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/repository"
-	"github.com/takoikatakotako/charalarm-backend/request"
+	"github.com/takoikatakotako/charalarm-backend/entity/request"
+	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/repository/sns"
 	"testing"
 )
 
 func TestAlarmService_AddAlarm(t *testing.T) {
 	// DynamoDBRepository
-	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
-	snsRepository := &repository.SNSRepository{IsLocal: true}
+	dynamoDBRepository := &dynamodb.DynamoDBRepository{IsLocal: true}
+	snsRepository := &sns.SNSRepository{IsLocal: true}
 
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}

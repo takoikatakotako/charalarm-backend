@@ -1,4 +1,4 @@
-package repository
+package sns
 
 import (
 	"context"
@@ -7,11 +7,11 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
+	sns2 "github.com/takoikatakotako/charalarm-backend/entity/sns"
 	"strings"
 	// "github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/sns"
 	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
-	"github.com/takoikatakotako/charalarm-backend/entity"
 )
 
 const (
@@ -27,7 +27,7 @@ type SNSRepositoryInterface interface {
 	CreateIOSPushPlatformEndpoint(pushToken string) (string, error)
 	CheckPlatformEndpointEnabled(endpoint string) error
 	CreateIOSVoipPushPlatformEndpoint(pushToken string) (string, error)
-	PublishPlatformApplication(targetArn string, iosVoipPushSNSMessage entity.IOSVoIPPushSNSMessage) error
+	PublishPlatformApplication(targetArn string, iosVoipPushSNSMessage sns2.IOSVoIPPushSNSMessage) error
 	DeletePlatformApplicationEndpoint(endpointArn string) error
 }
 
@@ -98,7 +98,7 @@ func (s *SNSRepository) CheckPlatformEndpointEnabled(endpoint string) error {
 	return nil
 }
 
-func (s *SNSRepository) PublishPlatformApplication(targetArn string, iosVoipPushSNSMessage entity.IOSVoIPPushSNSMessage) error {
+func (s *SNSRepository) PublishPlatformApplication(targetArn string, iosVoipPushSNSMessage sns2.IOSVoIPPushSNSMessage) error {
 	client, err := s.createSNSClient()
 	if err != nil {
 		return err

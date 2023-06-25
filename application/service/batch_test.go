@@ -4,9 +4,12 @@ import (
 	"encoding/json"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/entity"
-	"github.com/takoikatakotako/charalarm-backend/repository"
-	"github.com/takoikatakotako/charalarm-backend/request"
+	"github.com/takoikatakotako/charalarm-backend/entity/request"
+	"github.com/takoikatakotako/charalarm-backend/entity/sqs"
+	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/repository/environment_variable"
+	"github.com/takoikatakotako/charalarm-backend/repository/sns"
+	sqs2 "github.com/takoikatakotako/charalarm-backend/repository/sqs"
 	"math/rand"
 	"os"
 	"testing"
@@ -15,7 +18,7 @@ import (
 
 func TestMain(m *testing.M) {
 	// Before Tests
-	sqsRepository := repository.SQSRepository{IsLocal: true}
+	sqsRepository := sqs2.SQSRepository{IsLocal: true}
 	_ = sqsRepository.PurgeQueue()
 
 	exitVal := m.Run()
@@ -28,10 +31,10 @@ func TestBatchService_QueryDynamoDBAndSendMessage_RandomCharaAndRandomVoice(t *t
 	// キャラが決まっていない && ボイスファイル名も決まっていない
 
 	// DynamoDBRepository
-	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
-	environmentVariableRepository := repository.EnvironmentVariableRepository{IsLocal: true}
-	sqsRepository := &repository.SQSRepository{IsLocal: true}
-	snsRepository := &repository.SNSRepository{IsLocal: true}
+	dynamoDBRepository := &dynamodb.DynamoDBRepository{IsLocal: true}
+	environmentVariableRepository := environment_variable.EnvironmentVariableRepository{IsLocal: true}
+	sqsRepository := &sqs2.SQSRepository{IsLocal: true}
+	snsRepository := &sns.SNSRepository{IsLocal: true}
 
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
@@ -99,7 +102,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage_RandomCharaAndRandomVoice(t *t
 	}
 
 	assert.Equal(t, 1, len(messages))
-	getAlarmInfo := entity.IOSVoIPPushAlarmInfoSQSMessage{}
+	getAlarmInfo := sqs.IOSVoIPPushAlarmInfoSQSMessage{}
 	body := *messages[0].Body
 	err = json.Unmarshal([]byte(body), &getAlarmInfo)
 	if err != nil {
@@ -114,10 +117,10 @@ func TestBatchService_QueryDynamoDBAndSendMessage_DecidedCharaAndRandomVoice(t *
 	// キャラが決まっている && ボイスファイル名は決まっていない
 
 	// DynamoDBRepository
-	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
-	environmentVariableRepository := repository.EnvironmentVariableRepository{IsLocal: true}
-	sqsRepository := &repository.SQSRepository{IsLocal: true}
-	snsRepository := &repository.SNSRepository{IsLocal: true}
+	dynamoDBRepository := &dynamodb.DynamoDBRepository{IsLocal: true}
+	environmentVariableRepository := environment_variable.EnvironmentVariableRepository{IsLocal: true}
+	sqsRepository := &sqs2.SQSRepository{IsLocal: true}
+	snsRepository := &sns.SNSRepository{IsLocal: true}
 
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
@@ -185,7 +188,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage_DecidedCharaAndRandomVoice(t *
 	}
 
 	assert.Equal(t, 1, len(messages))
-	getAlarmInfo := entity.IOSVoIPPushAlarmInfoSQSMessage{}
+	getAlarmInfo := sqs.IOSVoIPPushAlarmInfoSQSMessage{}
 	body := *messages[0].Body
 	err = json.Unmarshal([]byte(body), &getAlarmInfo)
 	if err != nil {
@@ -200,10 +203,10 @@ func TestBatchService_QueryDynamoDBAndSendMessage_DecidedCharaAndDecidedVoice(t 
 	// キャラが決まっている && ボイスファイル名は決まっている
 
 	// DynamoDBRepository
-	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
-	environmentVariableRepository := repository.EnvironmentVariableRepository{IsLocal: true}
-	sqsRepository := &repository.SQSRepository{IsLocal: true}
-	snsRepository := &repository.SNSRepository{IsLocal: true}
+	dynamoDBRepository := &dynamodb.DynamoDBRepository{IsLocal: true}
+	environmentVariableRepository := environment_variable.EnvironmentVariableRepository{IsLocal: true}
+	sqsRepository := &sqs2.SQSRepository{IsLocal: true}
+	snsRepository := &sns.SNSRepository{IsLocal: true}
 
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
@@ -271,7 +274,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage_DecidedCharaAndDecidedVoice(t 
 	}
 
 	assert.Equal(t, 1, len(messages))
-	getAlarmInfo := entity.IOSVoIPPushAlarmInfoSQSMessage{}
+	getAlarmInfo := sqs.IOSVoIPPushAlarmInfoSQSMessage{}
 	body := *messages[0].Body
 	err = json.Unmarshal([]byte(body), &getAlarmInfo)
 	if err != nil {

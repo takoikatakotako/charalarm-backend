@@ -1,16 +1,17 @@
 package service
 
 import (
+	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/repository/sns"
 	"testing"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/repository"
 )
 
 func TestInfoUser(t *testing.T) {
 	// DynamoDBRepository
-	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
+	dynamoDBRepository := &dynamodb.DynamoDBRepository{IsLocal: true}
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
 
 	// ユーザー作成
@@ -35,7 +36,7 @@ func TestInfoUser(t *testing.T) {
 
 func TestSignup(t *testing.T) {
 	// DynamoDBRepository
-	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
+	dynamoDBRepository := &dynamodb.DynamoDBRepository{IsLocal: true}
 
 	// Service
 	s := UserService{DynamoDBRepository: dynamoDBRepository}
@@ -63,7 +64,7 @@ func TestSignup(t *testing.T) {
 
 func TestUserService_Withdraw(t *testing.T) {
 	// DynamoDBRepository
-	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
+	dynamoDBRepository := &dynamodb.DynamoDBRepository{IsLocal: true}
 	s := UserService{DynamoDBRepository: dynamoDBRepository}
 
 	// ユーザー作成
@@ -104,8 +105,8 @@ func TestUserService_Withdraw(t *testing.T) {
 func TestUserService_WithdrawAndCreateSamePushToken(t *testing.T) {
 	// 退会後に別のユーザーが同じ PushTokenでエンドポイントを作れる
 	// DynamoDBRepository
-	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
-	snsRepository := &repository.SNSRepository{IsLocal: true}
+	dynamoDBRepository := &dynamodb.DynamoDBRepository{IsLocal: true}
+	snsRepository := &sns.SNSRepository{IsLocal: true}
 
 	// service
 	userService := UserService{

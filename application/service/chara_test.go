@@ -2,13 +2,14 @@ package service
 
 import (
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/repository"
+	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/repository/environment_variable"
 	"testing"
 )
 
 func TestCharalarmList(t *testing.T) {
-	dynamoDBRepository := &repository.DynamoDBRepository{IsLocal: true}
-	environmentVariableRepository := repository.EnvironmentVariableRepository{IsLocal: true}
+	dynamoDBRepository := &dynamodb.DynamoDBRepository{IsLocal: true}
+	environmentVariableRepository := environment_variable.EnvironmentVariableRepository{IsLocal: true}
 
 	service := CharaService{
 		DynamoDBRepository:            dynamoDBRepository,

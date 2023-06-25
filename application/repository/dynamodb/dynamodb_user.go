@@ -1,10 +1,12 @@
-package repository
+package dynamodb
 
 import (
 	"context"
 	"errors"
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/takoikatakotako/charalarm-backend/util/validator"
+
 	// "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	// "github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
@@ -13,7 +15,6 @@ import (
 	// charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
 	"github.com/takoikatakotako/charalarm-backend/database"
 	"github.com/takoikatakotako/charalarm-backend/message"
-	"github.com/takoikatakotako/charalarm-backend/validator"
 	// "math/rand"
 	// "time"
 )
