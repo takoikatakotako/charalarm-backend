@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/takoikatakotako/charalarm-backend/entity/response"
 	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
 	"github.com/takoikatakotako/charalarm-backend/repository/sns"
@@ -19,13 +18,6 @@ import (
 
 func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	authorizationHeader := event.Headers["Authorization"]
-
-	fmt.Println("-------")
-	fmt.Println(ctx)
-	fmt.Println(event)
-	fmt.Println(authorizationHeader)
-	fmt.Println("-------")
-
 	userID, authToken, err := auth.Basic(authorizationHeader)
 	if err != nil {
 		return handler.FailureResponse(http.StatusBadRequest, message.ErrorInvalidValue)
@@ -38,11 +30,11 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	}
 	err = s.Withdraw(userID, authToken)
 	if err != nil {
-		return handler.FailureResponse(http.StatusInternalServerError, "xxxx")
+		return handler.FailureResponse(http.StatusInternalServerError, message.FailedToWithdraw)
 	}
 
 	// Success
-	res := response.MessageResponse{Message: "Withdraw Success!"}
+	res := response.MessageResponse{Message: message.WithdrawSuccess}
 	jsonBytes, _ := json.Marshal(res)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),

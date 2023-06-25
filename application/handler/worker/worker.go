@@ -8,15 +8,16 @@ import (
 	"github.com/takoikatakotako/charalarm-backend/entity/sqs"
 	"github.com/takoikatakotako/charalarm-backend/handler"
 	"github.com/takoikatakotako/charalarm-backend/repository/sns"
-	sqs2 "github.com/takoikatakotako/charalarm-backend/repository/sqs"
+	sqsRepo "github.com/takoikatakotako/charalarm-backend/repository/sqs"
 	"github.com/takoikatakotako/charalarm-backend/service"
+	"github.com/takoikatakotako/charalarm-backend/util/message"
 	"net/http"
 )
 
 func Handler(ctx context.Context, event events.SQSEvent) (events.APIGatewayProxyResponse, error) {
 	// Repository
 	snsRepository := &sns.SNSRepository{}
-	sqsRepository := &sqs2.SQSRepository{}
+	sqsRepository := &sqsRepo.SQSRepository{}
 
 	s := service.WorkerService{
 		SNSRepository: snsRepository,
@@ -48,7 +49,7 @@ func Handler(ctx context.Context, event events.SQSEvent) (events.APIGatewayProxy
 	}
 
 	return events.APIGatewayProxyResponse{
-		Body:       "Success",
+		Body:       message.Success,
 		StatusCode: http.StatusOK,
 	}, nil
 }
