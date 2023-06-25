@@ -17,7 +17,7 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/alarm_delete handler/ala
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/alarm_list handler/alarm_list/alarm_list.go
 
 # call_batch
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/batch handler/call_batchbatch/call_batch.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/batch handler/call_batch/call_batch.go
 
 # chara
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/chara_id handler/chara_id/chara_id.go
