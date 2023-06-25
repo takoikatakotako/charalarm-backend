@@ -8,6 +8,18 @@ resource "aws_s3_bucket" "s3_bucket" {
 resource "aws_s3_bucket_policy" "s3_bucket_policy" {
   bucket = aws_s3_bucket.s3_bucket.id
   policy = data.aws_iam_policy_document.iam_policy_document.json
+
+  depends_on = [
+    aws_s3_bucket_public_access_block.bucket_public_access_block,
+  ]
+}
+
+resource "aws_s3_bucket_public_access_block" "bucket_public_access_block" {
+  bucket                  = aws_s3_bucket.s3_bucket.id
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
 }
 
 data "aws_iam_policy_document" "iam_policy_document" {
