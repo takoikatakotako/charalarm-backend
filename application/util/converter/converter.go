@@ -1,7 +1,7 @@
 package converter
 
 import (
-	"github.com/takoikatakotako/charalarm-backend/database"
+	"github.com/takoikatakotako/charalarm-backend/entity/database"
 	"github.com/takoikatakotako/charalarm-backend/entity/request"
 	"github.com/takoikatakotako/charalarm-backend/entity/response"
 )

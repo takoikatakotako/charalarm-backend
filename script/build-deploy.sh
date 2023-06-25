@@ -16,8 +16,8 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/alarm_edit handler/alarm
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/alarm_delete handler/alarm_delete/alarm_delete.go
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/alarm_list handler/alarm_list/alarm_list.go
 
-# batch
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/batch handler/batch/batch.go
+# call_batch
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/batch handler/call_batch/call_batch.go
 
 # chara
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/chara_id handler/chara_id/chara_id.go
@@ -41,8 +41,8 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_info handler/user_i
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_signup handler/user_signup/user_signup.go
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_withdraw handler/user_withdraw/user_withdraw.go
 
-# worker
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/worker handler/worker/worker.go
+# call_worker
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/worker handler/call_worker/call_worker.go
 
 
 ################################################################
@@ -56,7 +56,7 @@ zip alarm_delete.zip alarm_delete
 zip alarm_edit.zip alarm_edit
 zip alarm_list.zip alarm_list
 
-# batch
+# call_batch
 zip batch.zip batch
 
 # chara
@@ -81,7 +81,7 @@ zip user_signup.zip user_signup
 zip user_info.zip user_info
 zip user_withdraw.zip user_withdraw
 
-# worker
+# call_worker
 zip worker.zip worker
 
 ################################################################
@@ -108,7 +108,7 @@ aws lambda update-function-code --function-name alarm-delete-post-function --s3-
 aws lambda update-function-code --function-name alarm-edit-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/alarm_edit.zip
 aws lambda update-function-code --function-name alarm-list-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/alarm_list.zip
 
-# batch
+# call_batch
 aws lambda update-function-code --function-name batch-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/batch.zip
 
 # chara
@@ -133,5 +133,5 @@ aws lambda update-function-code --function-name user-signup-post-function --s3-b
 aws lambda update-function-code --function-name user-withdraw-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/user_withdraw.zip
 aws lambda update-function-code --function-name user-info-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/user_info.zip
 
-# worker
+# call_worker
 aws lambda update-function-code --function-name worker-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/worker.zip

@@ -1,7 +1,9 @@
 package message
 
 const (
+	WithdrawSuccess                    = "Withdraw Success!"
 	Healthy                            = "Healthy"
+	Success                            = "Success"
 	InvalidValue                       = "Invalid Value"
 	AuthenticationFailure              = "Authentication Failure"
 	UserSignupSuccess                  = "Sign Up Success!"
@@ -18,7 +20,8 @@ const (
 	AlarmDeleteSuccess                 = "Delete Alarm Success!"
 	AlarmEditFailure                   = "Edit Alarm Failure..."
 	AlarmEditSuccess                   = "Edit Alarm Success!"
-	PlatformApplicationNotFound        = "Platform Application Not Found"
+	FailedToGetUserInfo                = "Failed to Get User Info"
+	FailedToWithdraw                   = "Failed to withdraw"
 	ErrorInvalidValue                  = "error invalid value"
 	ErrorAuthenticationFailure         = "error authentication failure"
 	ErrorAlarmAlreadyExists            = "error alarm already exists"

@@ -3,13 +3,13 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/takoikatakotako/charalarm-backend/entity/response"
 	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
 	"github.com/takoikatakotako/charalarm-backend/repository/sqs"
 	"github.com/takoikatakotako/charalarm-backend/service"
+	"github.com/takoikatakotako/charalarm-backend/util/message"
 	"net/http"
 	"time"
 )
@@ -21,21 +21,15 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	minute := t.Minute()
 	weekday := t.Weekday()
 
-	fmt.Printf("hour: %d minute: %d\n", hour, minute)
-
 	dynamodbRepository := &dynamodb.DynamoDBRepository{}
 	sqsRepository := &sqs.SQSRepository{}
-	s := service.BatchService{
+	s := service.CallBatchService{
 		DynamoDBRepository: dynamodbRepository,
 		SQSRepository:      sqsRepository,
 	}
 	err := s.QueryDynamoDBAndSendMessage(hour, minute, weekday)
 	if err != nil {
-		fmt.Println("----------------")
-		fmt.Printf("Hander: %v\n", err)
-		fmt.Println("----------------")
-
-		res := response.MessageResponse{Message: "ユーザー情報の取得に失敗しました"}
+		res := response.MessageResponse{Message: message.FailedToGetUserInfo}
 		jsonBytes, _ := json.Marshal(res)
 		return events.APIGatewayProxyResponse{
 			Body:       string(jsonBytes),
@@ -43,7 +37,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 		}, nil
 	}
 
-	res := response.MessageResponse{Message: "healthy!"}
+	res := response.MessageResponse{Message: message.Success}
 	jsonBytes, _ := json.Marshal(res)
 
 	return events.APIGatewayProxyResponse{

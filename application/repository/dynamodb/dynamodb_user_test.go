@@ -3,7 +3,7 @@ package dynamodb
 import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/takoikatakotako/charalarm-backend/database"
+	"github.com/takoikatakotako/charalarm-backend/entity/database"
 	"testing"
 	"time"
 )

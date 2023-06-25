@@ -4,10 +4,10 @@ import (
 	"errors"
 	"github.com/takoikatakotako/charalarm-backend/entity/request"
 	"github.com/takoikatakotako/charalarm-backend/entity/response"
-	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
 	"github.com/takoikatakotako/charalarm-backend/util/converter"
 	"github.com/takoikatakotako/charalarm-backend/util/logger"
+	"github.com/takoikatakotako/charalarm-backend/util/message"
 	"runtime"
 )
 

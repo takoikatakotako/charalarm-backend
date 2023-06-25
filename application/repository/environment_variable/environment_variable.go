@@ -2,7 +2,8 @@ package environment_variable
 
 import (
 	"errors"
-	"github.com/takoikatakotako/charalarm-backend/message"
+	"github.com/takoikatakotako/charalarm-backend/config"
+	"github.com/takoikatakotako/charalarm-backend/util/message"
 	"os"
 )
 
@@ -17,7 +18,7 @@ type EnvironmentVariableRepository struct {
 // GetResourceBaseURL get base url
 func (e *EnvironmentVariableRepository) GetResourceBaseURL() (string, error) {
 	if e.IsLocal {
-		return "http://localhost:4566", nil
+		return config.LocalstackEndpoint, nil
 	}
 
 	baseURL := os.Getenv(ResourceBaseURLKey)

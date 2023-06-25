@@ -9,8 +9,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
-	"github.com/takoikatakotako/charalarm-backend/database"
-	"github.com/takoikatakotako/charalarm-backend/message"
+	"github.com/takoikatakotako/charalarm-backend/entity/database"
+	"github.com/takoikatakotako/charalarm-backend/util/message"
 	"math/rand"
 	"time"
 )

@@ -3,27 +3,20 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/takoikatakotako/charalarm-backend/entity/response"
 	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
+	"github.com/takoikatakotako/charalarm-backend/util/message"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/takoikatakotako/charalarm-backend/entity/request"
 	"github.com/takoikatakotako/charalarm-backend/handler"
-	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/service"
 )
 
 func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	body := event.Body
-
-	fmt.Println("-------")
-	fmt.Println(ctx)
-	fmt.Println(event)
-	fmt.Println(body)
-	fmt.Println("-------")
 
 	// Decode Body
 	req := request.UserSignUp{}
@@ -40,7 +33,6 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	// Signup
 	s := service.UserService{DynamoDBRepository: &dynamodb.DynamoDBRepository{}}
 	if err := s.Signup(userID, authToken, platform, ipAddress); err != nil {
-		fmt.Println(err)
 		return handler.FailureResponse(http.StatusBadRequest, message.UserSignupFailure)
 	}
 

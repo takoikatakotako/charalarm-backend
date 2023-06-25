@@ -3,11 +3,10 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/takoikatakotako/charalarm-backend/entity/response"
-	"github.com/takoikatakotako/charalarm-backend/message"
 	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
 	"github.com/takoikatakotako/charalarm-backend/util/auth"
+	"github.com/takoikatakotako/charalarm-backend/util/message"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -19,16 +18,8 @@ import (
 
 func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	authorizationHeader := event.Headers["Authorization"]
-
-	fmt.Println("-------")
-	fmt.Println(ctx)
-	fmt.Println(event)
-	fmt.Println(authorizationHeader)
-	fmt.Println("-------")
-
 	userID, authToken, err := auth.Basic(authorizationHeader)
 	if err != nil {
-		fmt.Println(err)
 		return handler.FailureResponse(http.StatusInternalServerError, message.AuthenticationFailure)
 	}
 
@@ -43,8 +34,6 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	dynamodbRepository := &dynamodb.DynamoDBRepository{}
 	s := service.AlarmService{DynamoDBRepository: dynamodbRepository}
 	if err := s.AddAlarm(userID, authToken, requestAlarm); err != nil {
-		fmt.Println(err)
-		fmt.Println("kokomade")
 		return handler.FailureResponse(http.StatusInternalServerError, message.AlarmAddFailure)
 	}
 

@@ -4,8 +4,7 @@ import (
 	"errors"
 	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
 	"github.com/takoikatakotako/charalarm-backend/repository/sns"
-
-	"github.com/takoikatakotako/charalarm-backend/message"
+	"github.com/takoikatakotako/charalarm-backend/util/message"
 )
 
 type PushTokenService struct {

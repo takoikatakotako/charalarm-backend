@@ -39,7 +39,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage_RandomCharaAndRandomVoice(t *t
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
 	alarmService := AlarmService{DynamoDBRepository: dynamoDBRepository}
-	batchService := BatchService{EnvironmentVariableRepository: environmentVariableRepository, DynamoDBRepository: dynamoDBRepository, SQSRepository: sqsRepository}
+	batchService := CallBatchService{EnvironmentVariableRepository: environmentVariableRepository, DynamoDBRepository: dynamoDBRepository, SQSRepository: sqsRepository}
 	pushTokenService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
 	// ユーザー作成
@@ -125,7 +125,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage_DecidedCharaAndRandomVoice(t *
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
 	alarmService := AlarmService{DynamoDBRepository: dynamoDBRepository}
-	batchService := BatchService{EnvironmentVariableRepository: environmentVariableRepository, DynamoDBRepository: dynamoDBRepository, SQSRepository: sqsRepository}
+	batchService := CallBatchService{EnvironmentVariableRepository: environmentVariableRepository, DynamoDBRepository: dynamoDBRepository, SQSRepository: sqsRepository}
 	pushTokenService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
 	// ユーザー作成
@@ -211,7 +211,7 @@ func TestBatchService_QueryDynamoDBAndSendMessage_DecidedCharaAndDecidedVoice(t 
 	// Service
 	userService := UserService{DynamoDBRepository: dynamoDBRepository}
 	alarmService := AlarmService{DynamoDBRepository: dynamoDBRepository}
-	batchService := BatchService{EnvironmentVariableRepository: environmentVariableRepository, DynamoDBRepository: dynamoDBRepository, SQSRepository: sqsRepository}
+	batchService := CallBatchService{EnvironmentVariableRepository: environmentVariableRepository, DynamoDBRepository: dynamoDBRepository, SQSRepository: sqsRepository}
 	pushTokenService := PushTokenService{DynamoDBRepository: dynamoDBRepository, SNSRepository: snsRepository}
 
 	// ユーザー作成

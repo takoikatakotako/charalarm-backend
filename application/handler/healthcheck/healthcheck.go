@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/takoikatakotako/charalarm-backend/entity/response"
-	"github.com/takoikatakotako/charalarm-backend/message"
+	"github.com/takoikatakotako/charalarm-backend/util/message"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
