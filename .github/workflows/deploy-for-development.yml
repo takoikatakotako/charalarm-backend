@@ -28,7 +28,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: charalarm-github-action-role
+          role-to-assume: arn:aws:iam::397693451628:user/charalarm-backend-github-action-user
           role-session-name: charalarm-github-action-role-${{ github.run_id }} # CloudTrailイベントに表示されるユーザー名
           aws-region: ap-northeast-1
 
