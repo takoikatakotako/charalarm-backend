@@ -72,3 +72,7 @@ module "datadog" {
   source     = "./datadog"
   dd_api_key = local.dd_api_key
 }
+
+module "github" {
+  source = "./github"
+}
