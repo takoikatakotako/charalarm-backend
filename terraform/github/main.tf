@@ -40,7 +40,26 @@ data "aws_iam_policy_document" "charalarm_github_action_role_assume_policy_docum
   }
 }
 
-resource "aws_iam_role_policy_attachment" "s3_full_access_policy_attachment" {
+# Policy
+resource "aws_iam_policy" "charalarm_github_action_role_policy" {
+  name   = "charalarm-github-action-role-policy"
+  policy = data.aws_iam_policy_document.charalarm_github_action_role_policy_document.json
+}
+
+data "aws_iam_policy_document" "charalarm_github_action_role_policy_document" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:ListBucket",
+      "lambda:UpdateFunctionCode",
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "charalarm_github_action_role_policy_attachment" {
   role       = aws_iam_role.charalarm_github_action_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+  policy_arn = aws_iam_policy.charalarm_github_action_role_policy.arn
 }

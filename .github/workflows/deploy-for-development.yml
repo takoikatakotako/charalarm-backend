@@ -9,6 +9,7 @@ on:
 env:
   APPLICATION_VERSION: 0.0.1
   S3_BUCKET_NAME: application.charalarm.sandbox.swiswiswift.com
+  AWS_ROLE_ARN: arn:aws:iam::397693451628:role/charalarm-github-action-role
 
 jobs:
   test:
@@ -28,7 +29,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::397693451628:role/charalarm-github-action-role
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
           role-session-name: charalarm-github-action-role-${{ github.run_id }} # CloudTrailイベントに表示されるユーザー名
           aws-region: ap-northeast-1
 
