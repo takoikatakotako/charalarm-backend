@@ -12,6 +12,8 @@ jobs:
   test:
     name: Build and Deploy
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
 
     steps:
       - name: Checkout
