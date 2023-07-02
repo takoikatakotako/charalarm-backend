@@ -14,11 +14,11 @@ variable "ios_push_platform_principal" {
   type = string
 }
 
-variable "ios_voip_push_private_file" {
+variable "ios_voip_push_certificate_file" {
   type = string
 }
 
-variable "ios_voip_push_certificate_file" {
+variable "ios_voip_push_private_file" {
   type = string
 }
 
