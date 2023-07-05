@@ -23,6 +23,14 @@ module "dynamodb" {
   source = "./dynamodb"
 }
 
+module "lp" {
+  source              = "./lp"
+  bucket_name         = local.lp_bucket_name
+  acm_certificate_arn = local.lp_acm_certificate_arn
+  domain              = local.lp_domain
+  zone_id             = local.route53_zone_id
+}
+
 module "resource" {
   source              = "./resource"
   bucket_name         = local.resource_bucket_name
