@@ -23,6 +23,14 @@ module "dynamodb" {
   source = "./dynamodb"
 }
 
+module "lp" {
+  source              = "./lp"
+  bucket_name         = local.lp_bucket_name
+  acm_certificate_arn = local.lp_acm_certificate_arn
+  domain              = local.lp_domain
+  zone_id             = local.route53_zone_id
+}
+
 module "resource" {
   source              = "./resource"
   bucket_name         = local.resource_bucket_name
@@ -42,8 +50,8 @@ module "platform_application" {
   apple_platform_bundle_id       = "com.charalarm.staging"
   ios_push_credential_file       = "AuthKey_NL6K5FR5S8.p8"
   ios_push_platform_principal    = "NL6K5FR5S8"
-  ios_voip_push_private_file     = "staging-voip-20240210-privatekey.pem"
-  ios_voip_push_certificate_file = "staging-voip-20240210-certificate.pem"
+  ios_voip_push_certificate_file = local.ios_voip_push_certificate_filename
+  ios_voip_push_private_file     = local.ios_voip_push_private_filename
 }
 
 module "web_api" {
