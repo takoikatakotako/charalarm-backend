@@ -11,14 +11,16 @@ DynamoDBのテーブル構造についてです。
 {
   "userID":"{UUID}",
   "authToken":"{UUID}",
-  "iosVoIPPushTokens":{
-    "token":"{iOSのVoIPプッシュ通知のトークン}",
-    "snsEndpointArn":"{iOSのVoIPプッシュ通知のPlatformApplicationのエンドポイント}"
+  "createdAt":"{時間}",
+  "iosPlatformInfo":{
+    "pushToken":"{iOSのVoIPプッシュ通知のトークン}",
+    "pushTokenSNSEndpoint":"{iOSのVoIPプッシュ通知のPlatformApplicationのエンドポイント}",
+    "voIPPushToken":"{iOSのVoIPプッシュ通知のトークン}",
+    "voIPPushTokenSNSEndpoint":"{iOSのVoIPプッシュ通知のPlatformApplicationのエンドポイント}"
   },
-  "iosPushTokens":{
-    "token":"{iOSのVoIPプッシュ通知のトークン}",
-    "snsEndpointArn":"{iOSのVoIPプッシュ通知のPlatformApplicationのエンドポイント}"
-  }
+  "platform":"iOS",
+  "registeredIPAddress":"{IPV4}"",
+  "updatedAt":"{時間}""
 }
 ```
 
