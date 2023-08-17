@@ -23,4 +23,5 @@ type DynamoDBRepositoryInterface interface {
 	IsExistUser(userID string) (bool, error)
 	DeleteUser(userID string) error
 	GetCharaList() ([]database.Chara, error)
+	UpdateUserPremiumPlan(userID string, enablePremiumPlan bool) error
 }
