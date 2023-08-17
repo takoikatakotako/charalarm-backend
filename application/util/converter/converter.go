@@ -11,6 +11,7 @@ func DatabaseUserToResponseUserInfo(user database.User) response.UserInfoRespons
 		UserID:          user.UserID,
 		AuthToken:       maskAuthToken(user.AuthToken),
 		Platform:        user.Platform,
+		PremiumPlan:     user.PremiumPlan,
 		IOSPlatformInfo: DatabaseIOSPlatformInfoToResponseIOSPlatformInfoResponse(user.IOSPlatformInfo),
 	}
 }

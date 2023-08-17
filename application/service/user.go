@@ -57,6 +57,7 @@ func (s *UserService) Signup(userID string, authToken string, platform string, i
 		UserID:              userID,
 		AuthToken:           authToken,
 		Platform:            platform,
+		PremiumPlan:         false,
 		CreatedAt:           currentTime.Format(time.RFC3339),
 		UpdatedAt:           currentTime.Format(time.RFC3339),
 		RegisteredIPAddress: ipAddress,
