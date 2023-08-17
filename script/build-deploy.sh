@@ -40,6 +40,7 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/require handler/require/
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_info handler/user_info/user_info.go
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_signup handler/user_signup/user_signup.go
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_withdraw handler/user_withdraw/user_withdraw.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_update_premium_plan handler/user_update_premium_plan/user_update_premium_plan.go
 
 # call_worker
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/worker handler/call_worker/call_worker.go
