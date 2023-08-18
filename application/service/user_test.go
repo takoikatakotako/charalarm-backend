@@ -158,3 +158,39 @@ func TestUserService_WithdrawAndCreateSamePushToken(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 }
+
+func TestUserService_UpdatePremiumPlan(t *testing.T) {
+	// DynamoDBRepository
+	dynamoDBRepository := &dynamodb.DynamoDBRepository{IsLocal: true}
+	userService := UserService{DynamoDBRepository: dynamoDBRepository}
+
+	// ユーザー作成
+	userID := uuid.New().String()
+	authToken := uuid.New().String()
+	platform := "iOS"
+	ipAddress := "0.0.0.0"
+	err := userService.Signup(userID, authToken, platform, ipAddress)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// プレミアムプランが向こうであることを確認
+	userInfoResponse, err := userService.GetUser(userID, authToken)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	assert.Equal(t, false, userInfoResponse.PremiumPlan)
+
+	// プレミアムプランの有効化
+	err = userService.UpdatePremiumPlan(userID, authToken, true)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// プレミアムプランの有効化を確認
+	updatedUserInfoResponse, err := userService.GetUser(userID, authToken)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	assert.Equal(t, true, updatedUserInfoResponse.PremiumPlan)
+}

@@ -105,6 +105,45 @@ func TestInsertUserAndDelete(t *testing.T) {
 	assert.Equal(t, secondIsExist, false)
 }
 
+func TestDynamoDBRepository_UpdateUserPremiumPlan(t *testing.T) {
+	// DynamoDBRepository
+	repository := DynamoDBRepository{IsLocal: true}
+
+	userID := uuid.New().String()
+	authToken := uuid.New().String()
+
+	// Insert
+	insertUser := createUser(userID, authToken)
+	err := repository.InsertUser(insertUser)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Get User
+	user, err := repository.GetUser(userID)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Assert
+	assert.Equal(t, user.PremiumPlan, false)
+
+	// Update
+	err = repository.UpdateUserPremiumPlan(userID, true)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Get Updated User
+	updatedUser, err := repository.GetUser(userID)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Assert
+	assert.Equal(t, updatedUser.PremiumPlan, true)
+}
+
 // private methods
 
 func createUser(userID string, authToken string) database.User {
@@ -116,6 +155,7 @@ func createUser(userID string, authToken string) database.User {
 		UserID:              userID,
 		AuthToken:           authToken,
 		Platform:            platform,
+		PremiumPlan:         false,
 		CreatedAt:           currentTime.Format(time.RFC3339),
 		UpdatedAt:           currentTime.Format(time.RFC3339),
 		RegisteredIPAddress: ipAddress,
