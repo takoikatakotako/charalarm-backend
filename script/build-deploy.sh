@@ -40,7 +40,7 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/require handler/require/
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_info handler/user_info/user_info.go
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_signup handler/user_signup/user_signup.go
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_withdraw handler/user_withdraw/user_withdraw.go
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_update_premium_plan handler/user_update_premium_plan/user_update_premium_plan.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_update_premium handler/user_update_premium/user_update_premium.go
 
 # call_worker
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/worker handler/call_worker/call_worker.go
@@ -81,6 +81,7 @@ zip require.zip require
 zip user_signup.zip user_signup
 zip user_info.zip user_info
 zip user_withdraw.zip user_withdraw
+zip user_update_premium.zip user_update_premium
 
 # call_worker
 zip worker.zip worker
@@ -133,6 +134,7 @@ aws lambda update-function-code --function-name require-get-function --s3-bucket
 aws lambda update-function-code --function-name user-signup-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/user_signup.zip
 aws lambda update-function-code --function-name user-withdraw-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/user_withdraw.zip
 aws lambda update-function-code --function-name user-info-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/user_info.zip
+aws lambda update-function-code --function-name user-update-premium-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/user_update_premium.zip
 
 # call_worker
 aws lambda update-function-code --function-name worker-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/worker.zip
