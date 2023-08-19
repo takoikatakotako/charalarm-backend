@@ -134,7 +134,7 @@ aws lambda update-function-code --function-name require-get-function --s3-bucket
 aws lambda update-function-code --function-name user-signup-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/user_signup.zip
 aws lambda update-function-code --function-name user-withdraw-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/user_withdraw.zip
 aws lambda update-function-code --function-name user-info-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/user_info.zip
-aws lambda update-function-code --function-name user-update-premium-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/user_update_premium.zip
+aws lambda update-function-code --function-name user-update-premium-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/user_update_premium.zip
 
 # call_worker
 aws lambda update-function-code --function-name worker-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/worker.zip
