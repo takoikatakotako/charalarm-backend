@@ -41,7 +41,7 @@ func Handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	}
 
 	// Success
-	res := response.MessageResponse{Message: message.UserSignupSuccess}
+	res := response.MessageResponse{Message: message.UserUpdateSuccess}
 	jsonBytes, _ := json.Marshal(res)
 	return events.APIGatewayProxyResponse{
 		Body:       string(jsonBytes),
