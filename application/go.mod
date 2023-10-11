@@ -1,6 +1,6 @@
 module github.com/takoikatakotako/charalarm-backend
 
-go 1.16
+go 1.21
 
 require (
 	github.com/aws/aws-lambda-go v1.34.1
