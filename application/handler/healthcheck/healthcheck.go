@@ -21,6 +21,6 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 	}, nil
 }
 
-func main() {
+func bootstrap() {
 	lambda.Start(Handler)
 }
