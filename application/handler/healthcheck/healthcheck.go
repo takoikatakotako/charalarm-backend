@@ -11,7 +11,7 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func bootstrap(ctx context.Context, name events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	res := response.MessageResponse{Message: message.Healthy}
 	jsonBytes, _ := json.Marshal(res)
 
@@ -22,5 +22,5 @@ func Handler(ctx context.Context, name events.APIGatewayProxyRequest) (events.AP
 }
 
 func main() {
-	lambda.Start(Handler)
+	lambda.Start(bootstrap)
 }
