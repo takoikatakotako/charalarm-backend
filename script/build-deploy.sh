@@ -27,7 +27,7 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/chara_list handler/chara
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/maintenance handler/maintenance/maintenance.go
 
 # healthcheck
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/healthcheck handler/healthcheck/healthcheck.go
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/healthcheck/bootstrap handler/healthcheck/healthcheck.go
 
 # push-token
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/push_token_ios_push_add handler/push_token_ios_push_add/push_token_ios_push_add.go
@@ -68,7 +68,7 @@ zip chara_list.zip chara_list
 zip maintenance.zip maintenance
 
 # healthcheck
-zip healthcheck.zip healthcheck
+zip healthcheck.zip healthcheck/bootstrap
 
 # push-notification
 zip push_token_ios_push_add.zip push_token_ios_push_add
