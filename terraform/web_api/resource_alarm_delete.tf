@@ -14,7 +14,6 @@ module "alarm_delete_post_lambda_function" {
   source                    = "./lambda_function"
   function_name             = "alarm-delete-post-function"
   role                      = aws_iam_role.api_gateway_lambda_role.arn
-  handler                   = "alarm_delete"
   s3_bucket                 = local.application_bucket_s3_url
   s3_key                    = "/${var.application_version}/alarm_delete.zip"
   execution_arn             = aws_api_gateway_rest_api.charalarm_rest_api.execution_arn

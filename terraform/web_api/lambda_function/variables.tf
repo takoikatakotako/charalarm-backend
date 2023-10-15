@@ -6,10 +6,6 @@ variable "role" {
   type = string
 }
 
-variable "handler" {
-  type = string
-}
-
 variable "s3_bucket" {
   type = string
 }
