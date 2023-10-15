@@ -68,7 +68,7 @@ zip chara_list.zip chara_list
 zip maintenance.zip maintenance
 
 # healthcheck
-zip healthcheck.zip healthcheck/bootstrap
+zip bootstrap.zip healthcheck/bootstrap
 
 # push-notification
 zip push_token_ios_push_add.zip push_token_ios_push_add
@@ -121,7 +121,7 @@ aws lambda update-function-code --function-name chara-list-get-function --s3-buc
 aws lambda update-function-code --function-name maintenance-get-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/maintenance.zip
 
 # healthcheck
-aws lambda update-function-code --function-name healthcheck-get-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/healthcheck.zip
+aws lambda update-function-code --function-name healthcheck-get-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/bootstrap.zip
 
 # push-notification
 aws lambda update-function-code --function-name push-token-ios-push-add-post-function --s3-bucket $S3_BUCKET_NAME --s3-key $APPLICATION_VERSION/push_token_ios_push_add.zip
