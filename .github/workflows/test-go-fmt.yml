@@ -1,4 +1,10 @@
-on: [push]
+# Go Formatで差分が出るか確認
+name: TestGoFormat
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ develop ]
 
 jobs:
   gofmt_job:
