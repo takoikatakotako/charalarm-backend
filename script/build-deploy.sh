@@ -11,39 +11,39 @@ pwd
 # Build
 ################################################################
 # alarm
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/alarm_add handler/alarm_add/alarm_add.go
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/alarm_edit handler/alarm_edit/alarm_edit.go
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/alarm_delete handler/alarm_delete/alarm_delete.go
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/alarm_list handler/alarm_list/alarm_list.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/alarm_add/bootstrap handler/alarm_add/alarm_add.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/alarm_edit/bootstrap handler/alarm_edit/alarm_edit.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/alarm_delete/bootstrap handler/alarm_delete/alarm_delete.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/alarm_list/bootstrap handler/alarm_list/alarm_list.go
 
 # call_batch
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/batch handler/call_batch/call_batch.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/batch/bootstrap handler/call_batch/call_batch.go
 
 # chara
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/chara_id handler/chara_id/chara_id.go
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/chara_list handler/chara_list/chara_list.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/chara_id/bootstrap handler/chara_id/chara_id.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/chara_list/bootstrap handler/chara_list/chara_list.go
 
 # maintenance
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/maintenance handler/maintenance/maintenance.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/maintenance/bootstrap handler/maintenance/maintenance.go
 
 # healthcheck
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/healthcheck handler/healthcheck/healthcheck.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/healthcheck/bootstrap handler/healthcheck/healthcheck.go
 
 # push-token
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/push_token_ios_push_add handler/push_token_ios_push_add/push_token_ios_push_add.go
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/push_token_ios_voip_push_add handler/push_token_ios_voip_push_add/push_token_ios_voip_push_add.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/push_token_ios_push_add/bootstrap handler/push_token_ios_push_add/push_token_ios_push_add.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/push_token_ios_voip_push_add/bootstrap handler/push_token_ios_voip_push_add/push_token_ios_voip_push_add.go
 
 # require
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/require handler/require/require.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/require/bootstrap handler/require/require.go
 
 # user
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_info handler/user_info/user_info.go
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_signup handler/user_signup/user_signup.go
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_withdraw handler/user_withdraw/user_withdraw.go
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/user_update_premium handler/user_update_premium/user_update_premium.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/user_info/bootstrap handler/user_info/user_info.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/user_signup/bootstrap handler/user_signup/user_signup.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/user_withdraw/bootstrap handler/user_withdraw/user_withdraw.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/user_update_premium/bootstrap handler/user_update_premium/user_update_premium.go
 
 # call_worker
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/worker handler/call_worker/call_worker.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/worker/bootstrap handler/call_worker/call_worker.go
 
 
 ################################################################
@@ -52,39 +52,39 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/worker handler/call_work
 cd ./build
 
 # alarm
-zip alarm_add.zip alarm_add
-zip alarm_delete.zip alarm_delete
-zip alarm_edit.zip alarm_edit
-zip alarm_list.zip alarm_list
+zip -j alarm_add.zip alarm_add/bootstrap
+zip -j alarm_delete.zip alarm_delete/bootstrap
+zip -j alarm_edit.zip alarm_edit/bootstrap
+zip -j alarm_list.zip alarm_list/bootstrap
 
 # call_batch
-zip batch.zip batch
+zip -j batch.zip batch/bootstrap
 
 # chara
-zip chara_id.zip chara_id
-zip chara_list.zip chara_list
+zip -j chara_id.zip chara_id/bootstrap
+zip -j chara_list.zip chara_list/bootstrap
 
 # maintenance
-zip maintenance.zip maintenance
+zip -j maintenance.zip maintenance/bootstrap
 
 # healthcheck
-zip healthcheck.zip healthcheck
+zip -j healthcheck.zip healthcheck/bootstrap
 
 # push-notification
-zip push_token_ios_push_add.zip push_token_ios_push_add
-zip push_token_ios_voip_push_add.zip push_token_ios_voip_push_add
+zip -j push_token_ios_push_add.zip push_token_ios_push_add/bootstrap
+zip -j push_token_ios_voip_push_add.zip push_token_ios_voip_push_add/bootstrap
 
 # require
-zip require.zip require
+zip -j require.zip require/bootstrap
 
 # user
-zip user_signup.zip user_signup
-zip user_info.zip user_info
-zip user_withdraw.zip user_withdraw
-zip user_update_premium.zip user_update_premium
+zip -j user_signup.zip user_signup/bootstrap
+zip -j user_info.zip user_info/bootstrap
+zip -j user_withdraw.zip user_withdraw/bootstrap
+zip -j user_update_premium.zip user_update_premium/bootstrap
 
 # call_worker
-zip worker.zip worker
+zip -j worker.zip worker/bootstrap
 
 ################################################################
 # Clear
