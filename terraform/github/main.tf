@@ -34,7 +34,10 @@ data "aws_iam_policy_document" "charalarm_github_action_role_assume_policy_docum
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
       values = [
-        "repo:takoikatakotako/charalarm-backend:*"
+        "repo:takoikatakotako/charalarm-backend:*",
+        "repo:takoikatakotako/charalarm-ios:*",
+        "repo:takoikatakotako/charalarm-docs:*",
+        "repo:takoikatakotako/charalarm-lp:*"
       ]
     }
   }
@@ -53,6 +56,8 @@ data "aws_iam_policy_document" "charalarm_github_action_role_policy_document" {
       "s3:PutObject",
       "s3:GetObject",
       "s3:ListBucket",
+      "s3:ListObjectsV2",
+      "s3:DeleteObject",
       "lambda:UpdateFunctionCode",
       "cloudfront:CreateInvalidation"
     ]

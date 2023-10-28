@@ -4,8 +4,8 @@
 resource "aws_lambda_function" "batch_lambda_function" {
   function_name = "batch-function"
   role          = aws_iam_role.batch_lambda_role.arn
-  runtime       = "go1.x"
-  handler       = "batch"
+  runtime       = "provided.al2"
+  handler       = "bootstrap"
   timeout       = 300
 
   # Lambda生成に必要なのでダミーファイルを渡している。デプロイはCLIから行う。
@@ -13,7 +13,7 @@ resource "aws_lambda_function" "batch_lambda_function" {
   source_code_hash = sha256(filebase64("${path.module}/source/dummy.zip"))
   publish          = false
   architectures = [
-    "x86_64"
+    "arm64"
   ]
 
   environment {

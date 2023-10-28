@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/takoikatakotako/charalarm-backend/util/message"
 	"github.com/takoikatakotako/charalarm-backend/util/validator"
-
 	// "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	// "github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
@@ -117,9 +117,41 @@ func (d *DynamoDBRepository) InsertUser(user database.User) error {
 	return nil
 }
 
-func (d *DynamoDBRepository) DeleteUser(userID string) error {
-	ctx := context.Background()
+func (d *DynamoDBRepository) UpdateUserPremiumPlan(userID string, enablePremiumPlan bool) error {
+	client, err := d.createDynamoDBClient()
+	if err != nil {
+		return err
+	}
 
+	update := expression.UpdateBuilder{}.Set(expression.Name(database.UserTablePremiumPlan), expression.Value(enablePremiumPlan))
+	expr, err := expression.NewBuilder().WithUpdate(update).Build()
+	if err != nil {
+		fmt.Printf("build update expression: %s\n", err.Error())
+		return nil
+	}
+	updateInput := &dynamodb.UpdateItemInput{
+		TableName: aws.String(database.UserTableName),
+		Key: map[string]types.AttributeValue{
+			database.UserTableUserId: &types.AttributeValueMemberS{
+				Value: userID,
+			},
+		},
+		// This block can get really out of hand on big updates
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		UpdateExpression:          expr.Update(),
+	}
+
+	ctx := context.Background()
+	_, err = client.UpdateItem(ctx, updateInput)
+	if err != nil {
+		fmt.Printf("update item: %s\n", err.Error())
+		return err
+	}
+	return nil
+}
+
+func (d *DynamoDBRepository) DeleteUser(userID string) error {
 	client, err := d.createDynamoDBClient()
 	if err != nil {
 		return err
@@ -134,6 +166,7 @@ func (d *DynamoDBRepository) DeleteUser(userID string) error {
 		},
 	}
 
+	ctx := context.Background()
 	_, err = client.DeleteItem(ctx, deleteInput)
 	if err != nil {
 		return err

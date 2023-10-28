@@ -57,11 +57,31 @@ func (s *UserService) Signup(userID string, authToken string, platform string, i
 		UserID:              userID,
 		AuthToken:           authToken,
 		Platform:            platform,
+		PremiumPlan:         false,
 		CreatedAt:           currentTime.Format(time.RFC3339),
 		UpdatedAt:           currentTime.Format(time.RFC3339),
 		RegisteredIPAddress: ipAddress,
 	}
 	return s.DynamoDBRepository.InsertUser(user)
+}
+
+func (s *UserService) UpdatePremiumPlan(userID string, authToken string, enablePremiumPlan bool) error {
+	// バリデーション
+	if !validator.IsValidUUID(userID) || !validator.IsValidUUID(authToken) {
+		return errors.New(message.ErrorInvalidValue)
+	}
+
+	// Check User Is Exist
+	isExist, err := s.DynamoDBRepository.IsExistUser(userID)
+	if err != nil {
+		return err
+	}
+	if !isExist {
+		return errors.New(message.ErrorInvalidValue)
+	}
+
+	// プレミアムプランを更新
+	return s.DynamoDBRepository.UpdateUserPremiumPlan(userID, enablePremiumPlan)
 }
 
 func (s *UserService) Withdraw(userID string, authToken string) error {

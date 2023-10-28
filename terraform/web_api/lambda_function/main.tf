@@ -4,8 +4,8 @@
 resource "aws_lambda_function" "lambda_function" {
   function_name = var.function_name
   role          = var.role
-  runtime       = "go1.x"
-  handler       = var.handler
+  runtime       = "provided.al2"
+  handler       = "bootstrap"
   timeout       = 15
 
   # Lambda生成に必要なのでダミーファイルを渡している。デプロイはCLIから行う。
@@ -13,7 +13,7 @@ resource "aws_lambda_function" "lambda_function" {
   source_code_hash = sha256(filebase64("${path.module}/source/dummy.zip"))
   publish          = false
   architectures = [
-    "x86_64"
+    "arm64"
   ]
 
   environment {
