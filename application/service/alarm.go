@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"github.com/takoikatakotako/charalarm-backend/entity/request"
 	"github.com/takoikatakotako/charalarm-backend/entity/response"
 	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
@@ -50,7 +51,8 @@ func (s *AlarmService) AddAlarm(userID string, authToken string, requestAlarm re
 		// すでに登録されているのが贈られてくのは不審
 		pc, fileName, line, _ := runtime.Caller(1)
 		funcName := runtime.FuncForPC(pc).Name()
-		logger.Log(fileName, funcName, line, err)
+		msg := "すでに登録されたアラーム"
+		logger.Warn(msg, fileName, funcName, line)
 		return err
 	}
 	if isExist {
@@ -67,7 +69,8 @@ func (s *AlarmService) AddAlarm(userID string, authToken string, requestAlarm re
 		// 不明なターゲット
 		pc, fileName, line, _ := runtime.Caller(1)
 		funcName := runtime.FuncForPC(pc).Name()
-		logger.Log(fileName, funcName, line, err)
+		msg := "不明なターゲット"
+		logger.Warn(msg, fileName, funcName, line)
 		return errors.New(message.ErrorInvalidValue)
 	}
 	databaseAlarm := converter.RequestAlarmToDatabaseAlarm(requestAlarm, target)
@@ -100,7 +103,8 @@ func (s *AlarmService) EditAlarm(userID string, authToken string, requestAlarm r
 		// 不明なターゲット
 		pc, fileName, line, _ := runtime.Caller(1)
 		funcName := runtime.FuncForPC(pc).Name()
-		logger.Log(fileName, funcName, line, err)
+		msg := "不明ターゲット"
+		logger.Warn(msg, fileName, funcName, line)
 		return errors.New(message.ErrorInvalidValue)
 	}
 	databaseAlarm := converter.RequestAlarmToDatabaseAlarm(requestAlarm, target)
@@ -150,6 +154,10 @@ func (s *AlarmService) GetAlarmList(userID string, authToken string) ([]response
 		}
 		return responseAlarmList, nil
 	} else {
-		return []response.Alarm{}, errors.New(message.AuthenticationFailure)
+		pc, fileName, line, _ := runtime.Caller(1)
+		funcName := runtime.FuncForPC(pc).Name()
+		msg := fmt.Sprintf("Authentication Failure, UserID: %s, AuthToken: %s", user.UserID, user.AuthToken)
+		logger.Warn(msg, fileName, funcName, line)
+		return []response.Alarm{}, errors.New(message.ErrorAuthenticationFailure)
 	}
 }

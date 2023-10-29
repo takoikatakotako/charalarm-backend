@@ -1,16 +1,21 @@
 package logger
 
 import (
-	"encoding/json"
-	"fmt"
+	"log/slog"
+	"os"
 )
 
-func Log(fileName string, funcName string, line int, err error) {
-	message := LogMessage{
-		Level:   "error",
-		Message: err.Error(),
-	}
+func Info(msg string, fileName string, funcName string, line int) {
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	logger.Info(msg)
+}
 
-	jsonBytes, _ := json.Marshal(message)
-	fmt.Println(string(jsonBytes))
+func Warn(msg string, fileName string, funcName string, line int) {
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	logger.Warn(msg, "FileName", fileName, "FuncName", funcName, "Line", line)
+}
+
+func Error(msg string, fileName string, funcName string, line int) {
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	logger.Error(msg)
 }

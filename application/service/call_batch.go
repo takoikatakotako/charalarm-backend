@@ -49,10 +49,10 @@ func (b *CallBatchService) QueryDynamoDBAndSendMessage(hour int, minute int, wee
 	}
 	randomCharaCallVoicesCount := len(randomChara.Calls)
 	if randomCharaCallVoicesCount == 0 {
-		// 不明なターゲット
+		// ボイスが見つからない
 		pc, fileName, line, _ := runtime.Caller(1)
 		funcName := runtime.FuncForPC(pc).Name()
-		logger.Log(fileName, funcName, line, err)
+		logger.Error(err.Error(), fileName, funcName, line)
 		return errors.New("ボイスがないぞ")
 	}
 	randomCharaVoiceIndex := rand.Intn(randomCharaCallVoicesCount)
@@ -77,7 +77,7 @@ func (b *CallBatchService) QueryDynamoDBAndSendMessage(hour int, minute int, wee
 				// 不明なターゲット
 				pc, fileName, line, _ := runtime.Caller(1)
 				funcName := runtime.FuncForPC(pc).Name()
-				logger.Log(fileName, funcName, line, err)
+				logger.Error(err.Error(), fileName, funcName, line)
 				continue
 			}
 		}
