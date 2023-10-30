@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/takoikatakotako/charalarm-backend/entity/database"
 	"github.com/takoikatakotako/charalarm-backend/entity/response"
 	"github.com/takoikatakotako/charalarm-backend/repository/dynamodb"
 	"github.com/takoikatakotako/charalarm-backend/repository/environment_variable"
@@ -40,5 +41,14 @@ func (s *CharaService) GetCharaList() ([]response.Chara, error) {
 	if err != nil {
 		return []response.Chara{}, err
 	}
-	return converter.DatabaseCharaListToResponseCharaList(charaList, baseURL), nil
+
+	// enable のものを抽出
+	filteredCharaList := make([]database.Chara, 0)
+	for _, chara := range charaList {
+		if chara.Enable {
+			filteredCharaList = append(filteredCharaList, chara)
+		}
+	}
+
+	return converter.DatabaseCharaListToResponseCharaList(filteredCharaList, baseURL), nil
 }
