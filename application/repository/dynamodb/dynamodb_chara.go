@@ -10,8 +10,10 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	charalarm_config "github.com/takoikatakotako/charalarm-backend/config"
 	"github.com/takoikatakotako/charalarm-backend/entity/database"
+	"github.com/takoikatakotako/charalarm-backend/util/logger"
 	"github.com/takoikatakotako/charalarm-backend/util/message"
 	"math/rand"
+	"runtime"
 	"time"
 )
 
@@ -69,18 +71,19 @@ func (d *DynamoDBRepository) GetCharaList() ([]database.Chara, error) {
 	}
 
 	// 取得結果を struct の配列に変換
-	charaList := []database.Chara{}
+	charaList := make([]database.Chara, 0)
 	for _, item := range output.Items {
 		chara := database.Chara{}
 		err := attributevalue.UnmarshalMap(item, &chara)
 		if err != nil {
-			// TODO ログを出す
-			fmt.Println(err)
+			// Error
+			pc, fileName, line, _ := runtime.Caller(1)
+			funcName := runtime.FuncForPC(pc).Name()
+			logger.Error(err.Error(), fileName, funcName, line)
 			continue
 		}
 		charaList = append(charaList, chara)
 	}
-
 	return charaList, nil
 }
 

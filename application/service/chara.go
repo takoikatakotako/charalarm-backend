@@ -49,6 +49,5 @@ func (s *CharaService) GetCharaList() ([]response.Chara, error) {
 			filteredCharaList = append(filteredCharaList, chara)
 		}
 	}
-
 	return converter.DatabaseCharaListToResponseCharaList(filteredCharaList, baseURL), nil
 }
