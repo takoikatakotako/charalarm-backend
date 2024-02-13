@@ -13,8 +13,8 @@ locals {
       resource_domain                    = "resource.charalarm.sandbox.swiswiswift.com"
       resource_bucket_name               = "resource.charalarm.sandbox.swiswiswift.com"
       resource_acm_certificate_arn       = "arn:aws:acm:us-east-1:397693451628:certificate/6f024ec6-82c4-4412-b43e-e7095dc4195e"
-      ios_voip_push_certificate_filename = "development-voip-expiration-20240731-certificate.pem"
-      ios_voip_push_private_filename     = "development-voip-expiration-20240731-privatekey.pem"
+      ios_voip_push_certificate_filename = "development-voip-expiration-20250314-certificate.pem"
+      ios_voip_push_private_filename     = "development-voip-expiration-20250314-privatekey.pem"
       datadog_log_forwarder_arn          = "arn:aws:lambda:ap-northeast-1:397693451628:function:datadog-forwarder"
     }
 
@@ -31,8 +31,8 @@ locals {
       resource_domain                    = "resource.charalarm.swiswiswift.com"
       resource_bucket_name               = "resource.charalarm.swiswiswift.com"
       resource_acm_certificate_arn       = "arn:aws:acm:us-east-1:334832660826:certificate/cbd20721-8637-4079-9843-37169da6daa9"
-      ios_voip_push_certificate_filename = "staging-voip-20240210-certificate.pem"
-      ios_voip_push_private_filename     = "staging-voip-20240210-privatekey.pem"
+      ios_voip_push_certificate_filename = "staging-voip-expiration-20250314-certificate.pem"
+      ios_voip_push_private_filename     = "staging-voip-expiration-20250314-privatekey.pem"
       datadog_log_forwarder_arn          = "arn:aws:lambda:ap-northeast-1:334832660826:function:datadog-forwarder"
     }
 
@@ -49,8 +49,8 @@ locals {
       resource_domain                    = "resource.charalarm.com"
       resource_bucket_name               = "resource.charalarm.com"
       resource_acm_certificate_arn       = "arn:aws:acm:us-east-1:986921280333:certificate/c62fff84-8e07-495a-8fa9-359372471c37"
-      ios_voip_push_certificate_filename = "production-voip-20240210-certificate.pem"
-      ios_voip_push_private_filename     = "production-voip-20240210-privatekey.pem"
+      ios_voip_push_certificate_filename = "production-voip-expiration-20250314-certificate.pem"
+      ios_voip_push_private_filename     = "production-voip-expiration-20250314-privatekey.pem"
       datadog_log_forwarder_arn          = "arn:aws:lambda:ap-northeast-1:986921280333:function:datadog-forwarder"
     }
   }
